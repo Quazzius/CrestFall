@@ -1584,6 +1584,7 @@ public class CrestFallGame
 			} //end chapter 2
 		}
 		
+		KeyIn.close();
 		input.close();
 		
 	} //Game Over
