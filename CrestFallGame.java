@@ -30,10 +30,16 @@ public class CrestFallGame
 		int mBoots = 1;
 		Scanner KeyIn = new Scanner(System.in);
 		
+		////Define Graphics "Engine" object
+		Graphics g = new Graphics();
+		System.out.println();
+		g.printGraphic(g.gameLogo); //This is probably not how the class should be used but eh
+		System.out.println();
+		
 		//user enter name
 		System.out.println ( "Enter your name" );
 		Scanner input = new Scanner(System.in);
-		String player = input.nextLine( );
+		String player = input.nextLine( ); //-------------->>>>>>Put me to use, I'm so lonely
 		
 		//begin game
 		System.out.println ( "Your home, the village of Sardina, was just burned to the ground by a forest fire." );
@@ -1577,6 +1583,9 @@ public class CrestFallGame
 				}
 			} //end chapter 2
 		}
+		
+		input.close();
+		
 	} //Game Over
 
 }
