@@ -59,7 +59,9 @@ public class CrestFallGame
 		//endgame statement
 		if (forest == 'n')
 		{
-			System.out.println ( "You decided you would rather just lay down and burn like everything else, GAME OVER" );
+			System.out.println ( "You decided you would rather just lay down and burn like everything else" );
+			g.printGraphic(g.gameOver);
+			System.out.println(player);//Game over demo graphic placeholder etc
 			System.exit ( 0 );
 		}
 		
@@ -228,11 +230,11 @@ public class CrestFallGame
 				do  //check character input
 				{
 					roadFork =  input.next ( ).toUpperCase ( ).charAt ( 0 );
-					if (roadFork != 'E' && roadFork != 'W')  
+					if (roadFork != swamp && roadFork != merchant)  
 					{
 						System.out.println ( "You must enter E or W" );
 					}
-				} while (roadFork != 'E' && roadFork != 'W'); 
+				} while (roadFork != swamp && roadFork != merchant); 
 				
 				//Merchant road
 				if (roadFork == 'W')
