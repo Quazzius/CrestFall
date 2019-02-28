@@ -19,7 +19,6 @@ public class CrestFallNoMountain
 		int dex = 7;   // chance to hit
 		int evade = 7; //chance to evade
 		int rand;      //random number from encounter range
-		int attack = maxDMG - minDMG + 1;  //dmg range
 		int hitDMG;
 		int hitChance;
 		int chapter;  //chapter of game
@@ -36,6 +35,9 @@ public class CrestFallNoMountain
 		final int INNCOST = 20;
 		int merchCount = 0;
 		char direction = 'N';
+		int loser = 0;
+		int fighter = 0;
+		int victim = 1;
 		Scanner KeyIn = new Scanner(System.in);
 		
 		//user enter name
@@ -43,11 +45,33 @@ public class CrestFallNoMountain
 		Scanner input = new Scanner(System.in);
 		String player = input.nextLine( );
 		
+		//character class
+		System.out.println ( "Pick your class type" );
+		System.out.println ( "1. Hunter (Normal Game)\n2. Fighter (easier mode?) -1 dex, +2 Max DMG\n3. Loser (Harder Mode) -1 dex, -1 evade, -1 Max DMG, +10 Max HP" );
+		int playerType = input.nextInt ( );
+		if (playerType == 2) {
+			fighter = 1;
+			dex--;
+			maxDMG += 2;
+		}
+		if (playerType == 3) {
+			loser = 1;
+			dex--;
+			evade--;
+			maxDMG--;
+			hpMax += 10;
+		}
 		//begin game
 		System.out.println ( "Your home, the village of Sardina, was just burned to the ground by a forest fire." );
 		System.out.println ( "Living in the middle of the forest has its advantages though the closest town is 10 days away on foot." );
 		System.out.println ( "You know of a merchant to the SouthWest, but first you mush make your way through the forest to find the road." );
-		System.out.println ( "Your only posessions are the clothes on your back and your splitting axe (2-5 DMG)." );
+		System.out.println ( "Your only posessions are the clothes on your back and your Splitting Axe (2-5 DMG)." );
+		if(fighter == 1) {
+			System.out.println ( "You have a lifetime of fighting experince + 2 Max DMG\n But your large stature leaves you less nimble -1 dex" );
+		}
+		if (loser == 1) {
+			System.out.println ( "You're a loser so you kinda suck at everything -1 dex, -1 evade, -1 Max DMG\n But a lifetime of being picked on gives you more resilience + 10 Max HP" );
+		}
 		System.out.println ( "The only choice you have is to head South, continue? y/n" );
 		do  //check character input
 		{
@@ -68,6 +92,7 @@ public class CrestFallNoMountain
 		//is alive
 		while (hp > 0)
 		{
+			int attack = maxDMG - minDMG + 1;  //dmg range
 			chapter = 1;
 			while (chapter == 1)
 			{
@@ -680,6 +705,12 @@ public class CrestFallNoMountain
 							minDMG = 5;
 							maxDMG = 8;
 							ladyOfLake--;
+							if (fighter == 1) {
+								maxDMG += 2;
+							}
+							if (loser == 1) {
+								maxDMG--;
+							}
 						}
 					}
 					else
@@ -970,6 +1001,12 @@ public class CrestFallNoMountain
 									maxDMG = 6;
 									gold -= sSwordCost;
 									sSword--;
+									if (fighter == 1) {
+										maxDMG += 2;
+									}
+									if (loser == 1) {
+										maxDMG--;
+									}
 									if(mDagger == 0)
 									{
 										minDMG++;
@@ -997,6 +1034,12 @@ public class CrestFallNoMountain
 									dex--;
 									gold -= lSwordCost;
 									lSword--;
+									if (fighter == 1) {
+										maxDMG += 2;
+									}
+									if (loser == 1) {
+										maxDMG--;
+									}
 									if(mDagger == 0)
 									{
 										minDMG++;
@@ -1037,7 +1080,7 @@ public class CrestFallNoMountain
 						case 4:
 							if (mBoots >= 0)
 							{
-								if (gold > mBootsCost)
+								if (gold >= mBootsCost)
 								{
 									System.out.println ( "The strange looking boots fit! +1 Evade. You feel lighter" );
 									evade++;
@@ -1356,6 +1399,12 @@ public class CrestFallNoMountain
 												minDMG = 5;
 												maxDMG = 8;
 												ladyOfLake--;
+												if (fighter == 1) {
+													maxDMG += 2;
+												}
+												if (loser == 1) {
+													maxDMG--;
+												}
 												if (mDagger == 0)
 												{
 													minDMG++;
@@ -1596,6 +1645,8 @@ public class CrestFallNoMountain
 							rand = (int) ( Math.random ( ) * range + minEnc );  //encounter chance
 							System.out.println ( "Camp " + swampRoadCount + ". Press Enter to continue West" );
 							KeyIn.nextLine ( );
+							direction = 'N';
+							merchCount = 0;
 						}// end swamp road 2
 						break;
 							
@@ -1931,6 +1982,12 @@ public class CrestFallNoMountain
 															minDMG = 6;
 															maxDMG = 12;
 															gold -= bSwordCost;
+															if (fighter == 1) {
+																maxDMG += 2;
+															}
+															if (loser == 1) {
+																maxDMG--;
+															}
 															if (mDagger == 0)
 															{
 																minDMG++;
@@ -2049,8 +2106,7 @@ public class CrestFallNoMountain
 												gold += 10;
 												break;
 												
-												case 2:  // you have reached the lake
-												int victim = 1;
+												case 2:  // you find the girl
 												if (victim > 0)
 												{
 													System.out.println ("You hear a whisper. As you listen more closely it sounds \n more like a hushed scream from down the alley"  ); 	// rescue
