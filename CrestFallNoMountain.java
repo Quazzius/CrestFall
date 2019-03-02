@@ -32,17 +32,21 @@ public class CrestFallNoMountain
 		int mDagger = 1;
 		int mShield = 1;
 		int bSword = 1;
+		int hpPot = 0;
+		int hpPotCost;
 		final int INNCOST = 20;
 		int merchCount = 0;
 		char direction = 'N';
 		int loser = 0;
 		int fighter = 0;
 		int victim = 1;
+		int points =  0;
+		int battleDec = 0;
+		Scanner input = new Scanner(System.in);
 		Scanner KeyIn = new Scanner(System.in);
 		
 		//user enter name
 		System.out.println ( "Enter your name" );
-		Scanner input = new Scanner(System.in);
 		String player = input.nextLine( );
 		
 		//character class
@@ -70,7 +74,7 @@ public class CrestFallNoMountain
 			System.out.println ( "You have a lifetime of fighting experince + 2 Max DMG\n But your large stature leaves you less nimble -1 dex" );
 		}
 		if (loser == 1) {
-			System.out.println ( "You're a loser so you kinda suck at everything -1 dex, -1 evade, -1 Max DMG\n But a lifetime of being picked on gives you more resilience + 10 Max HP" );
+			System.out.println ( "You're a loser so you kind of suck at everything -1 dex, -1 evade, -1 Max DMG\n But a lifetime of being picked on gives you more resilience + 10 Max HP" );
 		}
 		System.out.println ( "The only choice you have is to head South, continue? y/n" );
 		do  //check character input
@@ -112,7 +116,7 @@ public class CrestFallNoMountain
 						int bearHP = 12;
 						while (bearHP > 0)  //fight sequence
 						{	
-							int bear = (int) ( Math.random ( ) * 9 + 4 );
+							int bear = (int) ( Math.random ( ) * 8 + 3 );
 							System.out.println ( "Bear attacks for " + bear + " damage.");
 							hitChance = (int) ( Math.random ( ) * 10 + 4);  //chance to evade
 							if (evade > hitChance) 
@@ -125,32 +129,47 @@ public class CrestFallNoMountain
 								System.out.println ( "-" + bear + " HP. " + "HP is " + hp);
 								if (hp < 1)
 								{
-									System.out.println ( "You Dead" );
+									System.out.println ( "GAME OVER.  SCORE: " + points );
 									System.exit(0);
 								}
 							}
-							  //key in enter to continue
-							System.out.println ( "press Enter to attack" );
-							KeyIn.nextLine ( );
+							  //battle decision
+							System.out.println ( "1-Attack, 0-Flee" );
+							battleDec = input.nextInt();
+							if (battleDec == 0) {
+								hitChance = (int) ( Math.random ( ) * 8 + 4);  //chance to flee
+								if (evade > hitChance) {
+									System.out.println ( "You run away! Coward!" );
+									break;
+								}
+								else {
+									System.out.println ( "You try to run, but you trip and fall on your face." );
+								}
+							}
 							
 							//attack
-							hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-							hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
-							if (dex >= hitChance)
-							{
-								System.out.println ( "You hit for " + hitDMG + " DMG" );
-								bearHP -= hitDMG;
-							}
-							else
-							{
-								System.out.println ( "You miss! Lame!" );
+							if (battleDec == 1) {
+								hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+								hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+								if (dex >= hitChance)
+								{
+									System.out.println ( "You hit for " + hitDMG + " DMG" );
+									bearHP -= hitDMG;
+								}
+								else
+								{
+									System.out.println ( "You miss! Lame!" );
+								}
 							}
 						}
-						System.out.println ( "You killed a Bear! +5 gold for some reason" );
-						gold += 5;
+						if (bearHP <= 0) {
+							System.out.println ( "You killed a Bear! +5 gold for some reason" );
+							gold += 5;
+							points += 50;
+						}
 						break;
 						
-						case 2: System.out.println ("You hear little asshole Goblins creeping around"  );
+						case 2: System.out.println ("You hear some little Goblins creeping around"  );
 						int gobHP = 8;
 						while (gobHP > 0)  //fight sequence
 						{	
@@ -167,29 +186,44 @@ public class CrestFallNoMountain
 								System.out.println ( "-" + goblin + " HP. " + "HP is " + hp);
 								if (hp < 1)
 								{
-									System.out.println ( "You Dead" );
+									System.out.println ( "GAME OVER.  SCORE: " + points );
 									System.exit(0);
 								}
 							}
-							  //key in enter to continue
-							System.out.println ( "press Enter to attack" );
-							KeyIn.nextLine ( );
+							 //battle decision
+							System.out.println ( "1-Attack, 0-Flee" );
+							battleDec = input.nextInt();
+							if (battleDec == 0) {
+								hitChance = (int) ( Math.random ( ) * 8 + 5);  //chance to flee
+								if (evade > hitChance) {
+									System.out.println ( "You run away! Coward!" );
+									break;
+								}
+								else {
+									System.out.println ( "You try to run, but you trip and fall on your face." );
+								}
+							}
 							
 							//attack
-							hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-							hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
-							if (dex >= hitChance)
-							{
-								System.out.println ( "You hit for " + hitDMG + " DMG" );
-								gobHP -= hitDMG;
-							}
-							else
-							{
-								System.out.println ( "You miss! Lame!" );
+							if (battleDec == 1) {
+								hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+								hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+								if (dex >= hitChance)
+								{
+									System.out.println ( "You hit for " + hitDMG + " DMG" );
+									gobHP -= hitDMG;
+								}
+								else
+								{
+									System.out.println ( "You miss! Lame!" );
+								}
 							}
 						}
-						System.out.println ( "You killed some Asshole Goblins! and found 3 gold!" );
-						gold += 3;
+						if (gobHP <= 0) {
+							System.out.println ( "You killed some Goblins! and found 3 gold!" );
+							gold += 3;
+							points += 10;
+						}
 						break;
 						
 						case 3: System.out.println ( "an Elf appears... to be very menacing!" );
@@ -209,29 +243,44 @@ public class CrestFallNoMountain
 								System.out.println ( "-" + elf + " HP. " + "HP is " + hp);
 								if (hp < 1)
 								{
-									System.out.println ( "You Dead" );
+									System.out.println ( "GAME OVER.  SCORE: " + points );
 									System.exit(0);
 								}
 							}
-							  //key in enter to continue
-							System.out.println ( "press Enter to attack" );
-							KeyIn.nextLine ( );
+							 //battle decision
+							System.out.println ( "1-Attack, 0-Flee" );
+							battleDec = input.nextInt();
+							if (battleDec == 0) {
+								hitChance = (int) ( Math.random ( ) * 8 + 4);  //chance to flee
+								if (evade > hitChance) {
+									System.out.println ( "You run away! Coward!" );
+									break;
+								}
+								else {
+									System.out.println ( "You try to run, but you trip and fall on your face." );
+								}
+							}
 							
 							//attack
-							hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-							hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
-							if (dex >= hitChance)
-							{
-								System.out.println ( "You hit for " + hitDMG + " DMG" );
-								elfHP -= hitDMG;
-							}
-							else
-							{
-								System.out.println ( "But you miss! Lame!" );
+							if (battleDec == 1) {
+								hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+								hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+								if (dex >= hitChance)
+								{
+									System.out.println ( "You hit for " + hitDMG + " DMG" );
+									elfHP -= hitDMG;
+								}
+								else
+								{
+									System.out.println ( "You miss! Lame!" );
+								}
 							}
 						}
-						System.out.println ( "You killed a crazy theiving Elf, and robbed his corpse of 6 gold! Awesome!" );
-						gold += 6;
+						if (elfHP <= 0) {
+							System.out.println ( "You killed a crazy theiving Elf, and robbed his corpse of 6 gold! Awesome!" );
+							gold += 6;
+							points += 30;
+						}
 						}
 					
 					} 
@@ -292,29 +341,44 @@ public class CrestFallNoMountain
 									System.out.println ( "-" + bums + " HP. " + "HP is " + hp);
 									if (hp < 1)
 									{
-										System.out.println ( "You Dead" );
+										System.out.println ( "GAME OVER.  SCORE: " + points );
 										System.exit(0);
 									}
 								}
-								  //key in enter to continue
-								System.out.println ( "press Enter to attack" );
-								KeyIn.nextLine ( );
+								 //battle decision
+								System.out.println ( "1-Attack, 0-Flee" );
+								battleDec = input.nextInt();
+								if (battleDec == 0) {
+									hitChance = (int) ( Math.random ( ) * 8 + 4);  //chance to flee
+									if (evade > hitChance) {
+										System.out.println ( "You run away! Coward!" );
+										break;
+									}
+									else {
+										System.out.println ( "You try to run, but you trip and fall on your face." );
+									}
+								}
 								
 								//attack
-								hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-								hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
-								if (dex >= hitChance)
-								{
-									System.out.println ( "You hit for " + hitDMG + " DMG" );
-									bumHP -= hitDMG;
-								}
-								else
-								{
-									System.out.println ( "You miss! Lame!" );
+								if (battleDec == 1) {
+									hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+									hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+									if (dex >= hitChance)
+									{
+										System.out.println ( "You hit for " + hitDMG + " DMG" );
+										bumHP -= hitDMG;
+									}
+									else
+									{
+										System.out.println ( "You miss! Lame!" );
+									}
 								}
 							}
-							System.out.println ( "You killed two Naked Bums! Their purses each held 2 gold" );
-							gold += 4;
+							if (bumHP <= 0){
+								System.out.println ( "You killed two Naked Bums! They each had 2 coins stached... somewhere. + 4 gold" );
+								gold += 4;
+								points += 25;
+							}
 							break;
 							
 							case 2: System.out.println ("A man is busy mending the wheel for his cart"  ); // cart man/ Bandit
@@ -355,30 +419,44 @@ public class CrestFallNoMountain
 											System.out.println ( "-" + bandit + " HP. " + "HP is " + hp);
 											if (hp < 1)
 											{
-												System.out.println ( "You Dead" );
+												System.out.println ( "GAME OVER.  SCORE: " + points );
 												System.exit(0);
 											}
 										}
-										//key in enter to continue
-										System.out.println ( "press Enter to attack" );
-										KeyIn.nextLine ( );
+										 //battle decision
+										System.out.println ( "1-Attack, 0-Flee" );
+										battleDec = input.nextInt();
+										if (battleDec == 0) {
+											hitChance = (int) ( Math.random ( ) * 8 + 4);  //chance to flee
+											if (evade > hitChance) {
+												System.out.println ( "You run away! Coward!" );
+												break;
+											}
+											else {
+												System.out.println ( "You try to run, but you trip and fall on your face." );
+											}
+										}
 									
 										//attack
-										hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-										hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
-										if (dex >= hitChance)
-										{
-											System.out.println ( "You hit for " + hitDMG + " DMG" );
-											banditHP -= hitDMG;
-										}
-										else
-										{
-											System.out.println ( "But you miss! Lame!" );
+										if (battleDec == 1) {
+											hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+											hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+											if (dex >= hitChance)
+											{
+												System.out.println ( "You hit for " + hitDMG + " DMG" );
+												banditHP -= hitDMG;
+											}
+											else
+											{
+												System.out.println ( "But you miss! Lame!" );
+											}
 										}
 									}
-									System.out.println ( "You killed a Bandit, and robbed his corpse of 8 gold! Nice..." );
-									gold += 8;
-									
+									if (banditHP <= 0) {
+										System.out.println ( "You killed a Bandit, and robbed his corpse of 8 gold! Nice..." );
+										gold += 8;
+										points += 50;
+									}
 								}
 								else
 								{
@@ -407,29 +485,44 @@ public class CrestFallNoMountain
 									System.out.println ( "-" + marauder + " HP. " + "HP is " + hp);
 									if (hp < 1)
 									{
-										System.out.println ( "You Dead" );
+										System.out.println ( "GAME OVER.  SCORE: " + points );
 										System.exit(0);
 									}
 								}
-								  //key in enter to continue
-								System.out.println ( "press Enter to attack" );
-								KeyIn.nextLine ( );
+								 //battle decision
+								System.out.println ( "1-Attack, 0-Flee" );
+								battleDec = input.nextInt();
+								if (battleDec == 0) {
+									hitChance = (int) ( Math.random ( ) * 7 + 5);  //chance to flee
+									if (evade > hitChance) {
+										System.out.println ( "You run away! Coward!" );
+										break;
+									}
+									else {
+										System.out.println ( "You try to run, but you trip and fall on your face." );
+									}
+								}
 								
 								//attack
-								hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-								hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
-								if (dex >= hitChance)
-								{
-									System.out.println ( "You hit for " + hitDMG + " DMG" );
-									marauderHP -= hitDMG;
-								}
-								else
-								{
-									System.out.println ( "But you miss! Lame!" );
+								if (battleDec == 1) {
+									hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+									hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+									if (dex >= hitChance)
+									{
+										System.out.println ( "You hit for " + hitDMG + " DMG" );
+										marauderHP -= hitDMG;
+									}
+									else
+									{
+										System.out.println ( "But you miss! Lame!" );
+									}
 								}
 							}
-							System.out.println ( "You killed a Marauder and took his purse, but his horse ran away. + 7 gold" );
-							gold += 7;
+							if (marauderHP <= 0) {
+								System.out.println ( "You killed a Marauder and took his purse, but his horse ran away. + 7 gold" );
+								gold += 7;
+								points += 40;
+							}
 							}
 						
 						} 
@@ -473,29 +566,44 @@ public class CrestFallNoMountain
 									System.out.println ( "-" + wolf + " HP. " + "HP is " + hp);
 									if (hp < 1)
 									{
-										System.out.println ( "You Dead" );
+										System.out.println ( "GAME OVER.  SCORE: " + points );
 										System.exit(0);
 									}
 								}
-								  //key in enter to continue
-								System.out.println ( "press Enter to attack" );
-								KeyIn.nextLine ( );
+								 //battle decision
+								System.out.println ( "1-Attack, 0-Flee" );
+								battleDec = input.nextInt();
+								if (battleDec == 0) {
+									hitChance = (int) ( Math.random ( ) * 8 + 4);  //chance to flee
+									if (evade > hitChance) {
+										System.out.println ( "You run away! Coward!" );
+										break;
+									}
+									else {
+										System.out.println ( "You try to run, but you trip and fall on your face." );
+									}
+								}
 								
 								//attack
-								hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-								hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
-								if (dex >= hitChance)
-								{
-									System.out.println ( "You hit for " + hitDMG + " DMG" );
-									wolfHP -= hitDMG;
-								}
-								else
-								{
-									System.out.println ( "You miss! Lame!" );
+								if (battleDec == 1) {
+									hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+									hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+									if (dex >= hitChance)
+									{
+										System.out.println ( "You hit for " + hitDMG + " DMG" );
+										wolfHP -= hitDMG;
+									}
+									else
+									{
+										System.out.println ( "You miss! Lame!" );
+									}
 								}
 							}
-							System.out.println ( "You killed the wolves and find their previous victims bones nearby. +8 gold" );
-							gold += 8;
+							if (wolfHP <= 0) {
+								System.out.println ( "You killed the wolves and find their previous victim's bones nearby. +8 gold" );
+								gold += 8;
+								points += 30;
+							}
 							break;
 							
 							case 2: System.out.println ("Something shiny catches your eye off trail"  ); // jewel/ wraith
@@ -523,7 +631,7 @@ public class CrestFallNoMountain
 									int wraithHP = 16;
 									while (wraithHP > 0)  //fight sequence
 									{	
-										int wraith = (int) ( Math.random ( ) * 8 + 3 );
+										int wraith = (int) ( Math.random ( ) * 8 + 4 );
 										System.out.println ( "wraith attacks for " + wraith + " damage.");
 										hitChance = (int) ( Math.random ( ) * 11 + 5);  //chance to evade
 										if (evade > hitChance) 
@@ -536,39 +644,59 @@ public class CrestFallNoMountain
 											System.out.println ( "-" + wraith + " HP. " + "HP is " + hp);
 											if (hp < 1)
 											{
-												System.out.println ( "You Dead" );
+												System.out.println ( "GAME OVER.  SCORE: " + points );
 												System.exit(0);
 											}
 										}
-										//key in enter to continue
-										System.out.println ( "press Enter to attack" );
-										KeyIn.nextLine ( );
+										 //battle decision
+										System.out.println ( "1-Attack, 0-Flee" );
+										battleDec = input.nextInt();
+										if (battleDec == 0) {
+											hitChance = (int) ( Math.random ( ) * 7 + 5);  //chance to flee
+											if (evade > hitChance) {
+												System.out.println ( "You run away! Coward!" );
+												break;
+											}
+											else {
+												System.out.println ( "You try to run, but you trip and fall on your face." );
+											}
+										}
 									
 										//attack
-										hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-										hitChance = (int) ( Math.random ( ) * 9);  //chance to hit
-										if (dex >= hitChance)
-										{
-											System.out.println ( "You hit for " + hitDMG + " DMG" );
-											wraithHP -= hitDMG;
-										}
-										else
-										{
-											System.out.println ( "But you miss! Lame!" );
+										if (battleDec == 1) {
+											hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+											hitChance = (int) ( Math.random ( ) * 9);  //chance to hit
+											if (dex >= hitChance)
+											{
+												System.out.println ( "You hit for " + hitDMG + " DMG" );
+												wraithHP -= hitDMG;
+											}
+											else
+											{
+												System.out.println ( "But you miss! Lame!" );
+											}
 										}
 									}
-									System.out.println ( "You killed a Wraith! And..." );
+									if (wraithHP <= 0) {
+										System.out.println ( "You killed a Wraith! And you find a garnet worth 8 gold! killer!" );
+										gold += 8;
+										points += 50;
+										break;
+									}
 								}
-							System.out.println ( "You find a Garnet worth 8 gold! Killer!" );
-							gold += 8;
+							else	{
+								System.out.println ( "You find a Garnet worth 8 gold! Killer!" );
+								gold += 8;
+							
+							}
 							}
 							break;
 							
-							case 3: System.out.println ( "A Muddy Mud Man grows rapidly in front of you like an Oozing pillar " );   //MudMan
+							case 3: System.out.println ( "A Mud Man grows rapidly in front of you like an Oozing pillar " );   //MudMan
 							int mudManHP = 14;
 							while (mudManHP > 0)  //fight sequence
 							{	
-								int mudMan = (int) ( Math.random ( ) * 8 + 5 );
+								int mudMan = (int) ( Math.random ( ) * 8 + 3 );
 								System.out.println ( "mudMan attacks for " + mudMan + " damage.");
 								hitChance = (int) ( Math.random ( ) * 11 + 5);  //chance to evade
 								if (evade > hitChance) 
@@ -581,29 +709,44 @@ public class CrestFallNoMountain
 									System.out.println ( "-" + mudMan + " HP. " + "HP is " + hp);
 									if (hp < 1)
 									{
-										System.out.println ( "You Dead" );
+										System.out.println ( "GAME OVER.  SCORE: " + points );
 										System.exit(0);
 									}
 								}
-								  //key in enter to continue
-								System.out.println ( "press Enter to attack" );
-								KeyIn.nextLine ( );
+								 //battle decision
+								System.out.println ( "1-Attack, 0-Flee" );
+								battleDec = input.nextInt();
+								if (battleDec == 0) {
+									hitChance = (int) ( Math.random ( ) * 7 + 5);  //chance to flee
+									if (evade > hitChance) {
+										System.out.println ( "You run away! Coward!" );
+										break;
+									}
+									else {
+										System.out.println ( "You try to run, but you trip and fall on your face." );
+									}
+								}
 								
 								//attack
-								hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-								hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
-								if (dex >= hitChance)
-								{
-									System.out.println ( "You hit for " + hitDMG + " DMG" );
-									mudManHP -= hitDMG;
-								}
-								else
-								{
-									System.out.println ( "But you miss! Lame!" );
+								if (battleDec == 1) {
+									hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+									hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+									if (dex >= hitChance)
+									{
+										System.out.println ( "You hit for " + hitDMG + " DMG" );
+										mudManHP -= hitDMG;
+									}
+									else
+									{
+										System.out.println ( "But you miss! Lame!" );
+									}
 								}
 							}
-							System.out.println ( "You killed a MudMan! It has some coins stuck to it. + 7 gold" );
-							gold += 7;
+							if (mudManHP <= 0) {
+								System.out.println ( "You killed a MudMan! It has some coins stuck to it. + 7 gold" );
+								gold += 7;
+								points += 40;
+							}
 							}
 						
 						} 
@@ -651,29 +794,44 @@ public class CrestFallNoMountain
 							System.out.println ( "-" + wolf + " HP. " + "HP is " + hp);
 							if (hp < 1)
 							{
-								System.out.println ( "You Dead" );
+								System.out.println ( "GAME OVER.  SCORE: " + points );
 								System.exit(0);
 							}
 						}
-						  //key in enter to continue
-						System.out.println ( "press Enter to attack" );
-						KeyIn.nextLine ( );
+						 //battle decision
+						System.out.println ( "1-Attack, 0-Flee" );
+						battleDec = input.nextInt();
+						if (battleDec == 0) {
+							hitChance = (int) ( Math.random ( ) * 8 + 4);  //chance to flee
+							if (evade > hitChance) {
+								System.out.println ( "You run away! Coward!" );
+								break;
+							}
+							else {
+								System.out.println ( "You try to run, but you trip and fall on your face." );
+							}
+						}
 						
 						//attack
-						hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-						hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
-						if (dex >= hitChance)
-						{
-							System.out.println ( "You hit for " + hitDMG + " DMG" );
-							wolfHP -= hitDMG;
-						}
-						else
-						{
-							System.out.println ( "You miss! Lame!" );
+						if (battleDec == 1) {
+							hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+							hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+							if (dex >= hitChance)
+							{
+								System.out.println ( "You hit for " + hitDMG + " DMG" );
+								wolfHP -= hitDMG;
+							}
+							else
+							{
+								System.out.println ( "You miss! Lame!" );
+							}
 						}
 					}
-					System.out.println ( "You killed the wolves and find their previous victims bones nearby. +8 gold" );
-					gold += 8;
+					if (wolfHP <= 0) {
+						System.out.println ( "You killed the wolves and find their previous victims bones nearby. +8 gold" );
+						gold += 8;
+						points += 30;
+					}
 					break;
 					
 					case 2: 
@@ -721,11 +879,11 @@ public class CrestFallNoMountain
 					}
 					break;
 					
-					case 3: System.out.println ( "A Muddy Mud Man grows rapidly in front of you like an Oozing pillar " );   //MudMan
+					case 3: System.out.println ( "A Mud Man grows rapidly in front of you like an Oozing pillar " );   //MudMan
 					int mudManHP = 14;
 					while (mudManHP > 0)  //fight sequence
 					{	
-						int mudMan = (int) ( Math.random ( ) * 8 + 5 );
+						int mudMan = (int) ( Math.random ( ) * 8 + 3 );
 						System.out.println ( "mudMan attacks for " + mudMan + " damage.");
 						hitChance = (int) ( Math.random ( ) * 11 + 5);  //chance to evade
 						if (evade > hitChance) 
@@ -738,29 +896,44 @@ public class CrestFallNoMountain
 							System.out.println ( "-" + mudMan + " HP. " + "HP is " + hp);
 							if (hp < 1)
 							{
-								System.out.println ( "You Dead" );
+								System.out.println ( "GAME OVER.  SCORE: " + points );
 								System.exit(0);
 							}
 						}
-						  //key in enter to continue
-						System.out.println ( "press Enter to attack" );
-						KeyIn.nextLine ( );
+						 //battle decision
+						System.out.println ( "1-Attack, 0-Flee" );
+						battleDec = input.nextInt();
+						if (battleDec == 0) {
+							hitChance = (int) ( Math.random ( ) * 7 + 5);  //chance to flee
+							if (evade > hitChance) {
+								System.out.println ( "You run away! Coward!" );
+								break;
+							}
+							else {
+								System.out.println ( "You try to run, but you trip and fall on your face." );
+							}
+						}
 						
 						//attack
-						hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-						hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
-						if (dex >= hitChance)
-						{
-							System.out.println ( "You hit for " + hitDMG + " DMG" );
-							mudManHP -= hitDMG;
-						}
-						else
-						{
-							System.out.println ( "But you miss! Lame!" );
+						if (battleDec == 1) {
+							hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+							hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+							if (dex >= hitChance)
+							{
+								System.out.println ( "You hit for " + hitDMG + " DMG" );
+								mudManHP -= hitDMG;
+							}
+							else
+							{
+								System.out.println ( "But you miss! Lame!" );
+							}
 						}
 					}
-					System.out.println ( "You killed a MudMan! It has some coins stuck to it. + 7 gold" );
-					gold += 7;
+					if (mudManHP <= 0) {
+						System.out.println ( "You killed a MudMan! It has some coins stuck to it. + 7 gold" );
+						gold += 7;
+						points += 40;
+					}
 				}
 				
 			}
@@ -805,29 +978,44 @@ public class CrestFallNoMountain
 							System.out.println ( "-" + wolf + " HP. " + "HP is " + hp);
 							if (hp < 1)
 							{
-								System.out.println ( "You Dead" );
+								System.out.println ( "GAME OVER.  SCORE: " + points );
 								System.exit(0);
 							}
 						}
-						  //key in enter to continue
-						System.out.println ( "press Enter to attack" );
-						KeyIn.nextLine ( );
+						 //battle decision
+						System.out.println ( "1-Attack, 0-Flee" );
+						battleDec = input.nextInt();
+						if (battleDec == 0) {
+							hitChance = (int) ( Math.random ( ) * 8 + 4);  //chance to flee
+							if (evade > hitChance) {
+								System.out.println ( "You run away! Coward!" );
+								break;
+							}
+							else {
+								System.out.println ( "You try to run, but you trip and fall on your face." );
+							}
+						}
 						
 						//attack
-						hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-						hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
-						if (dex >= hitChance)
-						{
-							System.out.println ( "You hit for " + hitDMG + " DMG" );
-							wolfHP -= hitDMG;
-						}
-						else
-						{
-							System.out.println ( "You miss! Lame!" );
+						if (battleDec == 1) {
+							hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+							hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+							if (dex >= hitChance)
+							{
+								System.out.println ( "You hit for " + hitDMG + " DMG" );
+								wolfHP -= hitDMG;
+							}
+							else
+							{
+								System.out.println ( "You miss! Lame!" );
+							}
 						}
 					}
-					System.out.println ( "You killed the wolves and find their previous victims bones nearby. +8 gold" );
-					gold += 8;
+					if (wolfHP <= 0) {
+						System.out.println ( "You killed the wolves and find their previous victims bones nearby. +8 gold" );
+						gold += 8;
+						points += 30;
+					}
 					break;
 					
 					case 2: System.out.println ("Something shiny catches your eye off trail"  ); // jewel/ wraith
@@ -855,7 +1043,7 @@ public class CrestFallNoMountain
 							int wraithHP = 16;
 							while (wraithHP > 0)  //fight sequence
 							{	
-								int wraith = (int) ( Math.random ( ) * 8 + 3 );
+								int wraith = (int) ( Math.random ( ) * 8 + 4 );
 								System.out.println ( "wraith attacks for " + wraith + " damage.");
 								hitChance = (int) ( Math.random ( ) * 11 + 5);  //chance to evade
 								if (evade > hitChance) 
@@ -868,29 +1056,44 @@ public class CrestFallNoMountain
 									System.out.println ( "-" + wraith + " HP. " + "HP is " + hp);
 									if (hp < 1)
 									{
-										System.out.println ( "You Dead" );
+										System.out.println ( "GAME OVER.  SCORE: " + points );
 										System.exit(0);
 									}
 								}
-								//key in enter to continue
-								System.out.println ( "press Enter to attack" );
-								KeyIn.nextLine ( );
+								 //battle decision
+								System.out.println ( "1-Attack, 0-Flee" );
+								battleDec = input.nextInt();
+								if (battleDec == 0) {
+									hitChance = (int) ( Math.random ( ) * 7 + 5);  //chance to flee
+									if (evade > hitChance) {
+										System.out.println ( "You run away! Coward!" );
+										break;
+									}
+									else {
+										System.out.println ( "You try to run, but you trip and fall on your face." );
+									}
+								}
 							
 								//attack
-								hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-								hitChance = (int) ( Math.random ( ) * 9);  //chance to hit
-								if (dex >= hitChance)
-								{
-									System.out.println ( "You hit for " + hitDMG + " DMG" );
-									wraithHP -= hitDMG;
-								}
-								else
-								{
-									System.out.println ( "But you miss! Lame!" );
+								if (battleDec == 1) {
+									hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+									hitChance = (int) ( Math.random ( ) * 9);  //chance to hit
+									if (dex >= hitChance)
+									{
+										System.out.println ( "You hit for " + hitDMG + " DMG" );
+										wraithHP -= hitDMG;
+									}
+									else
+									{
+										System.out.println ( "But you miss! Lame!" );
+									}
 								}
 							}
-							System.out.println ( "You killed a Wraith! It dropped a garnet worth 8 gold, Nice..." );
-							gold += 8;
+							if (wraithHP <= 0) {
+								System.out.println ( "You killed a Wraith! It dropped a garnet worth 8 gold, Nice..." );
+								gold += 8;
+								points += 50;
+							}
 						}
 						else 
 						{
@@ -900,11 +1103,11 @@ public class CrestFallNoMountain
 					}
 					break;
 					
-					case 3: System.out.println ( "A Muddy Mud Man grows rapidly in front of you like an Oozing pillar " );   //MudMan
+					case 3: System.out.println ( "A Mud Man grows rapidly in front of you like an Oozing pillar " );   //MudMan
 					int mudManHP = 14;
 					while (mudManHP > 0)  //fight sequence
 					{	
-						int mudMan = (int) ( Math.random ( ) * 8 + 5 );
+						int mudMan = (int) ( Math.random ( ) * 8 + 3 );
 						System.out.println ( "mudMan attacks for " + mudMan + " damage.");
 						hitChance = (int) ( Math.random ( ) * 11 + 5);  //chance to evade
 						if (evade > hitChance) 
@@ -917,29 +1120,44 @@ public class CrestFallNoMountain
 							System.out.println ( "-" + mudMan + " HP. " + "HP is " + hp);
 							if (hp < 1)
 							{
-								System.out.println ( "You Dead" );
+								System.out.println ( "GAME OVER.  SCORE: " + points );
 								System.exit(0);
 							}
 						}
-						  //key in enter to continue
-						System.out.println ( "press Enter to attack" );
-						KeyIn.nextLine ( );
+						 //battle decision
+						System.out.println ( "1-Attack, 0-Flee" );
+						battleDec = input.nextInt();
+						if (battleDec == 0) {
+							hitChance = (int) ( Math.random ( ) * 7 + 5);  //chance to flee
+							if (evade > hitChance) {
+								System.out.println ( "You run away! Coward!" );
+								break;
+							}
+							else {
+								System.out.println ( "You try to run, but you trip and fall on your face." );
+							}
+						}
 						
 						//attack
-						hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-						hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
-						if (dex >= hitChance)
-						{
-							System.out.println ( "You hit for " + hitDMG + " DMG" );
-							mudManHP -= hitDMG;
-						}
-						else
-						{
-							System.out.println ( "But you miss! Lame!" );
+						if (battleDec == 1) {
+							hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+							hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+							if (dex >= hitChance)
+							{
+								System.out.println ( "You hit for " + hitDMG + " DMG" );
+								mudManHP -= hitDMG;
+							}
+							else
+							{
+								System.out.println ( "But you miss! Lame!" );
+							}
 						}
 					}
-					System.out.println ( "You killed a MudMan! It has some coins stuck to it. + 7 gold" );
-					gold += 7;
+					if (mudManHP <= 0) {
+						System.out.println ( "You killed a MudMan! It has some coins stuck to it. + 7 gold" );
+						gold += 7;
+						points += 40;
+					}
 					}
 				
 				} 
@@ -983,10 +1201,12 @@ public class CrestFallNoMountain
 					System.out.println ( "3 - Leather Armour. + 1 evade. (15 gold). InStock: " + lArmor);
 					int mBootsCost = 30;
 					System.out.println ( "4 - Mercurial Dancing Boots. + 1 evade (30 gold). In Stock " + mBoots);
-					int hPotionCost = 10;
-					System.out.println ( "5 - Magic EEL Sauce. Heal 50 HP (10 gold)" );
-					System.out.println ( "6 - View Stats" );
-					System.out.println ( "7 - Exit Merchant Camp" );
+					int hPotionCost = 8;
+					System.out.println ( "5 - Magic EEL Sauce. Heal 50 HP (8 gold)" );
+					hpPotCost = 5;
+					System.out.println ( "6 - Magic EEL Sauce to go. Heal 25 HP in battle (5 gold)" );
+					System.out.println ( "7 - View Stats" );
+					System.out.println ( "8 - Exit Merchant Camp" );
 					System.out.println ( "You have " + gold + " gold");
 					merch = input.nextInt();   //input decision
 					switch (merch)
@@ -1103,6 +1323,7 @@ public class CrestFallNoMountain
 							{
 								hp += 50;
 								gold -= hPotionCost;
+								points -= 50;
 								if (hp > hpMax)
 								{
 									hp = hpMax;
@@ -1116,14 +1337,31 @@ public class CrestFallNoMountain
 							} 
 							break;
 							
-						case 6: 
+						case 6:
+							if (hpPot < 1) {
+								if (gold >= hpPotCost) {
+									System.out.println ( "You get a bottle of Magic EEl Sauce. Use it wisely" );
+									gold -= hpPotCost;
+									hpPot += 1;
+								}
+								else {
+									System.out.println ( "Damn it man! I'm a Merchant, not a Barber! You'll get no charity here. " );
+									System.out.println ( "You have " + gold + " gold. Go find some more" );
+								}
+							}
+							else {
+								System.out.println ( "You can only hold one bottle at a time." );
+							}
+							break;
+							
+						case 7: 
 							System.out.println ( "HP: " + hp);
 							System.out.println ( "DMG: " + minDMG + " - " + maxDMG);
 							System.out.println ( "Dex: " + dex);
 							System.out.println ( "Evade: " + evade );
 							break;
 						
-						case 7:
+						case 8:
 						System.out.println ( "There is a road sign at the far end of camp; It reads:" );
 						System.out.println ( "Humble Mountain - West, Road closed due to Extreme Terror" );
 						System.out.println ( "City of CrestFall - South" );
@@ -1163,29 +1401,59 @@ public class CrestFallNoMountain
 													System.out.println ( "-" + wolf + " HP. " + "HP is " + hp);
 													if (hp < 1)
 													{
-														System.out.println ( "You Dead" );
+														System.out.println ( "GAME OVER.  SCORE: " + points );
 														System.exit(0);
 													}
 												}
-												  //key in enter to continue
-												System.out.println ( "press Enter to attack" );
-												KeyIn.nextLine ( );
+												 //battle decision
+												System.out.println ( "1-Attack, 5-EEL Sauce (" + hpPot + "), 0-Flee" );
+												battleDec = input.nextInt();
+												if (battleDec == 0) {
+													hitChance = (int) ( Math.random ( ) * 8 + 4);  //chance to flee
+													if (evade > hitChance) {
+														System.out.println ( "You run away! Coward!" );
+														break;
+													}
+													else {
+														System.out.println ( "You try to run, but you trip and fall on your face." );
+													}
+												}
 												
 												//attack
-												hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-												hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
-												if (dex >= hitChance)
-												{
-													System.out.println ( "You hit for " + hitDMG + " DMG" );
-													wolfHP -= hitDMG;
+												if (battleDec == 1) {
+													hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+													hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+													if (dex >= hitChance)
+													{
+														System.out.println ( "You hit for " + hitDMG + " DMG" );
+														wolfHP -= hitDMG;
+													}
+													else
+													{
+														System.out.println ( "You miss! Lame!" );
+													}
 												}
-												else
-												{
-													System.out.println ( "You miss! Lame!" );
+												//potion
+												if (battleDec == 5) {
+													if (hpPot > 0) {
+														System.out.println ( "That Sauce is Awesome! +25HP" );
+														hpPot --;
+														points -= 25;
+														hp += 25;
+														if (hp > hpMax) {
+															hp = hpMax;
+														}
+													}
+													else {
+														System.out.println ( "Fool! You have no Sauce in supply!" );
+													}
 												}
 											}
-											System.out.println ( "You killed the wolves and find their previous victims bones nearby. +8 gold" );
-											gold += 8;
+											if (wolfHP <= 0) {
+												System.out.println ( "You killed the wolves and find their previous victim's bones nearby. +8 gold" );
+												gold += 8;
+												points += 30;
+											}
 											break;
 											
 											case 2: System.out.println ("Something shiny catches your eye off trail"  ); // jewel/ wraith
@@ -1213,7 +1481,7 @@ public class CrestFallNoMountain
 													int wraithHP = 16;
 													while (wraithHP > 0)  //fight sequence
 													{	
-														int wraith = (int) ( Math.random ( ) * 8 + 3 );
+														int wraith = (int) ( Math.random ( ) * 8 + 4 );
 														System.out.println ( "wraith attacks for " + wraith + " damage.");
 														hitChance = (int) ( Math.random ( ) * 11 + 5);  //chance to evade
 														if (evade > hitChance) 
@@ -1226,43 +1494,74 @@ public class CrestFallNoMountain
 															System.out.println ( "-" + wraith + " HP. " + "HP is " + hp);
 															if (hp < 1)
 															{
-																System.out.println ( "You Dead" );
+																System.out.println ( "GAME OVER.  SCORE: " + points );
 																System.exit(0);
 															}
 														}
-														//key in enter to continue
-														System.out.println ( "press Enter to attack" );
-														KeyIn.nextLine ( );
+														 //battle decision
+														System.out.println ( "1-Attack, 5-EEL Sauce (" + hpPot + "), 0-Flee" );
+														battleDec = input.nextInt();
+														if (battleDec == 0) {
+															hitChance = (int) ( Math.random ( ) * 7 + 5);  //chance to flee
+															if (evade > hitChance) {
+																System.out.println ( "You run away! Coward!" );
+																break;
+															}
+															else {
+																System.out.println ( "You try to run, but you trip and fall on your face." );
+															}
+														}
 													
 														//attack
-														hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-														hitChance = (int) ( Math.random ( ) * 9);  //chance to hit
-														if (dex >= hitChance)
-														{
-															System.out.println ( "You hit for " + hitDMG + " DMG" );
-															wraithHP -= hitDMG;
+														if (battleDec == 1) {
+															hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+															hitChance = (int) ( Math.random ( ) * 9);  //chance to hit
+															if (dex >= hitChance)
+															{
+																System.out.println ( "You hit for " + hitDMG + " DMG" );
+																wraithHP -= hitDMG;
+															}
+															else
+															{
+																System.out.println ( "You miss! Lame!" );
+															}
 														}
-														else
-														{
-															System.out.println ( "But you miss! Lame!" );
+														//potion
+														if (battleDec == 5) {
+															if (hpPot > 0) {
+																System.out.println ( "That Sauce is Awesome! +25HP" );
+																hpPot --;
+																points -= 25;
+																hp += 25;
+																if (hp > hpMax) {
+																	hp = hpMax;
+																}
+															}
+															else {
+																System.out.println ( "Fool! You have no Sauce in supply!" );
+															}
 														}
 													}
-													System.out.println ( "You killed a Wraith! It dropped a garnet worth 8 gold, Nice..." );
-													gold += 8;
+													if (wraithHP <= 0) {
+														System.out.println ( "You killed a Wraith! It dropped a garnet worth 8 gold, Nice..." );
+														gold += 8;
+														points += 50;
+													}
 												}
 												else 
 												{
 													System.out.println ( "You find a Garnet worth 8 gold! Killer!" );
 													gold += 8;
+													
 												}
 											}
 											break;
 											
-											case 3: System.out.println ( "A Muddy Mud Man grows rapidly in front of you like an Oozing pillar " );   //MudMan
+											case 3: System.out.println ( "A Mud Man grows rapidly in front of you like an Oozing pillar " );   //MudMan
 											int mudManHP = 14;
 											while (mudManHP > 0)  //fight sequence
 											{	
-												int mudMan = (int) ( Math.random ( ) * 8 + 5 );
+												int mudMan = (int) ( Math.random ( ) * 8 + 3 );
 												System.out.println ( "mudMan attacks for " + mudMan + " damage.");
 												hitChance = (int) ( Math.random ( ) * 11 + 5);  //chance to evade
 												if (evade > hitChance) 
@@ -1275,29 +1574,59 @@ public class CrestFallNoMountain
 													System.out.println ( "-" + mudMan + " HP. " + "HP is " + hp);
 													if (hp < 1)
 													{
-														System.out.println ( "You Dead" );
+														System.out.println ( "GAME OVER.  SCORE: " + points );
 														System.exit(0);
 													}
 												}
-												  //key in enter to continue
-												System.out.println ( "press Enter to attack" );
-												KeyIn.nextLine ( );
+												 //battle decision
+												System.out.println ( "1-Attack, 5-EEL Sauce (" + hpPot + "), 0-Flee" );
+												battleDec = input.nextInt();
+												if (battleDec == 0) {
+													hitChance = (int) ( Math.random ( ) * 7 + 5);  //chance to flee
+													if (evade > hitChance) {
+														System.out.println ( "You run away! Coward!" );
+														break;
+													}
+													else {
+														System.out.println ( "You try to run, but you trip and fall on your face." );
+													}
+												}
 												
 												//attack
-												hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-												hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
-												if (dex >= hitChance)
-												{
-													System.out.println ( "You hit for " + hitDMG + " DMG" );
-													mudManHP -= hitDMG;
+												if (battleDec == 1) {
+													hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+													hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+													if (dex >= hitChance)
+													{
+														System.out.println ( "You hit for " + hitDMG + " DMG" );
+														mudManHP -= hitDMG;
+													}
+													else
+													{
+														System.out.println ( "You miss! Lame!" );
+													}
 												}
-												else
-												{
-													System.out.println ( "But you miss! Lame!" );
+												//potion
+												if (battleDec == 5) {
+													if (hpPot > 0) {
+														System.out.println ( "That Sauce is Awesome! +25HP" );
+														hpPot --;
+														points -= 25;
+														hp += 25;
+														if (hp > hpMax) {
+															hp = hpMax;
+														}
+													}
+													else {
+														System.out.println ( "Fool! You have no Sauce in supply!" );
+													}
 												}
 											}
-											System.out.println ( "You killed a MudMan! It has some coins stuck to it. + 7 gold" );
-											gold += 7;
+											if (mudManHP <= 0) {
+												System.out.println ( "You killed a MudMan! It has some coins stuck to it. + 7 gold" );
+												gold += 7;
+												points += 40;
+											}
 										}
 									
 									} 
@@ -1345,29 +1674,59 @@ public class CrestFallNoMountain
 											System.out.println ( "-" + wolf + " HP. " + "HP is " + hp);
 											if (hp < 1)
 											{
-												System.out.println ( "You Dead" );
+												System.out.println ( "GAME OVER.  SCORE: " + points );
 												System.exit(0);
 											}
 										}
-										  //key in enter to continue
-										System.out.println ( "press Enter to attack" );
-										KeyIn.nextLine ( );
+										 //battle decision
+										System.out.println ( "1-Attack, 5-EEL Sauce (" + hpPot + "), 0-Flee" );
+										battleDec = input.nextInt();
+										if (battleDec == 0) {
+											hitChance = (int) ( Math.random ( ) * 7 + 5);  //chance to flee
+											if (evade > hitChance) {
+												System.out.println ( "You run away! Coward!" );
+												break;
+											}
+											else {
+												System.out.println ( "You try to run, but you trip and fall on your face." );
+											}
+										}
 										
 										//attack
-										hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-										hitChance = (int) ( Math.random ( ) * 9);  //chance to hit
-										if (dex >= hitChance)
-										{
-											System.out.println ( "You hit for " + hitDMG + " DMG" );
-											wolfHP -= hitDMG;
+										if (battleDec == 1) {
+											hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+											hitChance = (int) ( Math.random ( ) * 9);  //chance to hit
+											if (dex >= hitChance)
+											{
+												System.out.println ( "You hit for " + hitDMG + " DMG" );
+												wolfHP -= hitDMG;
+											}
+											else
+											{
+												System.out.println ( "You miss! Lame!" );
+											}
 										}
-										else
-										{
-											System.out.println ( "You miss! Lame!" );
+										//potion
+										if (battleDec == 5) {
+											if (hpPot > 0) {
+												System.out.println ( "That Sauce is Awesome! +25HP" );
+												hpPot --;
+												points -= 25;
+												hp += 25;
+												if (hp > hpMax) {
+													hp = hpMax;
+												}
+											}
+											else {
+												System.out.println ( "Fool! You have no Sauce in supply!" );
+											}
 										}
 									}
-									System.out.println ( "You killed the wolves and find their previous victim's bones nearby. +10 gold" );
-									gold += 10;
+									if (wolfHP <= 0) {
+										System.out.println ( "You killed the wolves and find their previous victim's bones nearby. +10 gold" );
+										gold += 10;
+										points += 40;
+									}
 									break;
 									
 									case 2: 
@@ -1436,29 +1795,59 @@ public class CrestFallNoMountain
 											System.out.println ( "-" + mudMan + " HP. " + "HP is " + hp);
 											if (hp < 1)
 											{
-												System.out.println ( "You Dead" );
+												System.out.println ( "GAME OVER.  SCORE: " + points );
 												System.exit(0);
 											}
 										}
-										  //key in enter to continue
-										System.out.println ( "press Enter to attack" );
-										KeyIn.nextLine ( );
+										 //battle decision
+										System.out.println ( "1-Attack, 5-EEL Sauce (" + hpPot + "), 0-Flee" );
+										battleDec = input.nextInt();
+										if (battleDec == 0) {
+											hitChance = (int) ( Math.random ( ) * 6 + 6);  //chance to flee
+											if (evade > hitChance) {
+												System.out.println ( "You run away! Coward!" );
+												break;
+											}
+											else {
+												System.out.println ( "You try to run, but you slip on some shit and fall on your face." );
+											}
+										}
 										
 										//attack
-										hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-										hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
-										if (dex >= hitChance)
-										{
-											System.out.println ( "You hit for " + hitDMG + " DMG" );
-											mudManHP -= hitDMG;
+										if (battleDec == 1) {
+											hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+											hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+											if (dex >= hitChance)
+											{
+												System.out.println ( "You hit for " + hitDMG + " DMG" );
+												mudManHP -= hitDMG;
+											}
+											else
+											{
+												System.out.println ( "You miss! Lame!" );
+											}
 										}
-										else
-										{
-											System.out.println ( "But you miss! Lame!" );
+										//potion
+										if (battleDec == 5) {
+											if (hpPot > 0) {
+												System.out.println ( "That Sauce is Awesome! +25HP" );
+												hpPot --;
+												points -= 25;
+												hp += 25;
+												if (hp > hpMax) {
+													hp = hpMax;
+												}
+											}
+											else {
+												System.out.println ( "Fool! You have no Sauce in supply!" );
+											}
 										}
 									}
-									System.out.println ( "You killed that Piece of Shit! It has some coins stuck in it. + 8 gold" );
-									gold += 8;
+									if (mudManHP <= 0) {
+										System.out.println ( "You killed that Piece of Shit! It has some coins stuck in it. + 8 gold" );
+										gold += 8;
+										points += 70;
+									}
 							}
 							
 						}
@@ -1503,29 +1892,59 @@ public class CrestFallNoMountain
 										System.out.println ( "-" + wolf + " HP. " + "HP is " + hp);
 										if (hp < 1)
 										{
-											System.out.println ( "You Dead" );
+											System.out.println ( "GAME OVER.  SCORE: " + points );
 											System.exit(0);
 										}
 									}
-									  //key in enter to continue
-									System.out.println ( "press Enter to attack" );
-									KeyIn.nextLine ( );
+									 //battle decision
+									System.out.println ( "1-Attack, 5-EEL Sauce (" + hpPot + "), 0-Flee" );
+									battleDec = input.nextInt();
+									if (battleDec == 0) {
+										hitChance = (int) ( Math.random ( ) * 8 + 4);  //chance to flee
+										if (evade > hitChance) {
+											System.out.println ( "You run away! Coward!" );
+											break;
+										}
+										else {
+											System.out.println ( "You try to run, but you trip and fall on your face." );
+										}
+									}
 									
 									//attack
-									hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-									hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
-									if (dex >= hitChance)
-									{
-										System.out.println ( "You hit for " + hitDMG + " DMG" );
-										wolfHP -= hitDMG;
+									if (battleDec == 1) {
+										hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+										hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+										if (dex >= hitChance)
+										{
+											System.out.println ( "You hit for " + hitDMG + " DMG" );
+											wolfHP -= hitDMG;
+										}
+										else
+										{
+											System.out.println ( "You miss! Lame!" );
+										}
 									}
-									else
-									{
-										System.out.println ( "You miss! Lame!" );
+									//potion
+									if (battleDec == 5) {
+										if (hpPot > 0) {
+											System.out.println ( "That Sauce is Awesome! +25HP" );
+											hpPot --;
+											points -= 25;
+											hp += 25;
+											if (hp > hpMax) {
+												hp = hpMax;
+											}
+										}
+										else {
+											System.out.println ( "Fool! You have no Sauce in supply!" );
+										}
 									}
 								}
-								System.out.println ( "You killed the wolves and find their previous victims bones nearby. +8 gold" );
-								gold += 8;
+								if (wolfHP <= 0) {
+									System.out.println ( "You killed the wolves and find their previous victims bones nearby. +8 gold" );
+									gold += 8;
+									points += 30;
+								}
 								break;
 								
 								case 2: System.out.println ("Something shiny catches your eye off trail"  ); // jewel/ wraith
@@ -1566,29 +1985,59 @@ public class CrestFallNoMountain
 												System.out.println ( "-" + wraith + " HP. " + "HP is " + hp);
 												if (hp < 1)
 												{
-													System.out.println ( "You Dead" );
+													System.out.println ( "GAME OVER.  SCORE: " + points );
 													System.exit(0);
 												}
 											}
-											//key in enter to continue
-											System.out.println ( "press Enter to attack" );
-											KeyIn.nextLine ( );
+											 //battle decision
+											System.out.println ( "1-Attack, 5-EEL Sauce (" + hpPot + "), 0-Flee" );
+											battleDec = input.nextInt();
+											if (battleDec == 0) {
+												hitChance = (int) ( Math.random ( ) * 7 + 5);  //chance to flee
+												if (evade > hitChance) {
+													System.out.println ( "You run away! Coward!" );
+													break;
+												}
+												else {
+													System.out.println ( "You try to run, but you trip and fall on your face." );
+												}
+											}
 										
 											//attack
-											hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-											hitChance = (int) ( Math.random ( ) * 10);  //chance to hit
-											if (dex >= hitChance)
-											{
-												System.out.println ( "You hit for " + hitDMG + " DMG" );
-												wraithHP -= hitDMG;
+											if (battleDec == 1) {
+												hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+												hitChance = (int) ( Math.random ( ) * 10);  //chance to hit
+												if (dex >= hitChance)
+												{
+													System.out.println ( "You hit for " + hitDMG + " DMG" );
+													wraithHP -= hitDMG;
+												}
+												else
+												{
+													System.out.println ( "You miss! Lame!" );
+												}
 											}
-											else
-											{
-												System.out.println ( "But you miss! Lame!" );
+											//potion
+											if (battleDec == 5) {
+												if (hpPot > 0) {
+													System.out.println ( "That Sauce is Awesome! +25HP" );
+													hpPot --;
+													points -= 25;
+													hp += 25;
+													if (hp > hpMax) {
+														hp = hpMax;
+													}
+												}
+												else {
+													System.out.println ( "Fool! You have no Sauce in supply!" );
+												}
 											}
 										}
-										System.out.println ( "You killed a Rotten Wraith! It dropped a garnet worth 8 gold, Nice..." );
-										gold += 8;
+										if (wraithHP <= 0) {
+											System.out.println ( "You killed a Rotten Wraith! It dropped a garnet worth 8 gold, Nice..." );
+											gold += 8;
+											points += 80;
+										}
 									}
 									else 
 									{
@@ -1598,7 +2047,7 @@ public class CrestFallNoMountain
 								}
 								break;
 								
-								case 3: System.out.println ( "A Muddy Mud Man grows rapidly in front of you like an Oozing pillar " );   //MudMan
+								case 3: System.out.println ( "A Mud Man grows rapidly in front of you like an Oozing pillar " );   //MudMan
 								int mudManHP = 14;
 								while (mudManHP > 0)  //fight sequence
 								{	
@@ -1615,29 +2064,59 @@ public class CrestFallNoMountain
 										System.out.println ( "-" + mudMan + " HP. " + "HP is " + hp);
 										if (hp < 1)
 										{
-											System.out.println ( "You Dead" );
+											System.out.println ( "GAME OVER.  SCORE: " + points );
 											System.exit(0);
 										}
 									}
-									  //key in enter to continue
-									System.out.println ( "press Enter to attack" );
-									KeyIn.nextLine ( );
+									 //battle decision
+									System.out.println ( "1-Attack, 5-EEL Sauce (" + hpPot + "), 0-Flee" );
+									battleDec = input.nextInt();
+									if (battleDec == 0) {
+										hitChance = (int) ( Math.random ( ) * 7 + 5);  //chance to flee
+										if (evade > hitChance) {
+											System.out.println ( "You run away! Coward!" );
+											break;
+										}
+										else {
+											System.out.println ( "You try to run, but you trip and fall on your face." );
+										}
+									}
 									
 									//attack
-									hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-									hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
-									if (dex >= hitChance)
-									{
-										System.out.println ( "You hit for " + hitDMG + " DMG" );
-										mudManHP -= hitDMG;
+									if (battleDec == 1) {
+										hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+										hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+										if (dex >= hitChance)
+										{
+											System.out.println ( "You hit for " + hitDMG + " DMG" );
+											mudManHP -= hitDMG;
+										}
+										else
+										{
+											System.out.println ( "You miss! Lame!" );
+										}
 									}
-									else
-									{
-										System.out.println ( "But you miss! Lame!" );
+									//potion
+									if (battleDec == 5) {
+										if (hpPot > 0) {
+											System.out.println ( "That Sauce is Awesome! +25HP" );
+											hpPot --;
+											points -= 25;
+											hp += 25;
+											if (hp > hpMax) {
+												hp = hpMax;
+											}
+										}
+										else {
+											System.out.println ( "Fool! You have no Sauce in supply!" );
+										}
 									}
 								}
-								System.out.println ( "You killed a MudMan! It has some coins stuck to it. + 7 gold" );
-								gold += 7;
+								if (mudManHP <= 0) {
+									System.out.println ( "You killed a MudMan! It has some coins stuck to it. + 7 gold" );
+									gold += 7;
+									points += 40;
+								}
 								}
 							
 							} 
@@ -1671,7 +2150,7 @@ public class CrestFallNoMountain
 										int thiefHP = 15;
 										while (thiefHP > 0)  //fight sequence
 										{	
-											int thief = (int) ( Math.random ( ) * 7 + 4 );  //attack
+											int thief = (int) ( Math.random ( ) * 6 + 4 );  //enemy attack
 											System.out.println ( "Thief attacks for " + thief + " damage.");
 											hitChance = (int) ( Math.random ( ) * 11 + 4);  //chance to evade
 											if (evade > hitChance) 
@@ -1684,29 +2163,57 @@ public class CrestFallNoMountain
 												System.out.println ( "-" + thief + " HP. " + "HP is " + hp);
 												if (hp < 1)
 												{
-													System.out.println ( "You Dead" );
+													System.out.println ( "GAME OVER.  SCORE: " + points );
 													System.exit(0);
 												}
 											}
-											  //key in enter to continue
-											System.out.println ( "press Enter to attack" );
-											KeyIn.nextLine ( );
+											 //battle decision
+											System.out.println ( "1-Attack, 5-EEL Sauce (" + hpPot + "), 0-Flee" );
+											battleDec = input.nextInt();
+											if (battleDec == 0) {
+												hitChance = (int) ( Math.random ( ) * 8 + 4);  //chance to flee
+												if (evade > hitChance) {
+													System.out.println ( "You run away! Coward!" );
+													break;
+												}
+												else {
+													System.out.println ( "You try to run, but you trip and fall on your face." );
+												}
+											}
 											
 											//attack
-											hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-											hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
-											if (dex >= hitChance)
-											{
-												System.out.println ( "You hit for " + hitDMG + " DMG" );
-												thiefHP -= hitDMG;
+											if (battleDec == 1) {
+												hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+												hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+												if (dex >= hitChance)
+												{
+													System.out.println ( "You hit for " + hitDMG + " DMG" );
+													thiefHP -= hitDMG;
+												}
+												else
+												{
+													System.out.println ( "You miss! Lame!" );
+												}
 											}
-											else
-											{
-												System.out.println ( "You miss! Lame!" );
+											//potion
+											if (battleDec == 5) {
+												if (hpPot > 0) {
+													System.out.println ( "That Sauce is Awesome! +25HP" );
+													hpPot --;
+													points -= 25;
+													hp += 25;
+													if (hp > hpMax) {
+														hp = hpMax;
+													}
+												}
+												else {
+													System.out.println ( "Fool! You have no Sauce in supply!" );
+												}
 											}
 										}
 										System.out.println ( "You kill the thief. His purse was pretty light. + 5 gold" );
 										gold += 5;
+										points += 40;
 										break;
 										
 										case 2: System.out.println ("A terrified looking man runs up to you from the West" ); // distress/ Necromancer
@@ -1751,30 +2258,60 @@ public class CrestFallNoMountain
 														System.out.println ( "-" + thrall + " HP. " + "HP is " + hp);
 														if (hp < 1)
 														{
-															System.out.println ( "You Dead" );
+															System.out.println ( "GAME OVER.  SCORE: " + points );
 															System.exit(0);
 														}
 													}
-													//key in enter to continue
-													System.out.println ( "press Enter to attack" );
-													KeyIn.nextLine ( );
+													 //battle decision
+													System.out.println ( "1-Attack, 5-EEL Sauce (" + hpPot + "), 0-Flee" );
+													battleDec = input.nextInt();
+													if (battleDec == 0) {
+														hitChance = (int) ( Math.random ( ) * 8 + 4);  //chance to flee
+														if (evade > hitChance) {
+															System.out.println ( "You run away! Coward!" );
+															break;
+														}
+														else {
+															System.out.println ( "You try to run, but you trip and fall on your face." );
+														}
+													}
 												
 													//attack
-													hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-													hitChance = (int) ( Math.random ( ) * 9);  //chance to hit
-													if (dex >= hitChance)
-													{
-														System.out.println ( "You hit for " + hitDMG + " DMG" );
-														thrallHP -= hitDMG;
+													if (battleDec == 1) {
+														hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+														hitChance = (int) ( Math.random ( ) * 9);  //chance to hit
+														if (dex >= hitChance)
+														{
+															System.out.println ( "You hit for " + hitDMG + " DMG" );
+															thrallHP -= hitDMG;
+														}
+														else
+														{
+															System.out.println ( "You miss! Lame!" );
+														}
 													}
-													else
-													{
-														System.out.println ( "But you miss! Lame!" );
+													//potion
+													if (battleDec == 5) {
+														if (hpPot > 0) {
+															System.out.println ( "That Sauce is Awesome! +25HP" );
+															hpPot --;
+															points -= 25;
+															hp += 25;
+															if (hp > hpMax) {
+																hp = hpMax;
+															}
+														}
+														else {
+															System.out.println ( "Fool! You have no Sauce in supply!" );
+														}
 													}
 												}
-												System.out.println ( "You killed the necromancers Thralls! But the Necromancer disappeared..." );
-												System.out.println ( "Looking through his useless cart you find 12 gold! Nice!" );
-												gold += 12;
+												if (thrallHP <= 0) {
+													System.out.println ( "You killed the necromancers Thralls! But the Necromancer disappeared..." );
+													System.out.println ( "Looking through his useless cart you find 12 gold! Nice!" );
+													gold += 12;
+													points += 60;
+												}
 											}
 											else
 											{
@@ -1802,29 +2339,59 @@ public class CrestFallNoMountain
 												System.out.println ( "-" + wyvren + " HP. " + "HP is " + hp);
 												if (hp < 1)
 												{
-													System.out.println ( "You Dead" );
+													System.out.println ( "GAME OVER.  SCORE: " + points );
 													System.exit(0);
 												}
 											}
-											  //key in enter to continue
-											System.out.println ( "press Enter to attack" );
-											KeyIn.nextLine ( );
+											 //battle decision
+											System.out.println ( "1-Attack, 5-EEL Sauce (" + hpPot + "), 0-Flee" );
+											battleDec = input.nextInt();
+											if (battleDec == 0) {
+												hitChance = (int) ( Math.random ( ) * 7 + 5);  //chance to flee
+												if (evade > hitChance) {
+													System.out.println ( "You run away! Coward!" );
+													break;
+												}
+												else {
+													System.out.println ( "You try to run, but you trip and fall on your face." );
+												}
+											}
 											
 											//attack
-											hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-											hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
-											if (dex >= hitChance)
-											{
-												System.out.println ( "You hit for " + hitDMG + " DMG" );
-												wyvrenHP -= hitDMG;
+											if (battleDec == 1) {
+												hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+												hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+												if (dex >= hitChance)
+												{
+													System.out.println ( "You hit for " + hitDMG + " DMG" );
+													wyvrenHP -= hitDMG;
+												}
+												else
+												{
+													System.out.println ( "You miss! Lame!" );
+												}
 											}
-											else
-											{
-												System.out.println ( "But you miss! Lame!" );
+											//potion
+											if (battleDec == 5) {
+												if (hpPot > 0) {
+													System.out.println ( "That Sauce is Awesome! +25HP" );
+													hpPot --;
+													points -= 25;
+													hp += 25;
+													if (hp > hpMax) {
+														hp = hpMax;
+													}
+												}
+												else {
+													System.out.println ( "Fool! You have no Sauce in supply!" );
+												}
 											}
 										}
-										System.out.println ( "You killed a Wyvren! WOW! you cut open its belly and find 11 gold!" );
-										gold += 11;
+										if (wyvrenHP <= 0) {
+											System.out.println ( "You killed a Wyvren! WOW! you cut open its belly and find 11 gold!" );
+											gold += 11;
+											points += 100;
+										}
 										}
 									
 									} 
@@ -1852,6 +2419,7 @@ public class CrestFallNoMountain
 							while (city != 6)
 							{
 								System.out.println ( "City Common Board" );
+								System.out.println ( "0 - EEL Sauce Vendor. 1 Bottle (8 gold)" );
 								System.out.println ( "1 - Read Messages" );
 								System.out.println ( "2 - View Stats");
 								System.out.println ( "3 - Visit the Armorer");
@@ -1863,6 +2431,24 @@ public class CrestFallNoMountain
 								commonBoard = input.nextInt();   //input decision
 								switch (commonBoard)
 								{
+									case 0:
+										hpPotCost = 8;
+										if (hpPot < 1) {
+											if (gold >= hpPotCost) {
+												System.out.println ( "You get a bottle of Magic EEl Sauce. Use it wisely" );
+												gold -= hpPotCost;
+												hpPot += 1;
+											}
+											else {
+												System.out.println ( "Damn it man! I'm a Merchant, not a Barber! You'll get no charity here. " );
+												System.out.println ( "You have " + gold + " gold. Go find some more" );
+											}
+										}
+										else {
+											System.out.println ( "You can only hold one bottle at a time." );
+										}
+										break;
+										
 									case 1:  //Read Messages
 										System.out.println ( "1.) Have you purchased your flame retardant wall dividers yet?" );
 										System.out.println ( "2.) An increase in fire raining from the sky has prompted the city treasurer" );
@@ -1976,8 +2562,8 @@ public class CrestFallNoMountain
 													{
 														if (gold >= bSwordCost)
 														{
-															System.out.println ( "A chill flows from your palm to the top of your head" );
-															System.out.println ( "and it feels as though you pulled this sword from its own grave" );
+															System.out.println ( "A chill flows from your palm to the top of your head." );
+															System.out.println ( "It feels as though you pulled this sword from its own grave" );
 															System.out.println ( "DMG = 6 - 12" );
 															minDMG = 6;
 															maxDMG = 12;
@@ -2032,6 +2618,7 @@ public class CrestFallNoMountain
 										{
 											System.out.println ( "You recieve a good nights rest. + 75 HP" );
 											hp += 75;
+											points -= 75;
 											gold -= INNCOST;
 											if (hp > hpMax)
 											{
@@ -2081,29 +2668,59 @@ public class CrestFallNoMountain
 														System.out.println ( "-" + Drunkass + " HP. " + "HP is " + hp);
 														if (hp < 1)
 														{
-															System.out.println ( "You Dead" );
+															System.out.println ( "GAME OVER.  SCORE: " + points );
 															System.exit(0);
 														}
 													}
-													  //key in enter to continue
-													System.out.println ( "press Enter to attack" );
-													KeyIn.nextLine ( );
+													 //battle decision
+													System.out.println ( "1-Attack, 5-EEL Sauce (" + hpPot + "), 0-Flee" );
+													battleDec = input.nextInt();
+													if (battleDec == 0) {
+														hitChance = (int) ( Math.random ( ) * 8 + 3);  //chance to flee
+														if (evade > hitChance) {
+															System.out.println ( "You run away! Coward!" );
+															break;
+														}
+														else {
+															System.out.println ( "You try to run, but you trip and fall on your face." );
+														}
+													}
 													
 													//attack
-													hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-													hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
-													if (dex >= hitChance)
-													{
-														System.out.println ( "You hit for " + hitDMG + " DMG" );
-														DrunkassHP -= hitDMG;
+													if (battleDec == 1) {
+														hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+														hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+														if (dex >= hitChance)
+														{
+															System.out.println ( "You hit for " + hitDMG + " DMG" );
+															DrunkassHP -= hitDMG;
+														}
+														else
+														{
+															System.out.println ( "Drunkass falls over and you miss! Lame!" );
+														}
 													}
-													else
-													{
-														System.out.println ( "Drunkass falls over and you miss! Lame!" );
+													//potion
+													if (battleDec == 5) {
+														if (hpPot > 0) {
+															System.out.println ( "That Sauce is Awesome! +25HP" );
+															hpPot --;
+															points -= 25;
+															hp += 25;
+															if (hp > hpMax) {
+																hp = hpMax;
+															}
+														}
+														else {
+															System.out.println ( "Fool! You have no Sauce in supply!" );
+														}
 													}
 												}
-												System.out.println ( "You knocked out that Asshole and picked up the\n gold tooth you knocked out of his mouth. +10 gold" );
-												gold += 10;
+												if (DrunkassHP <= 0) {
+													System.out.println ( "You knocked out that Asshole and picked up the\n gold tooth you knocked out of his mouth. +10 gold" );
+													gold += 10;
+													points += 80;
+												}
 												break;
 												
 												case 2:  // you find the girl
@@ -2145,33 +2762,62 @@ public class CrestFallNoMountain
 																System.out.println ( "-" + vandal + " HP. " + "HP is " + hp);
 																if (hp < 1)
 																{
-																	System.out.println ( "You Dead" );
+																	System.out.println ( "GAME OVER.  SCORE: " + points );
 																	System.exit(0);
 																}
 															}
-															  //key in enter to continue
-															System.out.println ( "press Enter to attack" );
-															KeyIn.nextLine ( );
-															
-															//attack
-															hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-															hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
-															if (dex >= hitChance)
-															{
-																System.out.println ( "You hit for " + hitDMG + " DMG" );
-																vandalHP -= hitDMG;
+															 //battle decision
+															System.out.println ( "1-Attack, 5-EEL Sauce (" + hpPot + "), 0-Flee" );
+															battleDec = input.nextInt();
+															if (battleDec == 0) {
+																hitChance = (int) ( Math.random ( ) * 8 + 5);  //chance to flee
+																if (evade > hitChance) {
+																	System.out.println ( "You run away! Coward!" );
+																	break;
+																}
+																else {
+																	System.out.println ( "You try to run, but you trip and fall on your face." );
+																}
 															}
-															else
-															{
-																System.out.println ( "But you miss! Lame!" );
+															//attack
+															if (battleDec == 1) {
+																hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+																hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+																if (dex >= hitChance)
+																{
+																	System.out.println ( "You hit for " + hitDMG + " DMG" );
+																	vandalHP -= hitDMG;
+																}
+																else
+																{
+																	System.out.println ( "You miss! Lame!" );
+																}
+															}
+															//potion
+															if (battleDec == 5) {
+																if (hpPot > 0) {
+																	System.out.println ( "That Sauce is Awesome! +25HP" );
+																	hpPot --;
+																	points -= 25;
+																	hp += 25;
+																	if (hp > hpMax) {
+																		hp = hpMax;
+																	}
+																}
+																else {
+																	System.out.println ( "Fool! You have no Sauce in supply!" );
+																}
 															}
 														}
-														System.out.println ( "You killed a couple Greasy Vandals and saved the girl!" );
-														System.out.println ( "She is shaken, but thanks you and gives you a kiss on the cheek" );
-														System.out.println ( "It felt so wonderful you breifly closed your eyes\n When you opened them she was gone" );
-														System.out.println ( "+25 Max HP" );
-														hpMax += 25;
-														victim--;
+														if (vandalHP <= 0) {
+															System.out.println ( "You killed a couple Greasy Vandals and saved the girl!" );
+															System.out.println ( "She is shaken, but thanks you and gives you a kiss on the cheek" );
+															System.out.println ( "It felt so wonderful you breifly closed your eyes\n When you opened them she was gone" );
+															System.out.println ( "+25 Max HP" );
+															hpMax += 25;
+															victim--;
+															points += 250;
+														}
 													}
 												}
 												else
@@ -2199,30 +2845,60 @@ public class CrestFallNoMountain
 														System.out.println ( "-" + rat + " HP. " + "HP is " + hp);
 														if (hp < 1)
 														{
-															System.out.println ( "You Dead" );
+															System.out.println ( "GAME OVER.  SCORE: " + points );
 															System.exit(0);
 														}
 													}
-													  //key in enter to continue
-													System.out.println ( "press Enter to attack" );
-													KeyIn.nextLine ( );
+													 //battle decision
+													System.out.println ( "1-Attack, 5-EEL Sauce (" + hpPot + "), 0-Flee" );
+													battleDec = input.nextInt();
+													if (battleDec == 0) {
+														hitChance = (int) ( Math.random ( ) * 6 + 6);  //chance to flee
+														if (evade > hitChance) {
+															System.out.println ( "You run away! Coward!" );
+															break;
+														}
+														else {
+															System.out.println ( "You try to run, but you trip and fall on your face." );
+														}
+													}
 													
 													//attack
-													hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-													hitChance = (int) ( Math.random ( ) * 9);  //chance to hit
-													if (dex >= hitChance)
-													{
-														System.out.println ( "You hit for " + hitDMG + " DMG" );
-														ratHP -= hitDMG;
+													if (battleDec == 1) {
+														hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+														hitChance = (int) ( Math.random ( ) * 9);  //chance to hit
+														if (dex >= hitChance)
+														{
+															System.out.println ( "You hit for " + hitDMG + " DMG" );
+															ratHP -= hitDMG;
+														}
+														else
+														{
+															System.out.println ( "You miss! Lame!" );
+														}
 													}
-													else
-													{
-														System.out.println ( "But you miss! Lame!" );
+													//potion
+													if (battleDec == 5) {
+														if (hpPot > 0) {
+															System.out.println ( "That Sauce is Awesome! +25HP" );
+															hpPot --;
+															points -= 25;
+															hp += 25;
+															if (hp > hpMax) {
+																hp = hpMax;
+															}
+														}
+														else {
+															System.out.println ( "Fool! You have no Sauce in supply!" );
+														}
 													}
 												}
+												if (ratHP <= 0) {
 												System.out.println ( "You killed a Giant Sewer Rat! Gross!" );
 												System.out.println ( "One of the locals witnessed your heroic deed and hands you 15 gold" );
 												gold += 15;
+												points += 100;
+												}
 											}
 											
 										}
@@ -2285,6 +2961,9 @@ public class CrestFallNoMountain
 				} //end direction N  
 			}//end chapter 2
 		}//end hp > 0
+	KeyIn.close();	
+	input.close();
 	} //Game Over
 
-}
+} 
+
