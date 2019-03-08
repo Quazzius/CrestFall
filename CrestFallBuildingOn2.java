@@ -49,7 +49,7 @@ public class CrestFallBuildingOn2
 			int loser = 0;
 			int fighter = 0;
 			int victim = 1;
-			int points =  0;
+			int points =  0; //total game points
 			int battleDec = 0;
 			int city = 9;
 			int chaosDemonLife = 1;
@@ -665,8 +665,8 @@ public class CrestFallBuildingOn2
 								}
 								if (wolfHP <= 0) {
 									if (hp > 0) {
-										System.out.println ( "You killed the wolves and find their previous victim's bones nearby. +8 gold" );
-										gold += 8;
+										System.out.println ( "You killed the wolves and find their previous victim's bones nearby. +5 gold" );
+										gold += 5;
 										points += 30;
 									}
 								}
@@ -819,8 +819,8 @@ public class CrestFallBuildingOn2
 								}
 								if (mudManHP <= 0) {
 									if (hp > 0) {
-										System.out.println ( "You killed a MudMan! It has some coins stuck to it. + 7 gold" );
-										gold += 7;
+										System.out.println ( "You killed a MudMan! It has some coins stuck to it. + 5 gold" );
+										gold += 5;
 										points += 40;
 									}
 								}
@@ -915,7 +915,7 @@ public class CrestFallBuildingOn2
 						if (wolfHP <= 0) {
 							if (hp > 0) {
 								System.out.println ( "You killed the wolves and find their previous victims bones nearby. +8 gold" );
-								gold += 8;
+								gold += 5;
 								points += 30;
 							}
 						}
@@ -1022,7 +1022,7 @@ public class CrestFallBuildingOn2
 						if (mudManHP <= 0) {
 							if (hp > 0) {
 								System.out.println ( "You killed a MudMan! It has some coins stuck to it. + 7 gold" );
-								gold += 7;
+								gold += 5;
 								points += 40;
 							}
 						}
@@ -1120,8 +1120,8 @@ public class CrestFallBuildingOn2
 						}
 						if (wolfHP <= 0) {
 							if (hp > 0) {
-								System.out.println ( "You killed the wolves and find their previous victims bones nearby. +8 gold" );
-								gold += 8;
+								System.out.println ( "You killed the wolves and find their previous victims bones nearby. +5 gold" );
+								gold += 5;
 								points += 30;
 							}
 						}
@@ -1212,7 +1212,7 @@ public class CrestFallBuildingOn2
 							else 
 							{
 								if (hp > 0) {
-									System.out.println ( "You find a Garnet worth 12 gold! Killer!" );
+									System.out.println ( "You find a Garnet worth 8 gold! Killer!" );
 									gold += 8;
 								}
 							}
@@ -1274,8 +1274,8 @@ public class CrestFallBuildingOn2
 						}
 						if (mudManHP <= 0) {
 							if (hp > 0) {
-								System.out.println ( "You killed a MudMan! It has some coins stuck to it. + 7 gold" );
-								gold += 7;
+								System.out.println ( "You killed a MudMan! It has some coins stuck to it. + 5 gold" );
+								gold += 5;
 								points += 40;
 							}
 						}
@@ -1328,6 +1328,8 @@ public class CrestFallBuildingOn2
 						}
 							
 						System.out.println ( "What would you like?" );
+						int gGameCost = 5;
+						System.out.println ( "0 - Guessing Game (5 gold) Double your money and get points!" );
 						int sSwordCost = 10;
 						System.out.println ( "1 - A reliable steel Short Sword. DMG: 3-6. (10 gold). In Stock: " + sSword );
 						int lSwordCost = 15;
@@ -1345,12 +1347,99 @@ public class CrestFallBuildingOn2
 						System.out.println ( "You have " + gold + " gold");
 						do {
 							merch = input.nextInt();   //input decision
-							if (merch < 1 || merch > 8) {
+							if (merch < 0 || merch > 8) {
 								System.out.println ( "You must enter a valid number (1-8)" );
 							}
-						} while (merch < 1 || merch > 8);
+						} while (merch < 0 || merch > 8);
 						switch (merch)
 						{
+							case 0:
+								if (gold < gGameCost) {
+									System.out.println ( "go get some more gold" );
+								}
+								else {
+									int randNumber = 1;   //initialize nested loop
+									int game = 1;   //game count
+									int score = 6;  //player score, will decrement before first play to 5
+									char play = 'y';  //initialize loop to play game
+									int number = -9999;  //initialize guess loop
+									int ttlpoints = 0;  //total point accumulator
+									int gameGold = gold;
+									
+									//Game start
+									while (play =='y')
+									{
+										gold -= gGameCost;
+										randNumber = (int) ( Math.random ( ) * 12 + 1 );  //Generate randNumberom number
+										
+										//user number must not equal randNumberom number to guess again
+										while (number != randNumber)
+										{
+											score--; //minus one point per guess. starts at 5.
+											if (score < 0)
+											{
+												score = 0; //set score to zero if less than zero
+											}
+											System.out.println ( score * 2 + " Points remain." ); 
+											
+											//prompt user for number and output results
+											System.out.println ("Enter a number between 1 and 12");
+											number = input.nextInt ( );  //users guess
+											System.out.println ( "Your number was: " + number);
+										
+											//output if the number was too high or too low
+											if (number > randNumber)
+											{
+												System.out.println ( "Too high, guess again!" );
+											}
+											if (number < randNumber)
+											{
+												System.out.println ( "Too low, guess again!" );
+											}
+										} //end loop when number = randNumber
+										
+										ttlpoints += score * 2; //score accumulate to total points
+										System.out.println ( "CORRECT! you get " + score * 2 + " Points and " + score * 2 + " gold! \nPlay Again? y/n" );
+										gold += score * 2;
+										points += score * 2;
+										do //user must answer 'y' or 'n'
+										{
+											play = input.next ( ).toLowerCase ( ).charAt ( 0 );  //user inputs character
+											if (play != 'y' && play != 'n')  //check character input
+											{
+												System.out.println ( "You must enter y or n, Play again?" ); //prompt user for correct input
+											}
+										} while (play != 'y' && play != 'n');  //loop if user enters something other than 'y' or 'n'
+										
+										//variables must be changed for next round
+										if (play == 'y')
+										{
+											if (gold >= gGameCost) {
+												number = -9999;  // reset number
+												score = 6;  //reset score for round (-1 before first guess)
+												game++;   //add one to game number count
+											}
+											else {
+												System.out.println ( "you're out of gold, go get some more... sucker" );
+												play = 'n';
+											}
+										} 
+									}//end loop if user inputs 'n'
+									 //calculate average and output score
+									double avg = (double)ttlpoints / game;
+									System.out.println ("GUESSING GAME OVER. Total points: " + ttlpoints);
+									System.out.println ("Games played: " + game);
+									System.out.println ( "Average Score: " + avg );
+									int rev = gold - gameGold;
+									if (gold > gameGold) {
+										System.out.println ( "You made " + rev + " gold\n" );
+									}
+									else {
+										System.out.println ( "Loser. " + rev + " gold" );
+									}
+								}
+								break;
+								
 							case 1:  //buy  short sword
 								if (sSword > 0)
 								{
