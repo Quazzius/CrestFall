@@ -1,10 +1,11 @@
+
 import java.util.Scanner;
 
 public class CrestFallGame
 {
-
 	public static void main( String[ ] args )
 	{
+	
 		Scanner input = new Scanner(System.in);
 		Scanner KeyIn = new Scanner(System.in);
 		char playGame = 'y';
@@ -49,11 +50,11 @@ public class CrestFallGame
 			int loser = 0;
 			int fighter = 0;
 			int victim = 1;
-			int points =  0;
+			int points =  0; //total game points
 			int battleDec = 0;
 			int city = 9;
 			int chaosDemonLife = 1;
-			
+			double start = 0.0;
 			
 			//character class
 			System.out.println ( "Pick your class type" );
@@ -114,15 +115,15 @@ public class CrestFallGame
 				hp = 0;
 			}
 			
-			//is alive
+			//loop while living
 			while (hp > 0)
 			{
-				int attack = maxDMG - minDMG + 1;  //dmg range
+				start = System.currentTimeMillis ( );// start timer
+				int attack = maxDMG - minDMG + 1;  //damage range
 				while (chapter == 1)
 				{
 					//Journey through the forest
 					int forestCount = 0;
-					
 					System.out.println ( "You begin your journey heading South through the overgrown Elderwood forest" );
 					while (forestCount < 3)
 					{
@@ -133,10 +134,10 @@ public class CrestFallGame
 							switch (enemy)
 							{
 							case 1: System.out.println ("You stumbled accross a Bear, Fuck" );   //Bear fight
-							int bearHP = 12;
+							int bearHP = 12;   //enemy health initialize
 							while (bearHP > 0)  //fight sequence
 							{	
-								int bear = (int) ( Math.random ( ) * 8 + 3 );
+								int bear = (int) ( Math.random ( ) * 8 + 3 ); //enemy attack range
 								System.out.println ( "Bear attacks for " + bear + " damage.");
 								hitChance = (int) ( Math.random ( ) * 10 + 4);  //chance to evade
 								if (evade > hitChance) 
@@ -145,9 +146,9 @@ public class CrestFallGame
 								}
 								else
 								{
-									hp -= bear;
+									hp -= bear; //player attacked
 									System.out.println ( "-" + bear + " HP. " + "HP is " + hp);
-									if (hp < 1)
+									if (hp < 1) //on death condition, reset vars to go to game over
 									{
 										chapter = 0;
 										forestCount = 9;
@@ -158,22 +159,22 @@ public class CrestFallGame
 								  //battle decision
 								System.out.println ( "1-Attack, 0-Flee" );
 								battleDec = input.nextInt();
-								if (battleDec == 0) {
+								if (battleDec == 0) { //flee decision
 									hitChance = (int) ( Math.random ( ) * 8 + 4);  //chance to flee
-									if (evade > hitChance) {
+									if (evade > hitChance) {  //flee successful
 										System.out.println ( "You run away! Coward!" );
 										break;
 									}
-									else {
+									else { //flee unsuccessful
 										System.out.println ( "You try to run, but you trip and fall on your face." );
 									}
 								}
 								
 								//attack
 								if (battleDec == 1) {
-									hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+									hitDMG = (int) ( Math.random ( ) * attack + minDMG);  //possible damage range
 									hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
-									if (dex >= hitChance)
+									if (dex >= hitChance)  //success to hit
 									{
 										System.out.println ( "You hit for " + hitDMG + " DMG" );
 										bearHP -= hitDMG;
@@ -184,7 +185,7 @@ public class CrestFallGame
 									}
 								}
 							}
-							if (bearHP <= 0) {
+							if (bearHP <= 0) { //enemy dead, get rewards
 								if (hp > 0) {
 									System.out.println ( "You killed a Bear! +5 gold for some reason" );
 									gold += 5;
@@ -610,7 +611,7 @@ public class CrestFallGame
 								int enemy = (int) ( Math.random ( ) * 3 + 1);  //random enemy
 								switch (enemy)
 								{
-								case 1: System.out.println ("A small pack of muddy wolves surround you!" ); //wolf pack
+								case 1: System.out.println ("A small pack of wolves surround you!" ); //wolf pack
 								int wolfHP = 15;
 								while (wolfHP > 0)  //fight sequence
 								{	
@@ -665,8 +666,8 @@ public class CrestFallGame
 								}
 								if (wolfHP <= 0) {
 									if (hp > 0) {
-										System.out.println ( "You killed the wolves and find their previous victim's bones nearby. +8 gold" );
-										gold += 8;
+										System.out.println ( "You killed the wolves and find their previous victim's bones nearby. +5 gold" );
+										gold += 5;
 										points += 30;
 									}
 								}
@@ -819,8 +820,8 @@ public class CrestFallGame
 								}
 								if (mudManHP <= 0) {
 									if (hp > 0) {
-										System.out.println ( "You killed a MudMan! It has some coins stuck to it. + 7 gold" );
-										gold += 7;
+										System.out.println ( "You killed a MudMan! It has some coins stuck to it. + 5 gold" );
+										gold += 5;
 										points += 40;
 									}
 								}
@@ -859,7 +860,7 @@ public class CrestFallGame
 						int enemy = (int) ( Math.random ( ) * 3 + 1);  //random enemy
 						switch (enemy)
 						{
-						case 1: System.out.println ("A small pack of muddy wolves surround you!" ); //wolf pack
+						case 1: System.out.println ("A small pack of wolves surround you!" ); //wolf pack
 						int wolfHP = 15;
 						while (wolfHP > 0)  //fight sequence
 						{	
@@ -915,7 +916,7 @@ public class CrestFallGame
 						if (wolfHP <= 0) {
 							if (hp > 0) {
 								System.out.println ( "You killed the wolves and find their previous victims bones nearby. +8 gold" );
-								gold += 8;
+								gold += 5;
 								points += 30;
 							}
 						}
@@ -1022,7 +1023,7 @@ public class CrestFallGame
 						if (mudManHP <= 0) {
 							if (hp > 0) {
 								System.out.println ( "You killed a MudMan! It has some coins stuck to it. + 7 gold" );
-								gold += 7;
+								gold += 5;
 								points += 40;
 							}
 						}
@@ -1065,7 +1066,7 @@ public class CrestFallGame
 						int enemy = (int) ( Math.random ( ) * 3 + 1);  //random enemy
 						switch (enemy)
 						{
-						case 1: System.out.println ("A small pack of muddy wolves surround you!" ); //wolf pack
+						case 1: System.out.println ("A small pack of wolves surround you!" ); //wolf pack
 						int wolfHP = 15;
 						while (wolfHP > 0)  //fight sequence
 						{	
@@ -1120,8 +1121,8 @@ public class CrestFallGame
 						}
 						if (wolfHP <= 0) {
 							if (hp > 0) {
-								System.out.println ( "You killed the wolves and find their previous victims bones nearby. +8 gold" );
-								gold += 8;
+								System.out.println ( "You killed the wolves and find their previous victims bones nearby. +5 gold" );
+								gold += 5;
 								points += 30;
 							}
 						}
@@ -1212,7 +1213,7 @@ public class CrestFallGame
 							else 
 							{
 								if (hp > 0) {
-									System.out.println ( "You find a Garnet worth 12 gold! Killer!" );
+									System.out.println ( "You find a Garnet worth 8 gold! Killer!" );
 									gold += 8;
 								}
 							}
@@ -1274,8 +1275,8 @@ public class CrestFallGame
 						}
 						if (mudManHP <= 0) {
 							if (hp > 0) {
-								System.out.println ( "You killed a MudMan! It has some coins stuck to it. + 7 gold" );
-								gold += 7;
+								System.out.println ( "You killed a MudMan! It has some coins stuck to it. + 5 gold" );
+								gold += 5;
 								points += 40;
 							}
 						}
@@ -1316,14 +1317,20 @@ public class CrestFallGame
 					{
 						if (merchCount == 0)
 						{
+							if (chaosDemonLife == 0) {
+								System.out.println ( "You return to the Merchant Camp.\nYou are relieved to be walking amongst others again" );
+								System.out.println ( "Recounting the first time making your way to this oasis,\nYou you can't help but feel an emptyness as if you lost a part of yourself on that mountain." );
+							}
 							System.out.println ( "There are a couple of Vendors hanging about..." );
 							System.out.println ( "One of them turns to you and asks \"Are you in need?\" " );
 							System.out.println ( "He then unrolls his mat to show you his various wares" );
-							System.out.println ( "You hear him whisper what sounds like \"its a secret to everyone\" ");
+							System.out.println ( "You hear him whisper what sounds like \"its a secret to everybody\" ");
 							merchCount++;
 						}
 							
 						System.out.println ( "What would you like?" );
+						int gGameCost = 5;
+						System.out.println ( "0 - Guessing Game (5 gold) Double your money and get points!" );
 						int sSwordCost = 10;
 						System.out.println ( "1 - A reliable steel Short Sword. DMG: 3-6. (10 gold). In Stock: " + sSword );
 						int lSwordCost = 15;
@@ -1339,9 +1346,101 @@ public class CrestFallGame
 						System.out.println ( "7 - View Stats" );
 						System.out.println ( "8 - Exit Merchant Camp" );
 						System.out.println ( "You have " + gold + " gold");
-						merch = input.nextInt();   //input decision
+						do {
+							merch = input.nextInt();   //input decision
+							if (merch < 0 || merch > 8) {
+								System.out.println ( "You must enter a valid number (1-8)" );
+							}
+						} while (merch < 0 || merch > 8);
 						switch (merch)
 						{
+							case 0:
+								if (gold < gGameCost) {
+									System.out.println ( "go get some more gold" );
+								}
+								else {
+									int randNumber = 1;   //initialize nested loop
+									int game = 1;   //game count
+									int score = 6;  //player score, will decrement before first play to 5
+									char play = 'y';  //initialize loop to play game
+									int number = -9999;  //initialize guess loop
+									int ttlpoints = 0;  //total point accumulator
+									int gameGold = gold;
+									
+									//Game start
+									while (play =='y')
+									{
+										gold -= gGameCost;
+										randNumber = (int) ( Math.random ( ) * 12 + 1 );  //Generate randNumberom number
+										
+										//user number must not equal randNumberom number to guess again
+										while (number != randNumber)
+										{
+											score--; //minus one point per guess. starts at 5.
+											if (score < 0)
+											{
+												score = 0; //set score to zero if less than zero
+											}
+											System.out.println ( score * 2 + " Points remain." ); 
+											
+											//prompt user for number and output results
+											System.out.println ("Enter a number between 1 and 12");
+											number = input.nextInt ( );  //users guess
+											System.out.println ( "Your number was: " + number);
+										
+											//output if the number was too high or too low
+											if (number > randNumber)
+											{
+												System.out.println ( "Too high, guess again!" );
+											}
+											if (number < randNumber)
+											{
+												System.out.println ( "Too low, guess again!" );
+											}
+										} //end loop when number = randNumber
+										
+										ttlpoints += score * 2; //score accumulate to total points
+										System.out.println ( "CORRECT! you get " + score * 2 + " Points and " + score * 2 + " gold! \nPlay Again? y/n" );
+										gold += score * 2;
+										points += score * 2;
+										do //user must answer 'y' or 'n'
+										{
+											play = input.next ( ).toLowerCase ( ).charAt ( 0 );  //user inputs character
+											if (play != 'y' && play != 'n')  //check character input
+											{
+												System.out.println ( "You must enter y or n, Play again?" ); //prompt user for correct input
+											}
+										} while (play != 'y' && play != 'n');  //loop if user enters something other than 'y' or 'n'
+										
+										//variables must be changed for next round
+										if (play == 'y')
+										{
+											if (gold >= gGameCost) {
+												number = -9999;  // reset number
+												score = 6;  //reset score for round (-1 before first guess)
+												game++;   //add one to game number count
+											}
+											else {
+												System.out.println ( "you're out of gold, go get some more... sucker" );
+												play = 'n';
+											}
+										} 
+									}//end loop if user inputs 'n'
+									 //calculate average and output score
+									double avg = (double)ttlpoints / game;
+									System.out.println ("GUESSING GAME OVER. Total points: " + ttlpoints);
+									System.out.println ("Games played: " + game);
+									System.out.println ( "Average Score: " + avg );
+									int rev = gold - gameGold;
+									if (gold > gameGold) {
+										System.out.println ( "You made " + rev + " gold\n" );
+									}
+									else {
+										System.out.println ( "Loser. " + rev + " gold" );
+									}
+								}
+								break;
+								
 							case 1:  //buy  short sword
 								if (sSword > 0)
 								{
@@ -1512,10 +1611,10 @@ public class CrestFallGame
 										rand = (int) ( Math.random ( ) * range + minEnc );  //encounter chance
 										if (encNumber == rand)
 										{
-											int enemy = (int) ( Math.random ( ) * 3 + 1);  //random enemy
+											int enemy = (int) ( Math.random ( ) * 4 + 1);  //random enemy
 											switch (enemy)
 											{
-												case 1: System.out.println ("A small pack of muddy wolves surround you!" ); //wolf pack
+												case 1: System.out.println ("A small pack of wolves surround you!" ); //wolf pack
 												int wolfHP = 15;
 												while (wolfHP > 0)  //fight sequence
 												{	
@@ -1586,8 +1685,8 @@ public class CrestFallGame
 												}
 												if (wolfHP <= 0) {
 													if (hp > 0) {
-														System.out.println ( "You killed the wolves and find their previous victim's bones nearby. +8 gold" );
-														gold += 8;
+														System.out.println ( "You killed the wolves and find their previous victim's bones nearby. +5 gold" );
+														gold += 5;
 														points += 30;
 													}
 												}
@@ -1615,7 +1714,7 @@ public class CrestFallGame
 													if (ruse >= 4)
 													{
 														System.out.println ( "It was a ruse!" );
-														int wraithHP = 16;
+														int wraithHP = 18;
 														while (wraithHP > 0)  //fight sequence
 														{	
 															int wraith = (int) ( Math.random ( ) * 8 + 4 );
@@ -1702,12 +1801,12 @@ public class CrestFallGame
 												}
 												break;
 												
-												case 3: System.out.println ( "A Mud Man grows rapidly in front of you like an Oozing pillar " );   //MudMan
+												case 3: System.out.println ( "A MudMan grows rapidly in front of you like an Oozing pillar " );   //MudMan
 												int mudManHP = 14;
 												while (mudManHP > 0)  //fight sequence
 												{	
 													int mudMan = (int) ( Math.random ( ) * 8 + 3 );
-													System.out.println ( "mudMan attacks for " + mudMan + " damage.");
+													System.out.println ( "MudMan attacks for " + mudMan + " damage.");
 													hitChance = (int) ( Math.random ( ) * 11 + 5);  //chance to evade
 													if (evade > hitChance) 
 													{
@@ -1773,9 +1872,93 @@ public class CrestFallGame
 												}
 												if (mudManHP <= 0) {
 													if (hp > 0) {
-														System.out.println ( "You killed a MudMan! It has some coins stuck to it. + 7 gold" );
-														gold += 7;
+														System.out.println ( "You killed a MudMan! It has some coins stuck to it. + 5 gold" );
+														gold += 5;
 														points += 40;
+													}
+												}
+												break;
+												
+												case 4: System.out.println ("A Giant Leech! Disgusting!" ); //leech 
+												int leechHP = 14;
+												while (leechHP > 0)  //fight sequence
+												{	
+													int leech = (int) ( Math.random ( ) * 8 + 3 );
+													System.out.println ( "Leech swats for " + leech + " damage.");
+													hitChance = (int) ( Math.random ( ) * 12 + 4);  //chance to evade
+													if (evade > hitChance) 
+													{
+														System.out.println ( "But Misses!" );
+													}
+													else
+													{
+														hp -= leech;
+														System.out.println ( "-" + leech + " HP. " + "HP is " + hp);
+														double vamp = leech * 0.25;  //leech heals 25% damage given
+														int iVamp = (int) vamp;
+														if (iVamp > 0) {   // output if necessary
+															System.out.println ( "Giant Leech heals " + iVamp + " HP" );
+															leechHP += iVamp;
+														}
+														if (hp < 1)
+														{
+															chapter = 0;
+															direction = 'A';
+															merch = 0;
+															swampRoadCount = 9;
+															leechHP = 0;
+															break;
+														}
+													}
+													 //battle decision
+													System.out.println ( "1-Attack, 5-EEL Sauce (" + hpPot + "), 0-Flee" );
+													battleDec = input.nextInt();
+													if (battleDec == 0) {
+														hitChance = (int) ( Math.random ( ) * 8 + 4);  //chance to flee
+														if (evade > hitChance) {
+															System.out.println ( "You run away! Coward!" );
+															break;
+														}
+														else {
+															System.out.println ( "You try to run, but you trip and fall on your face." );
+														}
+													}
+													
+													//attack
+													if (battleDec == 1) {
+														hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+														hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+														if (dex >= hitChance)
+														{
+															System.out.println ( "You hit for " + hitDMG + " DMG" );
+															leechHP -= hitDMG;
+														}
+														else
+														{
+															System.out.println ( "You miss! Lame!" );
+														}
+													}
+													//potion
+													if (battleDec == 5) {
+														if (hpPot > 0) {
+															System.out.println ( "That Sauce is Awesome! +25HP" );
+															hpPot --;
+															points -= 25;
+															hp += 25;
+															if (hp > hpMax) {
+																hp = hpMax;
+															}
+														}
+														else {
+															System.out.println ( "Fool! You have no Sauce in supply!" );
+														}
+													}
+												}
+												if (leechHP <= 0) {
+													if (hp > 0) {
+														System.out.println ( "You Skewer the Giant Leech. Gross! it expells 6 gold" );
+														gold += 6;
+														points += 35;
 													}
 												}
 												if (hp < 1) {
@@ -1820,7 +2003,7 @@ public class CrestFallGame
 								rand = (int) ( Math.random ( ) * range + minEnc );  //encounter chance
 								if (encNumber == rand)
 								{
-									int enemy = (int) ( Math.random ( ) * 3 + 1);  //random enemy
+									int enemy = (int) ( Math.random ( ) * 4 + 1);  //random enemy
 									switch (enemy)
 									{
 										case 1: System.out.println ("A viscious looking pack of wolves surround you!" ); //wolf pack
@@ -1844,6 +2027,7 @@ public class CrestFallGame
 													direction = 'A';
 													merch = 0;
 													swampRoadCount = 9;
+													lake = 'n';
 													wolfHP = 0;
 													break;
 												}
@@ -1894,8 +2078,8 @@ public class CrestFallGame
 										}
 										if (wolfHP <= 0) {
 											if (hp > 0) {
-												System.out.println ( "You killed the wolves and find their previous victim's bones nearby. +10 gold" );
-												gold += 10;
+												System.out.println ( "You killed the wolves and find their previous victim's bones nearby. + 7 gold" );
+												gold += 7;
 												points += 40;
 											}
 										}
@@ -1945,16 +2129,17 @@ public class CrestFallGame
 											else
 											{
 												System.out.println ( "Here is where you met the lady of the lake" );
-												System.out.println ( "You can feel her spirit well up inside of you. Regen 50% MaxHP!" );
-												hp += hpMax / 2;
+												System.out.println ( "You can feel her spirit well up inside of you. Regen 25% MaxHP!" );
+												hp += hpMax / 4;
 												if (hp > hpMax) {
 													hp = hpMax;
 												}
+												System.out.println ( "HP= " + hp );
 											}
 											break;
 										
 										case 3: System.out.println ( "A PooPoo Man plops in front of you from seemingly nowhere. " );   //MudMan
-										int mudManHP = 16;
+										int mudManHP = 20;
 										while (mudManHP > 0)  //fight sequence
 										{	
 											int mudMan = (int) ( Math.random ( ) * 9 + 3 );
@@ -1974,6 +2159,7 @@ public class CrestFallGame
 													direction = 'A';
 													merch = 0;
 													swampRoadCount = 9;
+													lake = 'n';
 													mudManHP = 0;
 													break;
 												}
@@ -2029,6 +2215,91 @@ public class CrestFallGame
 												points += 70;
 											}
 										}
+										break;
+										
+										case 4: System.out.println ("A Massive Leech! Horrifying!" ); //leech 
+										int leechHP = 18;
+										while (leechHP > 0)  //fight sequence
+										{	
+											int leech = (int) ( Math.random ( ) * 8 + 4 ); // damage range
+											System.out.println ( "Leech swats for " + leech + " damage.");
+											hitChance = (int) ( Math.random ( ) * 12 + 4);  //chance to evade
+											if (evade > hitChance) 
+											{
+												System.out.println ( "But Misses!" );
+											}
+											else
+											{
+												hp -= leech;
+												System.out.println ( "-" + leech + " HP. " + "HP is " + hp);
+												double vamp = leech * 0.25;  //leech heals 25% damage given
+												int iVamp = (int) vamp;
+												if (iVamp > 0) {   // output if necessary
+													System.out.println ( "Massive Leech heals " + iVamp + " HP" );
+													leechHP += iVamp;
+												}
+												if (hp < 1)
+												{
+													chapter = 0;
+													direction = 'A';
+													merch = 0;
+													swampRoadCount = 9;
+													lake = 'n';
+													leechHP = 0;
+													break;
+												}
+											}
+											 //battle decision
+											System.out.println ( "1-Attack, 5-EEL Sauce (" + hpPot + "), 0-Flee" );
+											battleDec = input.nextInt();
+											if (battleDec == 0) {
+												hitChance = (int) ( Math.random ( ) * 8 + 4);  //chance to flee
+												if (evade > hitChance) {
+													System.out.println ( "You run away! Coward!" );
+													break;
+												}
+												else {
+													System.out.println ( "You try to run, but you trip and fall on your face." );
+												}
+											}
+											
+											//attack
+											if (battleDec == 1) {
+												hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+												hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+												if (dex >= hitChance)
+												{
+													System.out.println ( "You hit for " + hitDMG + " DMG" );
+													leechHP -= hitDMG;
+												}
+												else
+												{
+													System.out.println ( "You miss! Lame!" );
+												}
+											}
+											//potion
+											if (battleDec == 5) {
+												if (hpPot > 0) {
+													System.out.println ( "That Sauce is Awesome! +25HP" );
+													hpPot --;
+													points -= 25;
+													hp += 25;
+													if (hp > hpMax) {
+														hp = hpMax;
+													}
+												}
+												else {
+													System.out.println ( "Fool! You have no Sauce in supply!" );
+												}
+											}
+										}
+										if (leechHP <= 0) {
+											if (hp > 0) {
+												System.out.println ( "You disembowel the Massive Leech. Gross! it expells 8 gold" );
+												gold += 8;
+												points += 60;
+											}
+										}
 										if (hp < 1) {
 											break;
 										}
@@ -2064,10 +2335,10 @@ public class CrestFallGame
 								rand = (int) ( Math.random ( ) * range + minEnc );  //encounter chance
 								if (encNumber == rand)
 								{
-									int enemy = (int) ( Math.random ( ) * 3 + 1);  //random enemy
+									int enemy = (int) ( Math.random ( ) * 4 + 1);  //random enemy
 									switch (enemy)
 									{
-									case 1: System.out.println ("A small pack of muddy wolves surround you!" ); //wolf pack
+									case 1: System.out.println ("A small pack of wolves surround you!" ); //wolf pack
 									int wolfHP = 15;
 									while (wolfHP > 0)  //fight sequence
 									{	
@@ -2138,8 +2409,8 @@ public class CrestFallGame
 									}
 									if (wolfHP <= 0) {
 										if (hp > 0) {
-											System.out.println ( "You killed the wolves and find their previous victims bones nearby. +8 gold" );
-											gold += 8;
+											System.out.println ( "You killed the wolves and find their previous victims bones nearby. +5 gold" );
+											gold += 5;
 											points += 30;
 										}
 									}
@@ -2324,28 +2595,112 @@ public class CrestFallGame
 									}
 									if (mudManHP <= 0) {
 										if (hp > 0) {
-												System.out.println ( "You killed a MudMan! It has some coins stuck to it. + 7 gold" );
-												gold += 7;
+												System.out.println ( "You killed a MudMan! It has some coins stuck to it. + 5 gold" );
+												gold += 5;
 												points += 40;
+										}
+									}
+									break;
+									
+									case 4: System.out.println ("A Giant Leech! Disgusting!" ); //leech 
+									int leechHP = 14;
+									while (leechHP > 0)  //fight sequence
+									{	
+										int leech = (int) ( Math.random ( ) * 8 + 3 );
+										System.out.println ( "Leech swats for " + leech + " damage.");
+										hitChance = (int) ( Math.random ( ) * 12 + 4);  //chance to evade
+										if (evade > hitChance) 
+										{
+											System.out.println ( "But Misses!" );
+										}
+										else
+										{
+											hp -= leech;
+											System.out.println ( "-" + leech + " HP. " + "HP is " + hp);
+											double vamp = leech * 0.25;  //leech heals 25% damage given
+											int iVamp = (int) vamp;
+											if (iVamp > 0) {   // output if necessary
+												System.out.println ( "Giant Leech heals " + iVamp + " HP" );
+												leechHP += iVamp;
+											}
+											if (hp < 1)
+											{
+												chapter = 0;
+												direction = 'A';
+												merch = 0;
+												swampRoadCount = 9;
+												leechHP = 0;
+												break;
+											}
+										}
+										 //battle decision
+										System.out.println ( "1-Attack, 5-EEL Sauce (" + hpPot + "), 0-Flee" );
+										battleDec = input.nextInt();
+										if (battleDec == 0) {
+											hitChance = (int) ( Math.random ( ) * 8 + 4);  //chance to flee
+											if (evade > hitChance) {
+												System.out.println ( "You run away! Coward!" );
+												break;
+											}
+											else {
+												System.out.println ( "You try to run, but you trip and fall on your face." );
+											}
+										}
+										
+										//attack
+										if (battleDec == 1) {
+											hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+											hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+											if (dex >= hitChance)
+											{
+												System.out.println ( "You hit for " + hitDMG + " DMG" );
+												leechHP -= hitDMG;
+											}
+											else
+											{
+												System.out.println ( "You miss! Lame!" );
+											}
+										}
+										//potion
+										if (battleDec == 5) {
+											if (hpPot > 0) {
+												System.out.println ( "That Sauce is Awesome! +25HP" );
+												hpPot --;
+												points -= 25;
+												hp += 25;
+												if (hp > hpMax) {
+													hp = hpMax;
+												}
+											}
+											else {
+												System.out.println ( "Fool! You have no Sauce in supply!" );
+											}
+										}
+									}
+									if (leechHP <= 0) {
+										if (hp > 0) {
+											System.out.println ( "You Skewer the Giant Leech. Gross! it expells 6 gold" );
+											gold += 6;
+											points += 35;
 										}
 									}
 									if (hp < 1) {
 										break;
 									}
 									}
-									if (hp < 1) {
-										break;
-									}
-								}
 								if (hp < 1) {
 									break;
 								}
-								swampRoadCount++;
-								rand = (int) ( Math.random ( ) * range + minEnc );  //encounter chance
-								System.out.println ( "Camp " + swampRoadCount + ". Press Enter to continue West" );
-								KeyIn.nextLine ( );
-								direction = 'N';
-								merchCount = 0;
+							}
+							if (hp < 1) {
+								break;
+							}
+							swampRoadCount++;
+							rand = (int) ( Math.random ( ) * range + minEnc );  //encounter chance
+							System.out.println ( "Camp " + swampRoadCount + ". Press Enter to continue West" );
+							KeyIn.nextLine ( );
+							direction = 'N';
+							merchCount = 0;
 							}// end swamp road 2
 							break;
 								
@@ -2676,9 +3031,14 @@ public class CrestFallGame
 									System.out.println ( "4 - Get a room at the Inn. (20 gold)");
 									System.out.println ( "5 - Wander aimlessly about town" );
 									System.out.println ( "6 - Leave the city" );
+									System.out.println ( "7 - Guessing Game (5) Double you gold and get points!" );
 									System.out.println ( "You have " + gold + " gold");
-								
-									commonBoard = input.nextInt();   //input decision
+									do {
+										commonBoard = input.nextInt();   //input decision
+										if (commonBoard < 0 || commonBoard > 7) {
+											System.out.println ( "You must enter a valid number (0-7)" );
+										}
+									} while (commonBoard < 0 || commonBoard > 7);
 									switch (commonBoard)
 									{
 										case 0:
@@ -2702,9 +3062,9 @@ public class CrestFallGame
 										case 1:  //Read Messages
 											System.out.println ( "1.) Have you purchased your flame retardant wall dividers yet?" );
 											System.out.println ( "2.) An increase in fire raining from the sky has prompted the city treasurer" );
-											System.out.println ( "\t \t to offer a reward of 50 gold to whomever can put an end to it." );
+											System.out.println ( "\tto offer a reward of 50 gold to whomever can put an end to it." );
 											System.out.println ( "3.) Please attend tomorrows memorial service for the Brave Soldiers" );
-											System.out.println ( "\t \t who went to the mountain and gave their lives to help our fair City " );
+											System.out.println ( "\twho went to the mountain and gave their lives to help our fair City " );
 											System.out.println ( "Press Enter to  Return to Common Board" );
 											KeyIn.nextLine();
 											break;
@@ -2899,7 +3259,7 @@ public class CrestFallGame
 												rand = (int) ( Math.random ( ) * range + minEnc );  //encounter chance
 												if (encNumber == rand)
 												{
-													int enemy = (int) ( Math.random ( ) * 3 + 1);  //random enemy
+													int enemy = (int) ( Math.random ( ) * 4 + 1);  //random enemy
 													switch (enemy)
 													{
 													case 1: System.out.println ("A fight started up outside the pub \n and some Drunkass threw his tankard at you..." ); //thief pack
@@ -2946,7 +3306,7 @@ public class CrestFallGame
 														//attack
 														if (battleDec == 1) {
 															hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-															hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+															hitChance = (int) ( Math.random ( ) * 8 + 1);  //chance to hit
 															if (dex >= hitChance)
 															{
 																System.out.println ( "You hit for " + hitDMG + " DMG" );
@@ -3047,7 +3407,7 @@ public class CrestFallGame
 																//attack
 																if (battleDec == 1) {
 																	hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-																	hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+																	hitChance = (int) ( Math.random ( ) * 8 + 1);  //chance to hit
 																	if (dex >= hitChance)
 																	{
 																		System.out.println ( "You hit for " + hitDMG + " DMG" );
@@ -3141,7 +3501,7 @@ public class CrestFallGame
 														//attack
 														if (battleDec == 1) {
 															hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-															hitChance = (int) ( Math.random ( ) * 9);  //chance to hit
+															hitChance = (int) ( Math.random ( ) * 8 + 1);  //chance to hit
 															if (dex >= hitChance)
 															{
 																System.out.println ( "You hit for " + hitDMG + " DMG" );
@@ -3174,6 +3534,92 @@ public class CrestFallGame
 															System.out.println ( "One of the locals witnessed your heroic deed and hands you 15 gold" );
 															gold += 15;
 															points += 100;
+														}
+													}
+													break;
+													
+													case 4: System.out.println ("A robed figure leaps from the shadows and stabs at you without warning" ); //cultist 
+													int cultistHP = 20;
+													while (cultistHP > 0)  //fight sequence
+													{	
+														int cultist = (int) ( Math.random ( ) * 8 + 5 );
+														System.out.println ( "Cultist stabs wildly for " + cultist + " damage.");
+														hitChance = (int) ( Math.random ( ) * 12 + 5);  //chance to evade
+														if (evade > hitChance) 
+														{
+															System.out.println ( "But Misses!" );
+														}
+														else
+														{
+															hp -= cultist;
+															System.out.println ( "-" + cultist + " HP. " + "HP is " + hp);
+															double vamp = cultist * 0.25;  //cultist heals 25% damage given
+															int iVamp = (int) vamp;
+															if (iVamp > 0) {   // output if necessary
+																System.out.println ( "Cultist heals " + iVamp + " HP" );
+																cultistHP += iVamp;
+															}
+															if (hp < 1)
+															{
+																chapter = 0;
+																direction = 'A';
+																merch = 0;
+																cityRoadCount = 9;
+																citySearch = 'n';
+																city = 6;
+																cultistHP = 0;
+																break;
+															}
+														}
+														 //battle decision
+														System.out.println ( "1-Attack, 5-EEL Sauce (" + hpPot + "), 0-Flee" );
+														battleDec = input.nextInt();
+														if (battleDec == 0) {
+															hitChance = (int) ( Math.random ( ) * 7 + 5);  //chance to flee
+															if (evade > hitChance) {
+																System.out.println ( "You run away! Coward!" );
+																break;
+															}
+															else {
+																System.out.println ( "You try to run, but you trip and fall on your face." );
+															}
+														}
+														
+														//attack
+														if (battleDec == 1) {
+															hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+															hitChance = (int) ( Math.random ( ) * 8 + 1);  //chance to hit
+															if (dex >= hitChance)
+															{
+																System.out.println ( "You hit for " + hitDMG + " DMG" );
+																cultistHP -= hitDMG;
+															}
+															else
+															{
+																System.out.println ( "You miss! Lame!" );
+															}
+														}
+														//potion
+														if (battleDec == 5) {
+															if (hpPot > 0) {
+																System.out.println ( "That Sauce is Awesome! +25HP" );
+																hpPot --;
+																points -= 25;
+																hp += 25;
+																if (hp > hpMax) {
+																	hp = hpMax;
+																}
+															}
+															else {
+																System.out.println ( "Fool! You have no Sauce in supply!" );
+															}
+														}
+													}
+													if (cultistHP <= 0) {
+														if (hp > 0) {
+															System.out.println ( "You decapitate the Cultist of Chaos... thier purse holds 12 gold" );
+															gold += 12;
+															points += 110;
 														}
 													}
 													if (hp < 1) {
@@ -3256,8 +3702,92 @@ public class CrestFallGame
 														city = 9;
 													}
 												}
-												if (hp < 1) {
-													break;
+											}
+											break;
+											
+										case 7:
+											if (gold < gGameCost) {
+												System.out.println ( "go get some more gold" );
+											}
+											else {
+												int randNumber = 1;   //initialize nested loop
+												int game = 1;   //game count
+												int score = 6;  //player score, will decrement before first play to 5
+												char play = 'y';  //initialize loop to play game
+												int number = -9999;  //initialize guess loop
+												int ttlpoints = 0;  //total point accumulator
+												int gameGold = gold;
+												
+												//Game start
+												while (play =='y')
+												{
+													gold -= gGameCost;
+													randNumber = (int) ( Math.random ( ) * 12 + 1 );  //Generate randNumberom number
+													
+													//user number must not equal randNumberom number to guess again
+													while (number != randNumber)
+													{
+														score--; //minus one point per guess. starts at 5.
+														if (score < 0)
+														{
+															score = 0; //set score to zero if less than zero
+														}
+														System.out.println ( score * 2 + " Points remain." ); 
+														
+														//prompt user for number and output results
+														System.out.println ("Enter a number between 1 and 12");
+														number = input.nextInt ( );  //users guess
+														System.out.println ( "Your number was: " + number);
+													
+														//output if the number was too high or too low
+														if (number > randNumber)
+														{
+															System.out.println ( "Too high, guess again!" );
+														}
+														if (number < randNumber)
+														{
+															System.out.println ( "Too low, guess again!" );
+														}
+													} //end loop when number = randNumber
+													
+													ttlpoints += score * 2; //score accumulate to total points
+													System.out.println ( "CORRECT! you get " + score * 2 + " Points and " + score * 2 + " gold! \nPlay Again? y/n" );
+													gold += score * 2;
+													points += score * 2;
+													do //user must answer 'y' or 'n'
+													{
+														play = input.next ( ).toLowerCase ( ).charAt ( 0 );  //user inputs character
+														if (play != 'y' && play != 'n')  //check character input
+														{
+															System.out.println ( "You must enter y or n, Play again?" ); //prompt user for correct input
+														}
+													} while (play != 'y' && play != 'n');  //loop if user enters something other than 'y' or 'n'
+													
+													//variables must be changed for next round
+													if (play == 'y')
+													{
+														if (gold >= gGameCost) {
+															number = -9999;  // reset number
+															score = 6;  //reset score for round (-1 before first guess)
+															game++;   //add one to game number count
+														}
+														else {
+															System.out.println ( "you're out of gold, go get some more... sucker" );
+															play = 'n';
+														}
+													} 
+												}//end loop if user inputs 'n'
+												 //calculate average and output score
+												double avg = (double)ttlpoints / game;
+												System.out.println ("GUESSING GAME OVER. Total points: " + ttlpoints);
+												System.out.println ("Games played: " + game);
+												System.out.println ( "Average Score: " + avg );
+												int rev = gold - gameGold;
+												if (gold > gameGold) {
+													System.out.println ( "You made " + rev + " gold\n" );
+												}
+												else {
+													System.out.println ( "Loser. " + rev + " gold" );
 												}
 											}
 											if (hp < 1) {
@@ -3282,7 +3812,7 @@ public class CrestFallGame
 									rand = (int) ( Math.random ( ) * range + minEnc );  //encounter chance
 									if (encNumber == rand)
 									{
-										int enemy = (int) ( Math.random ( ) * 3 + 1);  //random enemy
+										int enemy = (int) ( Math.random ( ) * 4 + 1);  //random enemy
 										switch (enemy)
 										{
 											case 1: System.out.println ("The surrounding rocks shimmer... A Fire Sprite floats closer" ); //fireSprite pack
@@ -3328,7 +3858,7 @@ public class CrestFallGame
 												//attack
 												if (battleDec == 1) {
 													hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-													hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+													hitChance = (int) ( Math.random ( ) * 9 + 1);  //chance to hit
 													if (dex >= hitChance)
 													{
 														System.out.println ( "You hit for " + hitDMG + " DMG" );
@@ -3428,7 +3958,7 @@ public class CrestFallGame
 														//attack
 														if (battleDec == 1) {
 															hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-															hitChance = (int) ( Math.random ( ) * 9);  //chance to hit
+															hitChance = (int) ( Math.random ( ) * 9 + 1);  //chance to hit
 															if (dex >= hitChance)
 															{
 																System.out.println ( "You hit for " + hitDMG + " DMG" );
@@ -3517,7 +4047,7 @@ public class CrestFallGame
 												//attack
 												if (battleDec == 1) {
 													hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-													hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+													hitChance = (int) ( Math.random ( ) * 8 + 1);  //chance to hit
 													if (dex >= hitChance)
 													{
 														System.out.println ( "You hit for " + hitDMG + " DMG" );
@@ -3548,7 +4078,92 @@ public class CrestFallGame
 												if (hp > 0) {
 													System.out.println ( "You killed a Mountain Troll! Wow! Its pouch holds 20 gold" );
 													gold += 20;
-													points += 135;
+													points += 140;
+												}
+											}
+											break;
+											
+											case 4: System.out.println ("The sky darkens. You look above to see a colony of thirsty Vampire Bats" ); //bat 
+											int batHP = 30;
+											while (batHP > 0)  //fight sequence
+											{	
+												int bat = (int) ( Math.random ( ) * 5 + 7 );
+												System.out.println ( "Vampire Bat swoops for " + bat + " damage.");
+												hitChance = (int) ( Math.random ( ) * 12 + 5);  //chance to evade
+												if (evade > hitChance) 
+												{
+													System.out.println ( "But Misses!" );
+												}
+												else
+												{
+													hp -= bat;
+													System.out.println ( "-" + bat + " HP. " + "HP is " + hp);
+													double vamp = bat * 0.25;  //bat heals 25% damage given
+													int iVamp = (int) vamp;
+													if (iVamp > 0) {   // output if necessary
+														System.out.println ( "Bat Colony heals " + iVamp + " HP" );
+														batHP += iVamp;
+													}
+													if (hp < 1)
+													{
+														chapter = 0;
+														direction = 'A';
+														merch = 0;
+														mtnRoadCount = 9;
+														city = 6;
+														batHP = 0;
+														break;
+													}
+												}
+												 //battle decision
+												System.out.println ( "1-Attack, 5-EEL Sauce (" + hpPot + "), 0-Flee" );
+												battleDec = input.nextInt();
+												if (battleDec == 0) {
+													hitChance = (int) ( Math.random ( ) * 7 + 5);  //chance to flee
+													if (evade > hitChance) {
+														System.out.println ( "You run away! Coward!" );
+														break;
+													}
+													else {
+														System.out.println ( "You try to run, but you trip and fall on your face." );
+													}
+												}
+												
+												//attack
+												if (battleDec == 1) {
+													hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+													hitChance = (int) ( Math.random ( ) * 9 + 1);  //chance to hit
+													if (dex >= hitChance)
+													{
+														System.out.println ( "You hit for " + hitDMG + " DMG" );
+														batHP -= hitDMG;
+													}
+													else
+													{
+														System.out.println ( "You miss! Lame!" );
+													}
+												}
+												//potion
+												if (battleDec == 5) {
+													if (hpPot > 0) {
+														System.out.println ( "That Sauce is Awesome! +25HP" );
+														hpPot --;
+														points -= 25;
+														hp += 25;
+														if (hp > hpMax) {
+															hp = hpMax;
+														}
+													}
+													else {
+														System.out.println ( "Fool! You have no Sauce in supply!" );
+													}
+												}
+											}
+											if (batHP <= 0) {
+												if (hp > 0) {
+													System.out.println ( "You slaughter the colony of annoying sky rats.\nYou find 13 gold on a nearby corpse" );
+													gold += 13;
+													points += 120;
 												}
 											}
 											if (hp < 1) {
@@ -3593,7 +4208,7 @@ public class CrestFallGame
 							rand = (int) ( Math.random ( ) * range + minEnc );  //encounter chance
 							if (encNumber == rand)
 							{
-								int enemy = (int) ( Math.random ( ) * 3 + 1);  //random enemy
+								int enemy = (int) ( Math.random ( ) * 4 + 1);  //random enemy
 								switch (enemy)
 								{
 									case 1: System.out.println ("The surrounding rocks shimmer... A Fire Sprite floats closer" ); //fireSprite pack
@@ -3640,7 +4255,7 @@ public class CrestFallGame
 										//attack
 										if (battleDec == 1) {
 											hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-											hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+											hitChance = (int) ( Math.random ( ) * 9 + 1);  //chance to hit
 											if (dex >= hitChance)
 											{
 												System.out.println ( "You hit for " + hitDMG + " DMG" );
@@ -3712,7 +4327,7 @@ public class CrestFallGame
 												}
 												System.out.println ( "Press Enter" );
 												KeyIn.nextLine ( );
-												int chaosDemonHP = 80;
+												int chaosDemonHP = 90;
 												while (chaosDemonHP > 0)  //fight sequence
 												{	
 													int chaosDemon = (int) ( Math.random ( ) * 12 + 6 );
@@ -3754,7 +4369,7 @@ public class CrestFallGame
 													//attack
 													if (battleDec == 1) {
 														hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-														hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+														hitChance = (int) ( Math.random ( ) * 9 + 1);  //chance to hit
 														if (dex >= hitChance)
 														{
 															System.out.println ( "You hit for " + hitDMG + " DMG" );
@@ -3851,7 +4466,7 @@ public class CrestFallGame
 										//attack
 										if (battleDec == 1) {
 											hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-											hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+											hitChance = (int) ( Math.random ( ) * 8 + 1);  //chance to hit
 											if (dex >= hitChance)
 											{
 												System.out.println ( "You hit for " + hitDMG + " DMG" );
@@ -3883,6 +4498,92 @@ public class CrestFallGame
 											System.out.println ( "You killed a Mountain Troll! Wow! Its pouch holds 20 gold" );
 											gold += 20;
 											points += 135;
+										}
+									}
+									break;
+									
+									case 4: System.out.println ("The sky darkens. You look above to see an enormous colony of thirsty Vampire Bats" ); //bat 
+									int batHP = 40;
+									while (batHP > 0)  //fight sequence
+									{	
+										int bat = (int) ( Math.random ( ) * 5 + 7 );
+										System.out.println ( "Vampire Bat swoops for " + bat + " damage.");
+										hitChance = (int) ( Math.random ( ) * 12 + 5);  //chance to evade
+										if (evade > hitChance) 
+										{
+											System.out.println ( "But Misses!" );
+										}
+										else
+										{
+											hp -= bat;
+											System.out.println ( "-" + bat + " HP. " + "HP is " + hp);
+											double vamp = bat * 0.25;  //bat heals 25% damage given
+											int iVamp = (int) vamp;
+											if (iVamp > 0) {   // output if necessary
+												System.out.println ( "Bat Colony heals " + iVamp + " HP" );
+												batHP += iVamp;
+											}
+											if (hp < 1)
+											{
+												chapter = 0;
+												direction = 'A';
+												merch = 0;
+												mtnRoadCount = 9;
+												city = 6;
+												mountain = 'n';
+												batHP = 0;
+												break;
+											}
+										}
+										 //battle decision
+										System.out.println ( "1-Attack, 5-EEL Sauce (" + hpPot + "), 0-Flee" );
+										battleDec = input.nextInt();
+										if (battleDec == 0) {
+											hitChance = (int) ( Math.random ( ) * 7 + 5);  //chance to flee
+											if (evade > hitChance) {
+												System.out.println ( "You run away! Coward!" );
+												break;
+											}
+											else {
+												System.out.println ( "You try to run, but you trip and fall on your face." );
+											}
+										}
+										
+										//attack
+										if (battleDec == 1) {
+											hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+											hitChance = (int) ( Math.random ( ) * 9 + 1);  //chance to hit
+											if (dex >= hitChance)
+											{
+												System.out.println ( "You hit for " + hitDMG + " DMG" );
+												batHP -= hitDMG;
+											}
+											else
+											{
+												System.out.println ( "You miss! Lame!" );
+											}
+										}
+										//potion
+										if (battleDec == 5) {
+											if (hpPot > 0) {
+												System.out.println ( "That Sauce is Awesome! +25HP" );
+												hpPot --;
+												points -= 25;
+												hp += 25;
+												if (hp > hpMax) {
+													hp = hpMax;
+												}
+											}
+											else {
+												System.out.println ( "Fool! You have no Sauce in supply!" );
+											}
+										}
+									}
+									if (batHP <= 0) {
+										if (hp > 0) {
+											System.out.println ( "You slaughter the colony of annoying sky rats.\nYou find 20 gold on a nearby corpse" );
+											gold += 20;
+											points += 120;
 										}
 									}
 									if (hp < 1) {
@@ -3920,7 +4621,7 @@ public class CrestFallGame
 							rand = (int) ( Math.random ( ) * range + minEnc );  //encounter chance
 							if (encNumber == rand)
 							{
-								int enemy = (int) ( Math.random ( ) * 3 + 1);  //random enemy
+								int enemy = (int) ( Math.random ( ) * 4 + 1);  //random enemy
 								switch (enemy)
 								{
 									case 1: System.out.println ("The surrounding rocks shimmer... A Fire Sprite floats closer" ); //fireSprite pack
@@ -3966,7 +4667,7 @@ public class CrestFallGame
 										//attack
 										if (battleDec == 1) {
 											hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-											hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+											hitChance = (int) ( Math.random ( ) * 9 + 1);  //chance to hit
 											if (dex >= hitChance)
 											{
 												System.out.println ( "You hit for " + hitDMG + " DMG" );
@@ -4066,7 +4767,7 @@ public class CrestFallGame
 												//attack
 												if (battleDec == 1) {
 													hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-													hitChance = (int) ( Math.random ( ) * 9);  //chance to hit
+													hitChance = (int) ( Math.random ( ) * 9 + 1);  //chance to hit
 													if (dex >= hitChance)
 													{
 														System.out.println ( "You hit for " + hitDMG + " DMG" );
@@ -4155,7 +4856,7 @@ public class CrestFallGame
 										//attack
 										if (battleDec == 1) {
 											hitDMG = (int) ( Math.random ( ) * attack + minDMG);
-											hitChance = (int) ( Math.random ( ) * 8);  //chance to hit
+											hitChance = (int) ( Math.random ( ) * 8 + 1);  //chance to hit
 											if (dex >= hitChance)
 											{
 												System.out.println ( "You hit for " + hitDMG + " DMG" );
@@ -4189,6 +4890,91 @@ public class CrestFallGame
 											points += 135;
 										}
 									}
+									break;
+									
+									case 4: System.out.println ("The sky darkens. You look above to see a colony of thirsty Vampire Bats" ); //bat 
+									int batHP = 30;
+									while (batHP > 0)  //fight sequence
+									{	
+										int bat = (int) ( Math.random ( ) * 5 + 7 );
+										System.out.println ( "Vampire Bat swoops for " + bat + " damage.");
+										hitChance = (int) ( Math.random ( ) * 12 + 5);  //chance to evade
+										if (evade > hitChance) 
+										{
+											System.out.println ( "But Misses!" );
+										}
+										else
+										{
+											hp -= bat;
+											System.out.println ( "-" + bat + " HP. " + "HP is " + hp);
+											double vamp = bat * 0.25;  //bat heals 25% damage given
+											int iVamp = (int) vamp;
+											if (iVamp > 0) {   // output if necessary
+												System.out.println ( "Bat Colony heals " + iVamp + " HP" );
+												batHP += iVamp;
+											}
+											if (hp < 1)
+											{
+												chapter = 0;
+												direction = 'A';
+												merch = 0;
+												mtnRoadCount = 9;
+												city = 6;
+												batHP = 0;
+												break;
+											}
+										}
+										 //battle decision
+										System.out.println ( "1-Attack, 5-EEL Sauce (" + hpPot + "), 0-Flee" );
+										battleDec = input.nextInt();
+										if (battleDec == 0) {
+											hitChance = (int) ( Math.random ( ) * 7 + 5);  //chance to flee
+											if (evade > hitChance) {
+												System.out.println ( "You run away! Coward!" );
+												break;
+											}
+											else {
+												System.out.println ( "You try to run, but you trip and fall on your face." );
+											}
+										}
+										
+										//attack
+										if (battleDec == 1) {
+											hitDMG = (int) ( Math.random ( ) * attack + minDMG);
+											hitChance = (int) ( Math.random ( ) * 9 + 1);  //chance to hit
+											if (dex >= hitChance)
+											{
+												System.out.println ( "You hit for " + hitDMG + " DMG" );
+												batHP -= hitDMG;
+											}
+											else
+											{
+												System.out.println ( "You miss! Lame!" );
+											}
+										}
+										//potion
+										if (battleDec == 5) {
+											if (hpPot > 0) {
+												System.out.println ( "That Sauce is Awesome! +25HP" );
+												hpPot --;
+												points -= 25;
+												hp += 25;
+												if (hp > hpMax) {
+													hp = hpMax;
+												}
+											}
+											else {
+												System.out.println ( "Fool! You have no Sauce in supply!" );
+											}
+										}
+									}
+									if (batHP <= 0) {
+										if (hp > 0) {
+											System.out.println ( "You slaughter the colony of annoying sky rats.\nYou find 13 gold on a nearby corpse" );
+											gold += 13;
+											points += 120;
+										}
+									}
 									if (hp < 1) {
 										break;
 									}
@@ -4220,8 +5006,19 @@ public class CrestFallGame
 					hp = 0;
 					break;
 				}
-			}//end hp > 0
-			System.out.println ( "GAME OVER.  SCORE: " + points );
+			}//end HP > 0
+			double end = System.currentTimeMillis ( );
+			double time = end - start;
+			int minutes = (int)(time / 1000 / 60);
+			int seconds = (int)(time / 1000 % 60);
+			System.out.println ( "\nGAME OVER :(" );
+			System.out.println ( "TIME: " + minutes + " min " + seconds + " sec");
+			if (minutes > 15) {
+				int penalty = (minutes - 15) * 50;
+				System.out.println ( "Time Penalty -" + penalty + " points" );
+				points -= penalty;
+			}
+			System.out.println ( "SCORE: " + points );
 			System.out.println ( "Play Again? y/n" );
 			do  //check character input
 			{
@@ -4239,4 +5036,5 @@ public class CrestFallGame
 	}
 
 } 
+
 
