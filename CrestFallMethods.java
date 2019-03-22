@@ -121,9 +121,10 @@ public class CrestFallMethods
 			{
 				a[1] -= damage; //player attacked
 				System.out.println ( "-" + damage + " HP. " + "HP is " + a[1]);
-				if (enemyAbility == 'v') {    //if type "v"
+				 //if enemy ability type "v" vampirism
+				if (enemyAbility == 'v') {  
 					double vamp = damage * 0.25;  // heals 25% damage given
-					int iVamp = (int) vamp;
+					int iVamp = (int) vamp;  // change from double to int
 					if (iVamp > 0) {   // output if necessary
 						System.out.println ( eType + " heals " + iVamp + " HP" );
 						enemyHP += iVamp;
@@ -143,37 +144,60 @@ public class CrestFallMethods
 			  //battle decision
 			if (a[1] > 0) {
 				System.out.println ( "1-Attack, 0-Flee" );
-				a[22] = input.nextInt();
-				if (a[22] == 0) { //flee decision
-					
-					hitChance = (int) ( Math.random ( ) * maxFlee + minFlee);  //chance to flee
-					if (a[6] > hitChance) {  //flee successful
-						System.out.println ( "You run away! Coward!" );
-						break;
-					}
-					else { //flee unsuccessful
-						System.out.println ( "You try to run, but you trip and fall on your face." );
-					}
+				if (a[7] > 1) {
+					System.out.println ( "5-EEL Sauce: " + a[16] );
 				}
+				a[22] = input.nextInt();
 				
-				//attack
-				else if (a[22] == 1) {
-					hitDMG = (int) ( Math.random ( ) * attack + a[3]);  //possible damage range
-					hitChance = (int) ( Math.random ( ) * heroHit + 1);  //chance to hit
-					if (a[5] >= hitChance)  //if dex is at least heroHit chance
-					{
-						System.out.println ( "You hit for " + hitDMG + " DMG" );
-						enemyHP -= hitDMG;
-					}
-					else
-					{
-						System.out.println ( "You miss! Lame!" );
-					}
+				//flee
+				switch (a[22]) 
+				{
+					//flee
+					case 0:
+						hitChance = (int) ( Math.random ( ) * maxFlee + minFlee);  //chance to flee
+						if (a[6] > hitChance) {  //flee successful
+							System.out.println ( "You run away! Coward!" );
+							enemyHP = 0;
+						}
+						else { //flee unsuccessful
+							System.out.println ( "You try to run, but you trip and fall on your face." );
+						}
+						break;
+				
+					//attack
+					case 1:
+						hitDMG = (int) ( Math.random ( ) * attack + a[3]);  //possible damage range
+						hitChance = (int) ( Math.random ( ) * heroHit + 1);  //chance to hit
+						if (a[5] >= hitChance)  //if dex is at least heroHit chance
+						{
+							System.out.println ( "You hit for " + hitDMG + " DMG" );
+							enemyHP -= hitDMG;
+						}
+						else
+						{
+							System.out.println ( "You miss! Lame!" );
+						}
+						break;
+						
+					//heal
+					case 5:
+						if (a[16] > 0) {
+							System.out.println ( "That Sauce is Awesome! +25HP" );
+							a[16] --;  //used potion
+							a[21] -= 25; //lose points for healing
+							a[1] += 25; // heal
+							if (a[1] > a[2]) {
+								a[1] = a[2]; //hp cant be greater than hp max
+							}
+						}
+						else {
+							System.out.println ( "Fool! You have no Sauce in supply!" );
+						}
 				}
 			}
 		}
-		if (a[1] > 0) {
-			System.out.println ( killText +eType + deathFlavor );
+		if (a[1] > 0 && a[22] != 0) { //make sure hero did not die or flee for reward
+			System.out.println ( killText + eType + deathFlavor );
 			a[0] += rewardGold; // gold
 			a[21] += rewardPoints;  //points
 		}
@@ -196,7 +220,7 @@ public class CrestFallMethods
 				{
 					case 1: 
 						System.out.println ("You stumbled accross a Bear, Fuck" );   //Bear fight
-						char enemyAbility = 'a';
+						char enemyAbility = 'a';  //enemy special ability class (a = none)
 						int enemyHP = 12;   //enemy health initialize
 						String eType = "Bear"; //type of enemy
 						String aType = " Swipes";  //attack style
@@ -214,7 +238,7 @@ public class CrestFallMethods
 					case 2: 
 						System.out.println ("You hear some Goblins creeping around"  );
 						enemyAbility = 'a';
-						enemyHP = 6;   //enemy health initialize
+						enemyHP = 6;   
 						eType = "Goblins";
 						aType = " attack";
 						killText = "You killed some ";
@@ -235,7 +259,7 @@ public class CrestFallMethods
 					case 3: 
 						System.out.println ( "An Elf appears... to be very Menacing!" );
 						enemyAbility = 'a';
-						enemyHP = 8;   //enemy health initialize
+						enemyHP = 8;   
 						eType = "Crazy Elf";
 						aType = " attacks";
 						killText = "You killed a ";
@@ -309,7 +333,7 @@ public class CrestFallMethods
 				case 1: 
 					System.out.println ("Two Naked Bums jump out at you from the ditch!" );
 					char enemyAbility = 'a';
-					int enemyHP = 12;   //enemy health initialize
+					int enemyHP = 12;   
 					String eType = "Wild twins";
 					String aType = " attack";
 					String killText = "You killed two ";
@@ -352,7 +376,7 @@ public class CrestFallMethods
 						{
 							System.out.println ( "It was a ruse!" );
 							enemyAbility = 'a';
-							enemyHP = 8;   //enemy health initialize
+							enemyHP = 8;   
 							eType = "Bandit";
 							aType = " attacks";
 							killText = "You killed a ";
@@ -383,7 +407,7 @@ public class CrestFallMethods
 				case 3: 
 					System.out.println ( "A dark figure on a horse approaches..." );   //Marauder
 					enemyAbility = 'a';
-					enemyHP = 10;   //enemy health initialize
+					enemyHP = 10;   
 					eType = "Marauder";
 					aType = " attacks";
 					killText = "You killed a ";
@@ -435,7 +459,7 @@ public class CrestFallMethods
 					case 1: 
 						System.out.println ("A small pack of wolves surround you!" ); //wolf pack
 						enemyAbility = 'a';
-						int enemyHP = 15;   //enemy health initialize
+						int enemyHP = 15;   
 						String eType = "Wolves";
 						String aType = " attack";
 						String killText = "You killed a small pack of ";
@@ -478,7 +502,7 @@ public class CrestFallMethods
 							{
 								System.out.println ( "It was a ruse!" );
 								enemyAbility = 'a';
-								enemyHP = 18;   //enemy health initialize
+								enemyHP = 18;   
 								eType = "Wraith";
 								aType = " attacks";
 								killText = "You killed a ";
@@ -508,7 +532,7 @@ public class CrestFallMethods
 					case 3: 
 						System.out.println ( "A MudMan grows rapidly in front of you like an Oozing pillar " );   //MudMan
 						enemyAbility = 'a';
-						enemyHP = 14;   //enemy health initialize
+						enemyHP = 14;   
 						eType = "MudMan";
 						aType = " attacks";
 						killText = "You killed a ";
@@ -530,7 +554,7 @@ public class CrestFallMethods
 					case 4:
 						System.out.println ("A Giant Leech! Disgusting!" ); //leech 
 						enemyAbility = 'v';
-						enemyHP = 14;   //enemy health initialize
+						enemyHP = 14;   
 						eType = "Leech";
 						aType = " bites";
 						killText = "You Skewer the Giant ";
@@ -585,7 +609,7 @@ public class CrestFallMethods
 				{
 					case 1: System.out.println ("A viscious looking pack of wolves surround you!" ); //wolf pack
 					enemyAbility = 'a';
-					int enemyHP = 20;   //enemy health initialize
+					int enemyHP = 20;   
 					String eType = "Wolves";
 					String aType = " attack";
 					String killText = "You killed a viscious pack of ";
@@ -660,7 +684,7 @@ public class CrestFallMethods
 					case 3: 
 						System.out.println ( "A PooPoo Man plops in front of you from seemingly nowhere. " );   //MudMan
 						enemyAbility = 'a';
-						enemyHP = 20;   //enemy health initialize
+						enemyHP = 20;   
 						eType = "PooPoo";
 						aType = " lunges";
 						killText = "You squash the huge ";
@@ -682,7 +706,7 @@ public class CrestFallMethods
 					case 4: 
 						System.out.println ("A Giant Leech! Gross!" ); //leech 
 						enemyAbility = 'v';
-						enemyHP = 18;   //enemy health initialize
+						enemyHP = 18;   
 						eType = "Leech";
 						aType = " bites";
 						killText = "You Skewer the Giant ";
@@ -740,7 +764,7 @@ public class CrestFallMethods
 				case 1:
 					System.out.println ("A small pack of wolves surround you!" ); //wolf pack
 					enemyAbility = 'a';
-					int enemyHP = 15;   //enemy health initialize
+					int enemyHP = 15;   
 					String eType = "Wolves";
 					String aType = " attack";
 					String killText = "You killed a small pack of ";
@@ -781,7 +805,7 @@ public class CrestFallMethods
 					{
 						System.out.println ( "It was a ruse!" );
 						enemyAbility = 'a';
-						enemyHP = 24;   //enemy health initialize
+						enemyHP = 24;   
 						eType = "Rotten Wraith";
 						aType = " swipes";
 						killText = "You killed a ";
@@ -809,7 +833,7 @@ public class CrestFallMethods
 				case 3:
 					System.out.println ( "A MudMan grows rapidly in front of you like an Oozing pillar " );   //MudMan
 					enemyAbility = 'a';
-					enemyHP = 14;   //enemy health initialize
+					enemyHP = 14;   
 					eType = "MudMan";
 					aType = " attacks";
 					killText = "You killed a ";
@@ -830,7 +854,7 @@ public class CrestFallMethods
 				case 4: 
 					System.out.println ("A Massive Leech! Horrifying!" ); //leech 
 					enemyAbility = 'v';
-					enemyHP = 20;   //enemy health initialize
+					enemyHP = 20;   
 					eType = "Leech";
 					aType = " bites";
 					killText = "You Fillet the Massive ";
@@ -1166,7 +1190,7 @@ public class CrestFallMethods
 				case 1:
 					System.out.println ("You hear a faint sound and turn in time to see a thief cutting your purse!"); //thief
 					enemyAbility = 'a';
-					int enemyHP = 15;   //enemy health initialize
+					int enemyHP = 15;   
 					String eType = "Thief";
 					String aType = " attacks";
 					String killText = "You kill the ";
@@ -1213,7 +1237,7 @@ public class CrestFallMethods
 							System.out.println ( "There are 3 haggard looking people with empty looking eyes standing near the cart" );
 							System.out.println ( "The \"man in need\" is a Necromancer!  His thralls quickly saunter your way." );
 							enemyAbility = 'a';
-							enemyHP = 20;   //enemy health initialize
+							enemyHP = 20;   
 							eType = "Thrall";
 							aType = " lunges";
 							killText = "You killed the necromancers ";
@@ -1241,7 +1265,7 @@ public class CrestFallMethods
 				case 3: 
 					System.out.println ( "You hear an Eagle screech... nope, thats a Wyvren! " );                   //Wyvren
 					enemyAbility = 'a';
-					enemyHP = 25;   //enemy health initialize
+					enemyHP = 25;   
 					eType = "Wyvren";
 					aType = " claws";
 					killText = "You killed a ";
@@ -1697,7 +1721,7 @@ public class CrestFallMethods
 				case 1: 
 					System.out.println ("A fight started up outside the pub \n and some Drunkass threw his tankard at you..." ); //thief pack
 					enemyAbility = 'a';
-					int enemyHP = 25;   //enemy health initialize
+					int enemyHP = 25;   
 					String eType = "Drunkass";
 					String aType = " swings";
 					String killText = "You knocked out that worthless ";
@@ -1740,7 +1764,7 @@ public class CrestFallMethods
 						System.out.println ( "You come accross two Greasy Vandals attempting an unsavory act upon a young lady" );
 						System.out.println ( "You meet their eyes and your fist clenches your blade");
 						enemyAbility = 'a';
-						enemyHP = 45;   //enemy health initialize
+						enemyHP = 45;   
 						eType = "Greasy Vandal";
 						aType = " slashes";
 						killText = "You killed a couple of ";
@@ -1775,7 +1799,7 @@ public class CrestFallMethods
 				case 3: 
 					System.out.println ( "Its a Giant Sewer Rat! " );   //Sewer Rat
 					enemyAbility = 'a';
-					enemyHP = 25;   //enemy health initialize
+					enemyHP = 25;   
 					eType = "Sewer Rat";
 					aType = " bites";
 					killText = "You killed a Giant ";
@@ -1797,7 +1821,7 @@ public class CrestFallMethods
 				case 4: 
 					System.out.println ("A robed figure leaps from the shadows and stabs at you without warning" ); //cultist 
 					enemyAbility = 'v';
-					enemyHP = 20;   //enemy health initialize
+					enemyHP = 20;   
 					eType = "Cultist";
 					aType = " stabs wildly";
 					killText = "You decapitate the ";
@@ -1855,7 +1879,7 @@ public class CrestFallMethods
 					case 1: 
 						System.out.println ("The surrounding rocks shimmer... A Fire Sprite floats closer" ); //fireSprite pack
 						enemyAbility = 'a';
-						int enemyHP = 30;   //enemy health initialize
+						int enemyHP = 30;   
 						String eType = "Fire Sprite";
 						String aType = " throws fireball ";
 						String killText = "You extinguish the ";
@@ -1898,7 +1922,7 @@ public class CrestFallMethods
 							{
 								System.out.println ( "It's a Mimic!" );
 								enemyAbility = 'a';
-								enemyHP = 35;   //enemy health initialize
+								enemyHP = 35;   
 								eType = "Mimic";
 								aType = " chomps";
 								killText = "You killed a ";
@@ -1926,7 +1950,7 @@ public class CrestFallMethods
 					case 3: 
 						System.out.println ( "The ground quakes and a Mountain Troll lurches toward you. " );   //MudMan
 						enemyAbility = 'a';
-						enemyHP = 50;   //enemy health initialize
+						enemyHP = 50;   
 						eType = "Mountain Troll";
 						aType = " clubs you";
 						killText = "You killed a ";
@@ -1948,7 +1972,7 @@ public class CrestFallMethods
 					case 4: 
 						System.out.println ("The sky darkens. You look above to see a colony of thirsty Vampire Bats" ); //bat 
 						enemyAbility = 'v';
-						enemyHP = 30;   //enemy health initialize
+						enemyHP = 30;   
 						eType = "Vampire Bat";
 						aType = " swoops";
 						killText = "You slaughter the colony of ";
@@ -2004,7 +2028,7 @@ public class CrestFallMethods
 					case 1:
 						System.out.println ("The surrounding rocks shimmer... A Fire Sprite floats closer" ); //fireSprite
 						enemyAbility = 'a';
-						int enemyHP = 30;   //enemy health initialize
+						int enemyHP = 30;   
 						String eType = "Fire Sprite";
 						String aType = " throws fireball ";
 						String killText = "You extinguish the ";
@@ -2061,7 +2085,7 @@ public class CrestFallMethods
 								
 								//Boss battle
 								enemyAbility = 'a';
-								enemyHP = 90;   //enemy health initialize
+								enemyHP = 90;   
 								eType = "Chaos Demon";
 								aType = " attacks";
 								killText = "You swing!... your blade cuts through empty air, at the same time\nan intense gust of wind throws you forward violently...\nThe ";
@@ -2098,7 +2122,7 @@ public class CrestFallMethods
 					case 3:
 						System.out.println ( "The ground quakes and a Mountain Troll lurches toward you. " );   //Troll
 						enemyAbility = 'a';
-						enemyHP = 50;   //enemy health initialize
+						enemyHP = 50;   
 						eType = "Mountain Troll";
 						aType = " clubs you";
 						killText = "You killed a ";
@@ -2119,7 +2143,7 @@ public class CrestFallMethods
 					case 4: 
 						System.out.println ("The sky darkens. You look above to see an enormous colony of thirsty Vampire Bats" ); //bat 
 						enemyAbility = 'v';
-						enemyHP = 40;   //enemy health initialize
+						enemyHP = 40;   
 						eType = "Vampire Bat";
 						aType = " swoops";
 						killText = "You slaughter the colony of ";
@@ -2176,7 +2200,7 @@ public class CrestFallMethods
 					case 1:
 						System.out.println ("The surrounding rocks shimmer... A Fire Sprite floats closer" ); //fireSprite 
 						enemyAbility = 'a';
-						int enemyHP = 30;   //enemy health initialize
+						int enemyHP = 30;   
 						String eType = "Fire Sprite";
 						String aType = " throws fireball ";
 						String killText = "You extinguish the ";
@@ -2218,7 +2242,7 @@ public class CrestFallMethods
 							{
 								System.out.println ( "It's a Mimic!" );
 								enemyAbility = 'a';
-								enemyHP = 35;   //enemy health initialize
+								enemyHP = 35;   
 								eType = "Mimic";
 								aType = " chomps";
 								killText = "You killed a ";
@@ -2246,7 +2270,7 @@ public class CrestFallMethods
 					case 3: 
 						System.out.println ( "The ground quakes and a Mountain Troll lurches toward you. " );   //MudMan
 						enemyAbility = 'a';
-						enemyHP = 50;   //enemy health initialize
+						enemyHP = 50;   
 						eType = "Mountain Troll";
 						aType = " clubs you";
 						killText = "You killed a ";
@@ -2267,7 +2291,7 @@ public class CrestFallMethods
 					case 4: 
 						System.out.println ("The sky darkens. You look above to see an enormous colony of thirsty Vampire Bats" ); //bat 
 						enemyAbility = 'v';
-						enemyHP = 40;   //enemy health initialize
+						enemyHP = 40;   
 						eType = "Vampire Bat";
 						aType = " swoops";
 						killText = "You slaughter the colony of ";
