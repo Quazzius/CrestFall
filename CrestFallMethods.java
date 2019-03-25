@@ -4,9 +4,10 @@ public class CrestFallMethods
 {
 	@SuppressWarnings("unused")
 	public static int[] gameArray() {
-		int [] a = new int[26];
+		int [] a = new int[33];
 		int gold, hp, hpMax, minDMG, maxDMG, dex, evade, chapter, ladyOfLake, sSword, lSword, lArmor, mBoots, mDagger, mShield;
-		int bSword, hpPot, merchCount, loser, fighter, victim, points, battleDec, city, chaosDemonLife;
+		int bSword, hpPot, merchCount, loser, fighter, victim, points, battleDec, city, chaosDemonLife, vRapier, dynamite, cKukri;
+		int  hordeLife, griffinLife, pDagger, slArmor;
 		char direction;
 		a[0] = gold = 0;
 		a[1] = hp = 100;
@@ -34,6 +35,13 @@ public class CrestFallMethods
 		a[23] = city = 9;
 		a[24] = chaosDemonLife = 1;
 		a[25] = direction = 'N';
+		a[26] = vRapier = 1;
+		a[27] = dynamite = 0;
+		a[28] = cKukri = 1;
+		a[29] = hordeLife = 1;
+		a[30] = griffinLife = 1;
+		a[31] = pDagger = 1;
+		a[32] = slArmor = 1;
 		return a;	
 		}
 	public static int[] characterClass(int[] a) {
@@ -108,6 +116,14 @@ public class CrestFallMethods
 	public static int[] battleSequence(int[] a, int hitChance, int hitDMG, int attack, int minRange, int maxRange, String eType, String aType, int eMaxHit, int eMinHit, int areaCount, 
 			int enemyHP, int maxFlee, int minFlee, int rewardGold, int rewardPoints, int heroHit, String killText, String deathFlavor, int merch, char enemyAbility) {
 		Scanner input = new Scanner(System.in);
+		int poisonCount = 0; //initialize hero poisoned counter
+		int ePoisonCount = 0; // initialize enemy poisoned counter
+		if (a[26] == 0) { //lose max hp to void rapier
+			a[2] -= 10;
+			if (a[1] > a[2]) {
+				a[1] = a[2];
+			}
+		}
 		while (enemyHP > 0)  //fight sequence
 		{	
 			int damage = (int) ( Math.random ( ) * maxRange + minRange ); //enemy attack range
@@ -120,7 +136,7 @@ public class CrestFallMethods
 			else
 			{
 				a[1] -= damage; //player attacked
-				System.out.println ( "-" + damage + " HP. " + "HP is " + a[1]);
+				System.out.println ( "-" + damage + " HP. " + "HP is " + a[1] + "/" + a[2]);
 				 //if enemy ability type "v" vampirism
 				if (enemyAbility == 'v') {  
 					double vamp = damage * 0.25;  // heals 25% damage given
@@ -130,6 +146,13 @@ public class CrestFallMethods
 						enemyHP += iVamp;
 					}
 				}
+				else if (enemyAbility == 'p' && poisonCount < 1) {
+					int poison = (int) (Math.random ( ) * 3 + 1);
+					if (poison == 3) {
+						System.out.println ( "You're Poisoned!" );
+						poisonCount = 3;
+					}
+				}
 				if (a[1] < 1) //on death condition, reset variables to go to game over
 				{
 					a[7] = 0;
@@ -137,15 +160,24 @@ public class CrestFallMethods
 					enemyHP = 0;
 					merch = 0;
 					a[23] = 6;
-					a[25] = 'A';
+					a[25] = '0';
 					
 				}
 			}
+			if (poisonCount > 0 ){
+				poisonCount--;
+				System.out.println ( "-2 HP (Poison), left: " + poisonCount);
+				a[1] -= 2;
+				
+			}
 			  //battle decision
 			if (a[1] > 0) {
-				System.out.println ( "1-Attack, 0-Flee" );
+				System.out.println ( "0 - Flee\n1 - Attack" );
+				if (a[7] > 2) {
+					System.out.println ( "3 - Dynamite: " + a[27]);
+				}
 				if (a[7] > 1) {
-					System.out.println ( "5-EEL Sauce: " + a[16] );
+					System.out.println ( "5 - Health Potion: " + a[16] );
 				}
 				a[22] = input.nextInt();
 				
@@ -172,26 +204,71 @@ public class CrestFallMethods
 						{
 							System.out.println ( "You hit for " + hitDMG + " DMG" );
 							enemyHP -= hitDMG;
+							
+							//character ability Vamp
+							if (a[26] == 0) { 
+								System.out.println ( "HP + 1" );
+								a[1] += 1;
+								if (a[1] > a[2]) { //cant go above max
+									a[1] = a[2];
+								}
+							}
+							//character ability poison
+							else if (a[28] == 0 && ePoisonCount < 1) {
+								int ePoison = (int) (Math.random ( ) * 3 + 1);
+								if (ePoison == 3) {
+									System.out.println ( eType + " Poisoned!" );
+									ePoisonCount = 3;
+								}
+							}
 						}
 						else
 						{
 							System.out.println ( "You miss! Lame!" );
 						}
-						break;
+						if (ePoisonCount > 0) {
+							System.out.println ( eType + " -2 HP (Poison), Left: " + ePoisonCount );
+							enemyHP -= 2;
+						}
+					break;
 						
+					case 3:
+						if (a[27] > 0) {
+							System.out.println ( "You light the wick and toss the dynamite at the " + eType );
+							System.out.println ( "dealing 30 damage! The reckless action deals 5 damage to you as well" );
+							enemyHP -= 30;
+							a[1] -= 5;
+							a[27] --;
+						}
+						else {
+							System.out.println ( "Idiot! You have no explosives in your inventory!" );
+						}
+					break;
+					
 					//heal
 					case 5:
 						if (a[16] > 0) {
-							System.out.println ( "That Sauce is Awesome! +25HP" );
-							a[16] --;  //used potion
-							a[21] -= 25; //lose points for healing
-							a[1] += 25; // heal
-							if (a[1] > a[2]) {
-								a[1] = a[2]; //hp cant be greater than hp max
+							if (a[7] > 2) {
+								System.out.println ( "Delicious reptile secretions...\n +40 HP" );
+								a[16] --;  //used potion
+								a[21] -= 40; //lose points for healing
+								a[1] += 40; // heal
+								if (a[1] > a[2]) {
+									a[1] = a[2]; //hp cant be greater than hp max
+								}
+							}
+							else {
+								System.out.println ( "That Sauce is Awesome!\n +25 HP" );
+								a[16] --;  //used potion
+								a[21] -= 25; //lose points for healing
+								a[1] += 25; // heal
+								if (a[1] > a[2]) {
+									a[1] = a[2]; //hp cant be greater than hp max
+								}
 							}
 						}
 						else {
-							System.out.println ( "Fool! You have no Sauce in supply!" );
+							System.out.println ( "Fool! You have no bottles in supply!" );
 						}
 				}
 			}
@@ -200,6 +277,9 @@ public class CrestFallMethods
 			System.out.println ( killText + eType + deathFlavor );
 			a[0] += rewardGold; // gold
 			a[21] += rewardPoints;  //points
+		}
+		if (a[26] == 0) {
+			a[2] += 10;
 		}
 		return a;	
 	}
@@ -631,7 +711,7 @@ public class CrestFallMethods
 					case 2: 
 						if (a[8] > 0)
 						{
-							System.out.println ("You hear someone singing..."  ); 								// Lady of the Lake
+							System.out.println ("You hear someone singing..."  ); 				// Lady of the Lake
 							System.out.println ( "Do you want to check it out? y/n" );
 							char help;
 							do  //check character input
@@ -652,20 +732,35 @@ public class CrestFallMethods
 								System.out.println ( "You found the lady of the lake" );
 								System.out.println ( "Her kind and voiceless words heal your wounds. Full HP!" );
 								a[1] = a[2];
-								System.out.println ( "She hands you a short sword that glows faintly green. The lady disappears upon taking the sword");
+								System.out.println ( "She hands you a short sword that glows faintly green.\nThe translucent lady disappears upon taking the sword.");
 								System.out.println ( "You've acquired PhantomBane! DMG 5-8" );
-								a[3] = 5;
-								a[4] = 8;
-								a[8]--;
-								if (a[19] == 1) {
-									a[4] += 2;
-								}
-								if (a[18] == 1) {
-									a[4]--;
-								}
-								if (a[13] == 0)
-								{
-									a[3]++;
+								System.out.println ( "Do you wish to equip the PhantomBane?\ny/n" );
+									do  //check character input
+									{
+										help = input.next ( ).toLowerCase ( ).charAt ( 0 );
+										if (help != 'y' && help != 'n')  
+										{
+											System.out.println ( "You must enter y or n" );
+										}
+									} while (help != 'y' && help != 'n');
+									if (help == 'y') {
+										System.out.println ( "PhantomBane Equipped" );
+										a[3] = 5;
+										a[4] = 8;
+										a[8]--;
+										a[26] = 1;
+										if (a[19] == 1) {
+											a[4] += 2;
+										}
+										if (a[18] == 1) {
+											a[4]--;
+										}
+										if (a[13] == 0){
+											a[3]++;
+										}
+									}
+									else {
+										System.out.println ( "The sword fades back into obscurity" );
 								}
 							}
 						}
@@ -906,11 +1001,11 @@ public class CrestFallMethods
 		int sSwordCost = 10;
 		System.out.println ( "1 - A reliable steel Short Sword. DMG: 3-6. (10 gold). In Stock: " + a[9] );
 		int lSwordCost = 15;
-		System.out.println ( "2 - A Heavy Iron Long Sword (-1 a[5]). DMG 4-9 (15 gold) In Stock: " + a[10] );
+		System.out.println ( "2 - A Heavy Iron Long Sword (-1 dex). DMG 4-9 (15 gold) In Stock: " + a[10] );
 		int lArmorCost = 15;
-		System.out.println ( "3 - Leather Armour. + 1 a[6]. (15 gold). InStock: " + a[11]);
+		System.out.println ( "3 - Leather Armour. + 1 evade. (15 gold). InStock: " + a[11]);
 		int mBootsCost = 30;
-		System.out.println ( "4 - Mercurial Dancing Boots. + 1 a[6] (30 gold). In Stock " + a[12]);
+		System.out.println ( "4 - Mercurial Dancing Boots. + 1 evade  (30 gold). In Stock " + a[12]);
 		int hPotionCost = 8;
 		System.out.println ( "5 - Magic EEL Sauce. Heal 50 HP (8 gold)" );
 		hpPotCost = 5;
@@ -1023,6 +1118,7 @@ public class CrestFallMethods
 						a[4] = 6;
 						a[0] -= sSwordCost;
 						a[9]--;
+						a[26] = 1;
 						if (a[19] == 1) {
 							a[4] += 2;
 						}
@@ -1056,6 +1152,7 @@ public class CrestFallMethods
 						a[5]--;
 						a[0] -= lSwordCost;
 						a[10]--;
+						a[26] = 1;
 						if (a[19] == 1) {
 							a[4] += 2;
 						}
@@ -1104,7 +1201,7 @@ public class CrestFallMethods
 				{
 					if (a[0] >= mBootsCost)
 					{
-						System.out.println ( "The strange looking boots fit! +1 Evade. You feel lighter" );
+						System.out.println ( "The strange looking boots fit! +1 Evade. You feel lighter." );
 						a[6]++;
 						a[0] -= mBootsCost;
 						a[12]--;
@@ -1317,7 +1414,7 @@ public class CrestFallMethods
 			System.out.println ( "1 - Read Messages" );
 			System.out.println ( "2 - View Stats");
 			System.out.println ( "3 - Visit the Armorer");
-			System.out.println ( "4 - Get a room at the Inn. (20 gold)");
+			System.out.println ( "4 - Get a room at the Inn. (15 gold)");
 			System.out.println ( "5 - Wander aimlessly about town" );
 			System.out.println ( "6 - Leave the City" );
 			System.out.println ( "7 - Guessing Game (5) Double your gold and get points!" );
@@ -1359,7 +1456,7 @@ public class CrestFallMethods
 					break;
 					
 				case 2:  //View stats
-					System.out.println ( "HP: " + a[1]);
+					System.out.println ( "HP: " + a[1] + " / " + a[2]);
 					System.out.println ( "DMG: " + a[3] + " - " + a[4]);
 					System.out.println ( "Dex: " + a[5]);
 					System.out.println ( "Evade: " + a[6] );
@@ -1388,7 +1485,9 @@ public class CrestFallMethods
 						System.out.println ( "2 - Crested Shield. Off-hand, +1 Resistance. (30 gold) In stock: " + a[14] );
 						int bSwordCost = 50;
 						System.out.println ( "3 - Snowy Bastard Sword. 6 - 12 DMG. (50 gold) In stock: " + a[15] );
-						System.out.println ( "4 - Return to Armorer Entrance" );
+						int vRapierCost = 60;
+						System.out.println ( "4 - Void Rapier. 5 - 11 DMG. Heals 1 HP on Hit. - 10 Max HP in battle" + a[26]);
+						System.out.println ( "5 - Return to Armorer Entrance" );
 						System.out.println ( "(You may only hold one Off-hand item, unless you grow and extra hand...)" );
 						armorerItems = input.nextInt();
 						switch (armorerItems)
@@ -1461,13 +1560,14 @@ public class CrestFallMethods
 								{
 									if (a[0] >= bSwordCost)
 									{
-										System.out.println ( "A chill flows from your palm to the top of your head." );
+										System.out.println ( "Gripping the pommel, a chill flows from your palm to the top of your head." );
 										System.out.println ( "It feels as though you pulled this sword from its own grave" );
 										System.out.println ( "DMG = 6 - 12" );
 										a[3] = 6;
 										a[4] = 12;
 										a[0] -= bSwordCost;
 										a[15]--;
+										a[26] = 1;
 										if (a[19] == 1) {
 											a[4] += 2;
 										}
@@ -1489,9 +1589,40 @@ public class CrestFallMethods
 									System.out.println ( "Sorry, This item is out of stock." );
 								}
 								break;
-										
-								
+							
 							case 4:
+								if (a[26] > 0)
+								{
+									if (a[0] >= vRapierCost)
+									{
+										System.out.println ( "Gripping the pommel, you get the feeling of a ghostly tentacle\nweaving its way through the tendons of your forearm." );
+										System.out.println ( "DMG = 5 - 11. Max HP -10.\nYou feel more vascular." );
+										a[3] = 5;
+										a[4] = 11;
+										a[0] -= vRapierCost;
+										a[26]--;
+										if (a[19] == 1) {
+											a[4] += 2;
+										}
+										if (a[18] == 1) {
+											a[4]--;
+										}
+										if (a[13] == 0)
+										{
+											a[3]++;
+										}
+									}
+									else
+									{
+										System.out.println ( "You are too poor for this item. you have " + a[0] + " gold");
+									}
+								}
+								else
+								{
+									System.out.println ( "Sorry, This item is out of stock." );
+								}
+								
+							case 5:
 								System.out.println ( "Return to Common Board? y/n" );
 								do  //check character input
 								{
@@ -1776,7 +1907,7 @@ public class CrestFallMethods
 						eMaxHit = 12;
 						minFlee = 5; 
 						maxFlee = 8;
-						heroHit = 8;
+						heroHit = 9;
 						rewardGold = 0;
 						rewardPoints = 250;
 						a = battleSequence(a, hitChance, hitDMG, attack, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
@@ -1810,7 +1941,7 @@ public class CrestFallMethods
 					eMaxHit = 12;
 					minFlee = 6; 
 					maxFlee = 6;
-					heroHit = 8;
+					heroHit = 9;
 					rewardGold = 15;
 					rewardPoints = 250;
 					a = battleSequence(a, hitChance, hitDMG, attack, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
@@ -2325,6 +2456,1096 @@ public class CrestFallMethods
 		}
 		return a;
 	}
+	public static void ch3Intro() {
+		Scanner KeyIn = new Scanner(System.in);
+		System.out.println ( "You've completed Chapter 2!");
+		System.out.println ( "Press Enter to skip 8 years" );         
+		KeyIn.nextLine ( );
+		System.out.println ( "You are immediately snapped out of your memory\nby a knock on front your door." );
+		System.out.println ( "Opening the door reveals the distantly familiar\nface of the carriage driver that had brought you to this village." );
+		System.out.println ( "You have not seen him since the day you stepped off his carriage\nPress Enter" );
+		KeyIn.nextLine ( );
+		System.out.println ( "\"Your abilities are needed again\" he says, \nand continues \"You had slain an agent of Chaos," );
+		System.out.println ( "and though you sought retribution and have found peace again,\nThere are even more horrors of the world driving others, like yourself,\nfrom their homes and into an unforgiving world." );
+		System.out.println ( "You are bound to this duty, just as the Chaos Orb is bound to you.\"\nPress Enter" );
+		KeyIn.nextLine ( );
+		System.out.println ( "Before you can say anything he disappears, and a familiar scenario arouses your memory again" );
+		System.out.println ( "Where \"he\" stood now lays the very same equipment you had 8 years ago..." );
+		System.out.println ( "After donning your armor and sheathing your weapons\nyou step out into the world willingly\nPress Enter" );
+		KeyIn.nextLine ( );
+		System.out.println ( "Your small village has no name as it is merely called \"Home\" to the village's 6 residents."
+				+ "\nYou greet your friend Gil, the merchant, and ask to see his stock");
+	}
+	
+	public static int[] homeHub(int[] a, int merch) {
+		Scanner input = new Scanner(System.in);
+		System.out.println ( "\"Welcome friend, what would you like?\"\n" );
+		int gGameCost = 5;
+		System.out.println ( "0 - Play Guessing Game. (5 gold)" );
+		int hpPotCost = 20;
+		System.out.println ( "1 - Snake Oil. Heal 40 HP. (20 gold)" );
+		int dynamiteCost = 25;
+		System.out.println ( "2 - Dynamite. Deals 30 DMG to the enemy and 5 damage to you. (25 gold)" );
+		System.out.println ( "3 - Go Home and Rest. Full HP" );
+		System.out.println ( "4 - Leave Village" );
+		System.out.println ( "5 - Get Advice" );
+		int slArmorCost = 220;
+		int pDaggerCost = 150;
+		// if marsh OR cliffs are complete
+		if (a[29] == 0 || a[30] == 0) {
+			System.out.println ( "6 - Parrying Dagger. dex + 2, + 1 minDMG off-hand (150 gold)" );
+		}
+		// if marsh AND cliffs are complete
+		if (a[29] == 0 && a[30] == 0) {
+			System.out.println ( "7 - Studded Leather Armor. + 2 Evade (220 gold)" );
+		}
+		System.out.println ( "\nYou Have " + a[0] + "gold");
+		do {
+			merch = input.nextInt();   //input decision
+			if (merch < 0 || merch > 7) {
+				System.out.println ( "You must enter a valid number" );
+			}
+		} while (merch < 0 || merch > 7);
+		switch (merch) {
+			case 0:
+				if (a[0] < gGameCost) {
+					System.out.println ( "go get some more gold" );
+				}
+				else {
+					int randNumber = 1;   //initialize nested loop
+					int game = 1;   //game count
+					int score = 6;  //player score, will decrement before first play to 5
+					char play = 'y';  //initialize loop to play game
+					int number = -9999;  //initialize guess loop
+					int ttlpoints = 0;  //total point accumulator
+					int gameGold = a[0];
+					
+					//Game start
+					while (play =='y')
+					{
+						a[0] -= gGameCost;
+						randNumber = (int) ( Math.random ( ) * 12 + 1 );  //Generate randNumberom number
+						
+						//user number must not equal randNumberom number to guess again
+						while (number != randNumber)
+						{
+							score--; //minus one point per guess. starts at 5.
+							if (score < 0)
+							{
+								score = 0; //set score to zero if less than zero
+							}
+							System.out.println ( score * 2 + " Points remain." ); 
+							
+							//prompt user for number and output results
+							System.out.println ("Enter a number between 1 and 12");
+							number = input.nextInt ( );  //users guess
+							System.out.println ( "Your number was: " + number);
+						
+							//output if the number was too high or too low
+							if (number > randNumber)
+							{
+								System.out.println ( "Too high, guess again!" );
+							}
+							if (number < randNumber)
+							{
+								System.out.println ( "Too low, guess again!" );
+							}
+						} //end loop when number = randNumber
+						
+						ttlpoints += score * 2; //score accumulate to total a[21]
+						System.out.println ( "CORRECT! you get " + score * 2 + " Points and " + score * 2 + " gold! \nPlay Again? y/n" );
+						a[0] += score * 2;
+						a[21] += score * 2;
+						do //user must answer 'y' or 'n'
+						{
+							play = input.next ( ).toLowerCase ( ).charAt ( 0 );  //user inputs character
+							if (play != 'y' && play != 'n')  //check character input
+							{
+								System.out.println ( "You must enter y or n, Play again?" ); //prompt user for correct input
+							}
+						} while (play != 'y' && play != 'n');  //loop if user enters something other than 'y' or 'n'
+						
+						//variables must be changed for next round
+						if (play == 'y')
+						{
+							if (a[0] >= gGameCost) {
+								number = -9999;  // reset number
+								score = 6;  //reset score for round (-1 before first guess)
+								game++;   //add one to game number count
+							}
+							else {
+								System.out.println ( "you're out of gold, go get some more... sucker" );
+								play = 'n';
+							}
+						} 
+					}//end loop if user inputs 'n'
+					 //calculate average and output score
+					double avg = (double)ttlpoints / game;
+					System.out.println ("GUESSING GAME OVER. Total a[21]: " + ttlpoints);
+					System.out.println ("Games played: " + game);
+					System.out.println ( "Average Score: " + avg );
+					int rev = a[0] - gameGold;
+					if (a[0] > gameGold) {
+						System.out.println ( "You made " + rev + " gold\n" );
+					}
+					else {
+						System.out.println ( "Loser. " + rev + " gold" );
+					}
+				}
+			break;
+			
+			case 1:
+				if (a[16] < 1) {
+					if (a[0] >= hpPotCost) {
+						System.out.println ( "You get a bottle of Snake Oil. Use it wisely" );
+						a[0] -= hpPotCost;
+						a[16] += 1;
+					}
+					else {
+						System.out.println ( "I'm your friend but I still require payment. " );
+						System.out.println ( "You only have " + a[0] + " gold..." );
+					}
+				}
+				else {
+					System.out.println ( "You can only hold one bottle at a time." );
+				}
+				break;
+			
+			case 2:
+				if (a[27] < 1) {
+					if (a[0] >= dynamiteCost) {
+						System.out.println ( "You get a Stick of Dynamite. Use it recklessly" );
+						a[0] -= dynamiteCost;
+						a[27] ++;
+					}
+					else {
+						System.out.println ( "I'm your friend but I still require payment. " );
+						System.out.println ( "You only have " + a[0] + " gold..." );
+					}
+				}
+				else {
+					System.out.println ( "You can only hold one explosive at a time." );
+				}
+				break;
+				
+			case 3:
+				a[1] = a[2];
+				System.out.println ( "Your bed is so comfy... HP Refiled: " + a[1] + " / " + a[2]);
+			break;
+			
+			case 4:
+				System.out.println ( "Where to?" );
+				System.out.println ( "1 - Stay Home\n2 - Shimmering Valley\n3 - Arid Plains\n4 - Frozen Desert\n5 - Sleeping Forest" );
+				a[25] = (char)input.nextInt ( );
+			break;
+			
+			case 5:
+				//before diamond key
+				System.out.println ( "I hear travelers lose whole days of travel in the sleeping forest\nand the plains are teaming with horrible creatures."
+						+ "\nThe Volcano has been recently erupting beyond the plains as well.\nAnd that's about all I know right now, I hope that helps.\n" );
+			break;
+			
+			case 6:
+				if (a[29] == 0 || a[30] == 0) {
+					if (a[31] > 0)
+					{
+						if (a[0] >= pDaggerCost)
+						{
+							if (a[14] == 0)
+							{
+								System.out.println ( "You ditch your shield and it vanishes! -1 Resistance" );
+								System.out.println ( "Where you left it now lies a few gold coins... + 10 gold" );
+								a[2] -= 25;
+								a[14]++;
+								a[0] += 10;
+							}
+							else if (a[13] == 0) {
+								System.out.println ( "You set aside the Jeweled Dagger and it vanishes! -1 MinDMG, -1 Dex" );
+								System.out.println ( "A few coins materialize in its place. +10 gold" );
+								a[3]--;
+								a[5]--;
+								a[0] += 10;
+								a[13]++;
+							}
+							System.out.println ( "The Parrying Dagger's hilt feels like it was made for your hand" );
+							System.out.println ( "+1 Min DMG, +2 Dex" );
+							a[3]++;
+							a[5] += 2;
+							a[0] -= pDaggerCost;
+							a[31]--;
+							
+						}
+						else
+						{
+							System.out.println ( "You are too poor for this item. you have " + a[0] + " gold");
+						}
+					}
+					else
+					{
+						System.out.println ( "Sorry, This item is out of stock." );
+					}
+				}
+				else {
+					System.out.println ( "No Cheating!" );
+				}
+			break;
+			
+			case 7:
+				if (a[29] == 0 && a[30] == 0) {
+					if (a[32] > 0)
+					{
+						if (a[0] >= slArmorCost)
+						{
+							if (a[11] == 0) {
+								System.out.println ( "You're glad to get some new armor and remove your old leather armor. -1 Evade" );
+								System.out.println ( "It would be best if it was burned...\n" );
+								a[6] --;
+							}
+							System.out.println ( "The Studded Leather Armor fits like a glove. +2 Evade" );
+							a[6] += 2;
+							a[0] -= slArmorCost;
+							a[32]--;
+						}
+						else
+						{
+							System.out.println ( "You are too poor for this item. you have " + a[0] + " gold");
+						}
+					}
+					else
+					{
+						System.out.println ( "Sorry, This item is out of stock." );
+					}
+				}
+				else {
+					System.out.println ( "No Cheating!" );
+				}
+			break;
+		}
+		return a;
+	}
+	
+	public static int[] sValleyRoad(int[] a, int rand, int range, int minEnc, int encNumber, int hitChance, int hitDMG, int attack, int merch, String nautical) {
+		Scanner input = new Scanner(System.in);
+		Scanner KeyIn = new Scanner(System.in);
+		char enemyAbility;
+		System.out.println ( "Press Enter to head " + nautical );
+		KeyIn.nextLine();
+		int areaCount = 0;
+		while (areaCount < 3)
+		{
+			rand = (int) ( Math.random ( ) * range + minEnc );  //encounter chance
+			if (encNumber == rand)
+			{
+				int enemy = (int) ( Math.random ( ) * 4 + 1);  //random enemy
+				switch (enemy)
+				{
+					case 1: 
+						System.out.println ("The nerby ferns begin to hiss. They uproot themselves and lash at you with their stolons" ); //Ferns
+						enemyAbility = 'a';
+						int enemyHP = 30;   
+						String eType = "Fern Feind";
+						String aType = " whips ";
+						String killText = "You dice the ";
+						String deathFlavor = "s and clip their buds worth 5 gold a piece. +15 gold";
+						int minRange = 5; 
+						int maxRange = 7;
+						int eMinHit = 5; 
+						int eMaxHit = 12;
+						int minFlee = 4; 
+						int maxFlee = 8;
+						int heroHit = 9;
+						int rewardGold = 15;
+						int rewardPoints = 125;
+						a = battleSequence(a, hitChance, hitDMG, attack, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, merch, enemyAbility);
+					
+					break;
+					
+					case 2: 
+						System.out.println ("You nearly trip over a mound of dirt hidden in the underbrush\nIt looks like someone buried something recently"  ); // chest/ zombie
+						System.out.println ( "Do you want to dig it up? y/n" );
+						char help;
+						do  //check character input
+						{
+							help = input.next ( ).toLowerCase ( ).charAt ( 0 );
+							if (help != 'y' && help != 'n')  
+							{
+								System.out.println ( "You must enter y or n" );
+							}
+						} while (help != 'y' && help != 'n'); 
+						
+						if (help == 'n')  //Don't look
+						{
+							System.out.println ( "No way am i digging up whats been buried... Keep walking" );
+						}
+						else
+						{
+							int ruse =	(int) ( Math.random ( ) * 10);
+							if (ruse >= 5)
+							{
+								System.out.println ( "You uncover a rotting corpse... It opens its eyes and grabs you!" );
+								enemyAbility = 'a';
+								enemyHP = 35;   
+								eType = "Zombie";
+								aType = " claws";
+								killText = "You Decapitated a ";
+								deathFlavor = "!\n20 gold shine in the bottom of the hole. +20  gold";
+								minRange = 6; 
+								maxRange = 7;
+							 	eMinHit = 6; 
+								eMaxHit = 12;
+								minFlee = 5; 
+								maxFlee = 7;
+								heroHit = 9;
+								rewardGold = 20;
+								rewardPoints = 150;
+								a = battleSequence(a, hitChance, hitDMG, attack, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+									enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, merch, enemyAbility);
+							}
+							else 
+							{
+								System.out.println ( "You find a chest full of coin! + 20 gold" );
+								a[0] += 20;	
+							}
+						}
+					break;
+					
+					case 3: 
+						System.out.println ( "Something has been stalking you... " );   //MudMan
+						enemyAbility = 'a';
+						enemyHP = 40;   
+						eType = "Panther";
+						aType = " claws";
+						killText = "You killed a ";
+						deathFlavor = "! panther eyes are worth 10 gold each. +20 gold";
+						minRange = 6; 
+						maxRange = 8;
+					 	eMinHit = 5; 
+						eMaxHit = 11;
+						minFlee = 4; 
+						maxFlee = 6;
+						heroHit = 9;
+						rewardGold = 20;
+						rewardPoints = 140;
+						a = battleSequence(a, hitChance, hitDMG, attack, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, merch, enemyAbility);
+					
+					break;
+					
+					case 4: 
+						System.out.println ("A leafy tentacle strikes at you form the thick shrubbery\nan octopus-like plant wants to devour you!" ); //bat 
+						enemyAbility = 'p';
+						enemyHP = 45;   
+						eType = "Malboro";
+						aType = " swats";
+						killText = "You slay the ";
+						deathFlavor = ". upon death it spews 25 gold.";
+						minRange = 7; 
+						maxRange = 6;
+					 	eMinHit = 5; 
+						eMaxHit = 12;
+						minFlee = 5; 
+						maxFlee = 7;
+						heroHit = 9;
+						rewardGold = 25;
+						rewardPoints = 150;
+						a = battleSequence(a, hitChance, hitDMG, attack, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, merch, enemyAbility);
+				}
+			} 
+			if (areaCount < 3) {
+				areaCount++;
+				System.out.println ( "Camp " + areaCount + ". Press Enter to continue " + nautical);
+				KeyIn.nextLine ( );
+			}
+		}// end valley road
+		
+		return a;	
+	}
+	public static int[] sValley(int[] a, int rand, int range, int minEnc, int encNumber, int hitChance, int hitDMG, int attack, int merch) {
+		Scanner input = new Scanner(System.in);
+		Scanner KeyIn = new Scanner(System.in);
+		char enemyAbility;
+		int areaCount = 0;
+		char valley;                                                                              //Shimmering Valley
+		System.out.println ( "The trail widens and then branches into many directions" );
+		System.out.println ( "From here you can either head back home, or continue East to the White Marsh" );
+		System.out.println ( "First, Would you like to look around the meandering trails? y/n" );
+		do  //check character input
+		{
+			valley = input.next ( ).toLowerCase ( ).charAt ( 0 );
+			if (valley != 'y' && valley != 'n')  
+			{
+				System.out.println ( "You must enter y or n" );
+			}
+		} while (valley != 'y' && valley != 'n'); 
+		while (valley == 'y')
+		{
+			rand = (int) ( Math.random ( ) * range + minEnc );  //encounter chance
+			if (encNumber == rand)
+			{
+				int enemy = (int) ( Math.random ( ) * 4 + 1);  //random enemy
+				switch (enemy)
+				{
+					case 1: 
+						System.out.println ("The nerby ferns begin to hiss. They uproot themselves and lash at you with their barbed stolons" ); //Ferns
+						enemyAbility = 'a';
+						int enemyHP = 30;   
+						String eType = "Fern Feind";
+						String aType = " whips ";
+						String killText = "You dice the ";
+						String deathFlavor = "s and clip their buds worth 5 gold a piece. +15 gold";
+						int minRange = 5; 
+						int maxRange = 8;
+						int eMinHit = 5; 
+						int eMaxHit = 12;
+						int minFlee = 4; 
+						int maxFlee = 8;
+						int heroHit = 9;
+						int rewardGold = 15;
+						int rewardPoints = 125;
+						a = battleSequence(a, hitChance, hitDMG, attack, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, merch, enemyAbility);
+					
+					break;
+					
+					case 2: 
+							System.out.println ("The sound of a half-dozen horses comes from up ahead"  ); 	// traveling merchant
+							System.out.println ( "Do you want to check it out? y/n" );
+							char help;
+							do  //check character input
+							{
+								help = input.next ( ).toLowerCase ( ).charAt ( 0 );
+								if (help != 'y' && help != 'n')  
+								{
+									System.out.println ( "You must enter y or n" );
+								}
+							} while (help != 'y' && help != 'n'); 
+							
+							if (help == 'n')  //Don't look
+							{
+								System.out.println ( "Frightened, you run off into the brush and hide until the sound\nof the horses fade into the distance..." );
+							}
+							else
+							{
+								System.out.println ( "You meet a merchant and his small caravan on the trail\nand he gladly shows you his wares" );
+								int valleyMerch = 0;
+								while (valleyMerch != 4) {
+									System.out.println ( "\"What would you like?\"\n" );
+									int gGameCost = 5;
+									System.out.println ( "0 - Play Guessing Game. (5 gold)" );
+									int hpPotCost = 35;
+									System.out.println ( "1 - Snake Oil. Heal 40 HP. (35 gold)" );
+									int dynamiteCost = 40;
+									System.out.println ( "2 - Dynamite. Deals 30 DMG to the enemy and 5 damage to you. (40 gold)" );
+									int cKukriCost = 75;
+									System.out.println ( "3 - Coral Kukri. 6 - 9 DMG, 33% Chance to Poison (75 gold)" );
+									System.out.println ( "4 - Take your Leave" );
+									System.out.println ( "\nYou Have " + a[0] + "gold");
+									do {
+										valleyMerch = input.nextInt();   //input decision
+										if (valleyMerch < 0 || valleyMerch > 4) {
+											System.out.println ( "You must enter a valid number (0 - 4)" );
+										}
+									} while (valleyMerch < 0 || valleyMerch > 4);
+									switch (valleyMerch) {
+										case 0:
+											if (a[0] < gGameCost) {
+												System.out.println ( "go get some more gold" );
+											}
+											else {
+												int randNumber = 1;   //initialize nested loop
+												int game = 1;   //game count
+												int score = 6;  //player score, will decrement before first play to 5
+												char play = 'y';  //initialize loop to play game
+												int number = -9999;  //initialize guess loop
+												int ttlpoints = 0;  //total point accumulator
+												int gameGold = a[0];
+												
+												//Game start
+												while (play =='y')
+												{
+													a[0] -= gGameCost;
+													randNumber = (int) ( Math.random ( ) * 12 + 1 );  //Generate randNumberom number
+													
+													//user number must not equal randNumberom number to guess again
+													while (number != randNumber)
+													{
+														score--; //minus one point per guess. starts at 5.
+														if (score < 0)
+														{
+															score = 0; //set score to zero if less than zero
+														}
+														System.out.println ( score * 2 + " Points remain." ); 
+														
+														//prompt user for number and output results
+														System.out.println ("Enter a number between 1 and 12");
+														number = input.nextInt ( );  //users guess
+														System.out.println ( "Your number was: " + number);
+													
+														//output if the number was too high or too low
+														if (number > randNumber)
+														{
+															System.out.println ( "Too high, guess again!" );
+														}
+														if (number < randNumber)
+														{
+															System.out.println ( "Too low, guess again!" );
+														}
+													} //end loop when number = randNumber
+													
+													ttlpoints += score * 2; //score accumulate to total a[21]
+													System.out.println ( "CORRECT! you get " + score * 2 + " Points and " + score * 2 + " gold! \nPlay Again? y/n" );
+													a[0] += score * 2;
+													a[21] += score * 2;
+													do //user must answer 'y' or 'n'
+													{
+														play = input.next ( ).toLowerCase ( ).charAt ( 0 );  //user inputs character
+														if (play != 'y' && play != 'n')  //check character input
+														{
+															System.out.println ( "You must enter y or n, Play again?" ); //prompt user for correct input
+														}
+													} while (play != 'y' && play != 'n');  //loop if user enters something other than 'y' or 'n'
+													
+													//variables must be changed for next round
+													if (play == 'y')
+													{
+														if (a[0] >= gGameCost) {
+															number = -9999;  // reset number
+															score = 6;  //reset score for round (-1 before first guess)
+															game++;   //add one to game number count
+														}
+														else {
+															System.out.println ( "you're out of gold, go get some more... sucker" );
+															play = 'n';
+														}
+													} 
+												}//end loop if user inputs 'n'
+												 //calculate average and output score
+												double avg = (double)ttlpoints / game;
+												System.out.println ("GUESSING GAME OVER. Total a[21]: " + ttlpoints);
+												System.out.println ("Games played: " + game);
+												System.out.println ( "Average Score: " + avg );
+												int rev = a[0] - gameGold;
+												if (a[0] > gameGold) {
+													System.out.println ( "You made " + rev + " gold\n" );
+												}
+												else {
+													System.out.println ( "Loser. " + rev + " gold" );
+												}
+											}
+										break;
+										
+										case 1:
+											if (a[16] < 1) {
+												if (a[0] >= hpPotCost) {
+													System.out.println ( "You get a bottle of Snake Oil. Use it wisely" );
+													a[0] -= hpPotCost;
+													a[16] += 1;
+												}
+												else {
+													System.out.println ( "I'm your friend but I still require payment. " );
+													System.out.println ( "You only have " + a[0] + " gold..." );
+												}
+											}
+											else {
+												System.out.println ( "You can only hold one bottle at a time." );
+											}
+											break;
+										
+										case 2:
+											if (a[27] < 1) {
+												if (a[0] >= dynamiteCost) {
+													System.out.println ( "You get a Stick of Dynamite. Use it recklessly" );
+													a[0] -= dynamiteCost;
+													a[27] ++;
+												}
+												else {
+													System.out.println ( "I'm your friend but I still require payment. " );
+													System.out.println ( "You only have " + a[0] + " gold..." );
+												}
+											}
+											else {
+												System.out.println ( "You can only hold one explosive at a time." );
+											}
+											break;
+											
+										case 3:
+											if (a[28] > 0)
+											{
+												if (a[0] >= cKukriCost)
+												{
+													System.out.println ( "The Coral Kukri is now yours! DMG: 6-9. careful not to poison yourself..." );
+													a[3] = 6;
+													a[4] = 9;
+													a[0] -= cKukriCost;
+													a[28]--;
+													a[26] = 1;
+													if (a[19] == 1) {
+														a[4] += 2;
+													}
+													if (a[18] == 1) {
+														a[4]--;
+													}
+													if(a[13] == 0)
+													{
+														a[3]++;
+													}
+												}
+												else
+												{
+													System.out.println ( "You are too poor for this item. you have " + a[0] + " gold");
+												}
+											}
+											else
+											{
+												System.out.println ( "Sorry, This item is out of stock." );
+											}
+											
+										break;
+										
+										case 4:	
+																				
+									}//end switch
+								}//end merchant
+						}
+					break;
+					
+					case 3: 
+						System.out.println ( "A giant snake drops out of the canopy! " );   //snake
+						enemyAbility = 'p';
+						enemyHP = 40;   
+						eType = "Viper";
+						aType = " Strikes";
+						killText = "You decapitate the ";
+						deathFlavor = " and cut open its stomach revealing a team of cadavers along with 15 gold";
+						minRange = 6; 
+						maxRange = 7;
+					 	eMinHit = 5; 
+						eMaxHit = 11;
+						minFlee = 6; 
+						maxFlee = 11;
+						heroHit = 9;
+						rewardGold = 15;
+						rewardPoints = 160;
+						a = battleSequence(a, hitChance, hitDMG, attack, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, merch, enemyAbility);
+					
+					break;
+					
+					case 4: 
+						System.out.println ("A leafy tentacle strikes at you form the thick shrubbery!\nAn octopus-like plant wants to devour you!" ); //bat 
+						enemyAbility = 'p';
+						enemyHP = 50;   
+						eType = "Malboro Red";
+						aType = " swats";
+						killText = "You slay the ";
+						deathFlavor = ". upon death it spews 25 gold.";
+						minRange = 6; 
+						maxRange = 9;
+					 	eMinHit = 5; 
+						eMaxHit = 12;
+						minFlee = 5; 
+						maxFlee = 7;
+						heroHit = 9;
+						rewardGold = 25;
+						rewardPoints = 170;
+						a = battleSequence(a, hitChance, hitDMG, attack, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, merch, enemyAbility);
+					
+				}	
+			}
+			if (a[1] < 1) {
+				valley = 'n';
+			}
+			else {
+				System.out.println ( "Keep looking around?" );
+				do  //check character input
+				{
+					valley = input.next ( ).toLowerCase ( ).charAt ( 0 );
+					if (valley != 'y' && valley != 'n')  
+					{
+						System.out.println ( "You must enter y or n" );
+					}
+				} while (valley != 'y' && valley != 'n');
+			}
+		}
+		return a;
+		
+	}
+	
+	public static int[] wMarshRoad(int[] a, int rand, int range, int minEnc, int encNumber, int hitChance, int hitDMG, int attack, int merch, String nautical) {
+		System.out.println ( "You can feel the humidity rise as your steps begin to sink further into the saturated ground" );
+		Scanner input = new Scanner(System.in);
+		Scanner KeyIn = new Scanner(System.in);
+		char enemyAbility;
+		System.out.println ( "Press Enter to head " + nautical );
+		KeyIn.nextLine();
+		int areaCount = 0;
+		while (areaCount < 3)
+		{
+			rand = (int) ( Math.random ( ) * range + minEnc );  //encounter chance
+			if (encNumber == rand)
+			{
+				int enemy = (int) ( Math.random ( ) * 4 + 1);  //random enemy
+				switch (enemy)
+				{
+					case 1: 
+						System.out.println ("The mist thickens into fog, and suddenly a pale figure is right in front of you" ); //Ferns
+						enemyAbility = 'v';
+						int enemyHP = 35;   
+						String eType = "Litchling";
+						String aType = " claws ";
+						String killText = "You stab the ";
+						String deathFlavor = " through the heart and cut off its head. Gross.\nIt was wearing a sapphire pendant. +20 Gold! ";
+						int minRange = 4; 
+						int maxRange = 9;
+						int eMinHit = 5; 
+						int eMaxHit = 12;
+						int minFlee = 4; 
+						int maxFlee = 8;
+						int heroHit = 9;
+						int rewardGold = 20;
+						int rewardPoints = 175;
+						a = battleSequence(a, hitChance, hitDMG, attack, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, merch, enemyAbility);
+					
+					break;
+					
+					case 2: 
+						System.out.println ("An Enormous tree stands alone in a small clearing.\nAs you pass, you notice the branches swaying though there is no breeze."  ); //tree
+						System.out.println ( "Investigate the tree? y/n" );
+						char help;
+						do  //check character input
+						{
+							help = input.next ( ).toLowerCase ( ).charAt ( 0 );
+							if (help != 'y' && help != 'n')  
+							{
+								System.out.println ( "You must enter y or n" );
+							}
+						} while (help != 'y' && help != 'n'); 
+						
+						if (help == 'n')  //Don't look
+						{
+							System.out.println ( "Thats one freaky tree bruh. Exit stage right." );
+						}
+						else
+						{
+							int ruse =	(int) ( Math.random ( ) * 10);
+							if (ruse >= 5)
+							{
+								System.out.println ( "There are about 100 crows in the tree, and theyre pissed!" );
+								enemyAbility = 'a';
+								enemyHP = 50;   
+								eType = "Murder Crows";
+								aType = " dive bomb ";
+								killText = "You Murdered a Murder of ";
+								deathFlavor = "!\nThere is a small hole in the base of the tree and you find 25 gold\nanlong with a bottle of Snake Oil!";
+								minRange = 7; 
+								maxRange = 4;
+							 	eMinHit = 6; 
+								eMaxHit = 12;
+								minFlee = 5; 
+								maxFlee = 7;
+								heroHit = 9;
+								rewardGold = 25;
+								rewardPoints = 150;
+								a = battleSequence(a, hitChance, hitDMG, attack, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+									enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, merch, enemyAbility);
+							}
+							else 
+							{
+								System.out.println ( "You can hear a creaky sigh let out from the tree as you approach.\n"
+										+ "It gives itself a decent shake and drops 25 gold coins along with a few dead animals\nand a bottle of Snake Oil!"
+										+ " + 25 gold!" );
+								a[0] += 25;	
+							}
+							if (a[16] > 0) {
+								System.out.println ( "Delicious! +40 HP" );
+								a[1] += 40;
+								if (a[1] > a[2]) {
+									a[1] = a[2];
+								}
+							}
+							else {
+								System.out.println ( "You stowe the snake oil for later." );
+								a[16] ++;
+							}
+						}
+					break;
+					
+					case 3: 
+						System.out.println ( "A Horrible Scream stops you in your tracks..." );   //banshee
+						enemyAbility = 'a';
+						enemyHP = 55;   
+						eType = "Banshee";
+						aType = " claws";
+						killText = "You destroyed a ";
+						deathFlavor = "! everyone knows Banshee heads are worth 18 gold. +18 gold";
+						minRange = 5; 
+						maxRange = 8;
+					 	eMinHit = 5; 
+						eMaxHit = 11;
+						minFlee = 4; 
+						maxFlee = 8;
+						heroHit = 9;
+						rewardGold = 20;
+						rewardPoints = 140;
+						a = battleSequence(a, hitChance, hitDMG, attack, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, merch, enemyAbility);
+					
+					break;
+					
+					case 4: 
+						System.out.println ("The mist ahead of you begins to bind cohesively. A figure forms and floats closer" ); //air elemental
+						enemyAbility = 'a';
+						enemyHP = 45;   
+						eType = "Air Elemental";
+						aType = " gusts ";
+						killText = "You dissipate the ";
+						deathFlavor = " and coins drop from the mist... huh? + 20 coins";
+						minRange = 7; 
+						maxRange = 7;
+					 	eMinHit = 6; 
+						eMaxHit = 12;
+						minFlee = 5; 
+						maxFlee = 7;
+						heroHit = 9;
+						rewardGold = 20;
+						rewardPoints = 150;
+						a = battleSequence(a, hitChance, hitDMG, attack, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, merch, enemyAbility);
+				}
+			} 
+			if (areaCount < 3) {
+				areaCount++;
+				System.out.println ( "Camp " + areaCount + ". Press Enter to continue " + nautical);
+				KeyIn.nextLine ( );
+			}
+		}// end marsh road
+		
+		return a;	
+	}
+	public static int[] whiteMarsh(int[] a, int rand, int range, int minEnc, int encNumber, int hitChance, int hitDMG, int attack, int merch) {
+		Scanner input = new Scanner(System.in);
+		Scanner KeyIn = new Scanner(System.in);
+		System.out.println ( "The White Marsh is Humid, Moist, Creepy, and blindingly white with low visibility." );
+		System.out.println ( "Would you like to look around? y/n" );
+		int areaCount = 0;
+		char enemyAbility;
+		char mountain = 'a';
+		do  //check character input
+		{
+			mountain = input.next ( ).toLowerCase ( ).charAt ( 0 );
+			if (mountain != 'y' && mountain != 'n')  
+			{
+				System.out.println ( "You must enter y or n" );
+			}
+		} while (mountain != 'y' && mountain != 'n'); 
+		
+		while (mountain == 'y')
+		{
+			rand = (int) ( Math.random ( ) * range + minEnc );  //encounter chance
+			if (encNumber == rand)
+			{
+				int enemy = (int) ( Math.random ( ) * 4 + 1);  //random enemy
+				switch (enemy)
+				{
+					case 1: 
+						System.out.println ("The mist thickens into fog, and suddenly a pale figure is right in front of you" ); //Ferns
+						enemyAbility = 'v';
+						int enemyHP = 35;   
+						String eType = "Litchling";
+						String aType = " claws ";
+						String killText = "You stab the ";
+						String deathFlavor = " through the heart and cut off its head. Gross.\nIt was wearing a sapphire pendant. +20 Gold! ";
+						int minRange = 4; 
+						int maxRange = 9;
+						int eMinHit = 5; 
+						int eMaxHit = 12;
+						int minFlee = 4; 
+						int maxFlee = 8;
+						int heroHit = 9;
+						int rewardGold = 20;
+						int rewardPoints = 175;
+						a = battleSequence(a, hitChance, hitDMG, attack, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, merch, enemyAbility);
+					
+					break;
+					
+					case 2:  // Horde
+						if (a[24] > 0)
+						{
+							System.out.println ("You come to a large circle of long dead trees.\n"
+									+ "As you approach, you notice a glow eminating from the mist."  ); 	// boss
+							System.out.println ( "Move closer? y/n" );
+							char help;
+							do  //check character input
+							{
+								help = input.next ( ).toLowerCase ( ).charAt ( 0 );
+								if (help != 'y' && help != 'n')  
+								{
+									System.out.println ( "You must enter y or n" );
+								}
+							} while (help != 'y' && help != 'n'); 
+							
+							if (help == 'n')  //Don't look
+							{
+								System.out.println ( "No fucking way..." );
+							}
+							else
+							{
+								System.out.println ( "As you approach the glow, a mass of skeletons is uncovered from the mist.\n "
+										+ "Their gaze is fixated on a floating jewel, which you imagine is important somehow.\n "
+										+ "Suddenly one of the skeletons turns toward you!" );
+								System.out.println ( "Have at you! Regen 50% MaxHP" );
+								a[1] += a[2] / 2;
+								if (a[1] > a[2]) { //hp cannot go above max
+									a[1] = a[2];
+								}
+								System.out.println ( "Press Enter" );
+								KeyIn.nextLine ( );
+								
+								//Boss battle
+								enemyAbility = 'a';
+								enemyHP = 120;
+								eType = "Necro Horde"; 
+								aType = " attacks";
+								killText = "You slice through the last of the ";
+								deathFlavor = " and drop to your knees from exhaustion.\n"
+										+ "The jewel dims its light and drops from the air\n"
+										+ "When you pick it up you can see that it is a diamond in the shape of a key...\n"
+										+ "+10 max HP. HP fully restored! + 40 gold.";
+								minRange = 7; 
+								maxRange = 9;
+							 	eMinHit = 5; 
+								eMaxHit = 13;
+								minFlee = 6; 
+								maxFlee = 8;
+								heroHit = 9;
+								rewardGold = 40;
+								rewardPoints = 600;
+								a = battleSequence(a, hitChance, hitDMG, attack, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+									enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, merch, enemyAbility);
+								if (a[1] > 0) {
+									a[2] += 10; //hp Max + 10
+									a[1] = a[2]; // full hp
+									a[0] += 50;  // 50 gold
+									a[29] --;  //horde dies
+									a[21] += 600; // 600 points
+								}
+							}
+						}
+						else
+						{
+							System.out.println ( "You wander back to the spot where you fought the Necro Horde" );
+							System.out.println ( "Feeling Nostalgic?\n ...Oh a coin! + 1 gold" );
+							a[0] += 1;
+						}
+						break;
+					
+					case 3: 
+						System.out.println ("An Enormous tree stands alone in a small clearing.\nAs you pass, you notice the branches swaying though there is no breeze."  ); //tree
+						System.out.println ( "Investigate the tree? y/n" );
+						char help;
+						do  //check character input
+						{
+							help = input.next ( ).toLowerCase ( ).charAt ( 0 );
+							if (help != 'y' && help != 'n')  
+							{
+								System.out.println ( "You must enter y or n" );
+							}
+						} while (help != 'y' && help != 'n'); 
+						
+						if (help == 'n')  //Don't look
+						{
+							System.out.println ( "Thats one freaky tree bruh. Exit stage right." );
+						}
+						else
+						{
+							int ruse =	(int) ( Math.random ( ) * 10);
+							if (ruse >= 5)
+							{
+								System.out.println ( "There are about 100 crows in the tree, and theyre pissed!" );
+								enemyAbility = 'a';
+								enemyHP = 50;   
+								eType = "Murder Crows";
+								aType = " dive bomb ";
+								killText = "You Murdered a Murder of ";
+								deathFlavor = "!\nThere is a small hole in the base of the tree and you find 25 gold\nanlong with a bottle of Snake Oil!";
+								minRange = 7; 
+								maxRange = 4;
+							 	eMinHit = 6; 
+								eMaxHit = 12;
+								minFlee = 5; 
+								maxFlee = 7;
+								heroHit = 9;
+								rewardGold = 25;
+								rewardPoints = 150;
+								a = battleSequence(a, hitChance, hitDMG, attack, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+									enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, merch, enemyAbility);
+							}
+							else 
+							{
+								System.out.println ( "You can hear a creaky sigh let out from the tree as you approach.\n"
+										+ "It gives itself a decent shake and drops 25 gold coins along with a few dead animals\nand a bottle of Snake Oil!"
+										+ " + 25 gold!" );
+								a[0] += 25;	
+							}
+							if (a[16] > 0) {
+								System.out.println ( "Delicious! +40 HP" );
+								a[1] += 40;
+								if (a[1] > a[2]) {
+									a[1] = a[2];
+								}
+							}
+							else {
+								System.out.println ( "You stowe the snake oil for later." );
+								a[16] ++;
+							}
+						}
+					break;
+					
+					case 4: 
+						System.out.println ("The mist ahead of you begins to bind cohesively. A figure forms and floats closer" ); //air elemental
+						enemyAbility = 'a';
+						enemyHP = 45;   
+						eType = "Air Elemental";
+						aType = " gusts ";
+						killText = "You dissipate the ";
+						deathFlavor = " and coins drop from the mist... huh? + 20 coins";
+						minRange = 7; 
+						maxRange = 7;
+					 	eMinHit = 6; 
+						eMaxHit = 12;
+						minFlee = 5; 
+						maxFlee = 7;
+						heroHit = 9;
+						rewardGold = 20;
+						rewardPoints = 150;
+						a = battleSequence(a, hitChance, hitDMG, attack, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, merch, enemyAbility);
+					
+				}
+			}
+			if (a[1] > 0) {
+				System.out.println ( "Keep Searching the Marsh?" );
+				do  //check character input
+				{
+					mountain = input.next ( ).toLowerCase ( ).charAt ( 0 );
+					if (mountain != 'y' && mountain != 'n')  
+					{
+						System.out.println ( "You must enter y or n" );
+					}
+				} while (mountain != 'y' && mountain != 'n');
+			}
+			else {
+				mountain = 'n';
+			}
+		}
+		return a;
+	}
+	
 	
 	public static void main( String[ ] args )//////////////////////////////////////////////////////////////////////////////////////////////////
 	{
@@ -2338,10 +3559,10 @@ public class CrestFallMethods
 			// Direction
 			char forest = 'y';
 		   // probabilities
-			int minEnc = 1, maxEnc = 3, encNumber = 1, range = maxEnc - minEnc + 1, rand = 0, hitDMG = 0, hitChance = 0;
+			int minEnc = 1, maxEnc = 2, encNumber = 1, range = maxEnc - minEnc + 1, rand = 0, hitDMG = 0, hitChance = 0;
 			//misc
 			int hpPotCost = 5, merch = 0;
-			final int INNCOST = 20;
+			final int INNCOST = 15;
 			double start = 0.0; //Timer
 			
 			int [] a = gameArray(); //get array variables
@@ -2377,15 +3598,16 @@ public class CrestFallMethods
 				}
 			
 				//Merchant Camp hub- Chapter 2
+				if (a[1] > 0) {
+					System.out.println ( "You've reached the merchant camp and completed Chapter 1 of your journey." );
+					System.out.println ( "HP: " + a[1]);
+					System.out.println ( "Gold: " + a[0] );
+					System.out.println ( "Press Enter to Continue" );
+					KeyIn.nextLine();
+				}
 				while (a[7] == 2)
 				{
-					if (a[1] > 0) {
-						System.out.println ( "You've reached the merchant camp and completed Chapter 1 of your journey." );
-						System.out.println ( "HP: " + a[1]);
-						System.out.println ( "Gold: " + a[0] );
-						System.out.println ( "Press Enter to Continue" );
-						KeyIn.nextLine();
-					}
+					a[25] = 'N';
 					merch = 0;
 					while (a[25] == 'N')
 					{
@@ -2409,8 +3631,7 @@ public class CrestFallMethods
 								System.out.println ( "Press Enter to continue" );         
 								KeyIn.nextLine ( );
 								System.out.println ( "As you set out, you have a strange feeling about this \"City\"." );
-								System.out.println ( "But, The road is flat and lined by trees that are filled with birds singing their songs" );
-								System.out.println ( "You pick up your pace...\n" );
+								System.out.println ( "But, The road is flat and lined by trees that are filled with birds singing their songs...\n" );
 								a = cityRoad(a, rand, range, minEnc, encNumber, hitChance, hitDMG, attack, merch);
 								if (a[1] > 0) {
 									a= theCity(a, rand, range, minEnc, encNumber, hitChance, hitDMG, attack, merch, INNCOST);/////the city/////
@@ -2440,24 +3661,71 @@ public class CrestFallMethods
 				//Chapter 3
 				while (a[7] == 3) 
 				{
-					System.out.println ( "You've completed Chapter 2!");
-					System.out.println ( "Press Enter to skip 8 years" );         
-					KeyIn.nextLine ( );
-					System.out.println ( "You are immediately snapped out of your memory\nby a knock on front your door." );
-					System.out.println ( "Opening the door reveals the distantly familiar\nface of the carriage driver that had brought you to this village." );
-					System.out.println ( "You have not seen him since the day you stepped off his carriage\nPress Enter" );
-					KeyIn.nextLine ( );
-					System.out.println ( "\"Your abilities are needed again\" he says, \nand continues \"You had slain an agent of Chaos," );
-					System.out.println ( "and though you sought retribution and have found peace again,\nThere are even more horrors of the world driving others, like yourself,\nfrom their homes and into an unforgiving world." );
-					System.out.println ( "You are bound to this duty, just as the Chaos Orb is bound to you.\"\nPress Enter" );
-					KeyIn.nextLine ( );
-					System.out.println ( "Before you can say anything he disappears, and a familiar scenario arouses your memory again" );
-					System.out.println ( "Where \"he\" stood now lays the very same equipment you had 8 years ago..." );
-					System.out.println ( "After donning your armor and sheathing your weapons\nyou step out into the world willingly\nPress Enter" );
-					KeyIn.nextLine ( );
-					a[7] = 0;
-					a[1] = 0;
-					break;
+					String nautical;
+					ch3Intro();  //chapter 3 intro
+					a[1] = a[2]; //refill health
+					a[25] = '1'; //initialize direction loop
+					while (a[25] == '1') {
+						a = homeHub(a, merch);
+						switch (a[25]) {
+							
+							case 2:
+								int eastWest = 0;
+								System.out.println ( "The trees and ferns of Shimmering Valley all perpetually covered in dew\nby the mist that rolls in from the distant marsh." );
+								nautical = "East";
+								a = sValleyRoad(a, rand, range, minEnc, encNumber, hitChance, hitDMG, attack, merch, nautical);
+								if(a[1] > 0) {
+									a = sValley(a, rand, range, minEnc, encNumber, hitChance, hitDMG, attack, merch);
+								}
+								if(a[1] > 0) {
+									System.out.println ( "Head back home or onward to the White Marsh?" );
+									System.out.println ( "1 - Home\n2 - Marsh" );
+									do {
+										eastWest = input.nextInt ( );
+										if (eastWest < 1 || eastWest > 2) {
+											System.out.println ( "You must enter 1 to go Home or 2 for the Marsh" );
+										}	
+									}while (eastWest < 1 || eastWest > 2);
+								}
+								if (eastWest == 1) {
+									nautical = "West";
+									a = sValleyRoad (a, rand, range, minEnc, encNumber, hitChance, hitDMG, attack, merch, nautical);
+									a[25] = '1';
+								}
+								else if (eastWest == 2){
+									nautical = "East";
+									a = wMarshRoad (a, rand, range, minEnc, encNumber, hitChance, hitDMG, attack, merch, nautical);
+									if (a[1] > 0) {
+										a = whiteMarsh(a, rand, range, minEnc, encNumber, hitChance, hitDMG, attack, merch);
+									}
+									if (a[1] > 0) {
+										nautical = "West";
+										System.out.println ( "You find the trail and head back west but everything looks different.\n "
+												+ "After what seems like a couple of hours, you realize that you are now\n "
+												+ "walking amongst the split trails of the shimmering valley...\n" );
+										a = sValleyRoad (a, rand, range, minEnc, encNumber, hitChance, hitDMG, attack, merch, nautical);
+										a[25] = '1';
+									}
+								}
+							break;
+							
+							case 3:
+								System.out.println ( "Arid Plains" );
+								a[25] = '1';
+							break;
+								
+							case 4:
+								System.out.println ( "Frozen Desert" );
+								a[25] = '1';
+							break;
+								
+							case 5:
+								System.out.println ( "Sleeping Forest" );
+								a[25] = '1';
+							
+							
+						}
+					}
 				}
 			}//end HP > 0
 			double end = System.currentTimeMillis ( );
@@ -2469,7 +3737,7 @@ public class CrestFallMethods
 			if (minutes > 15) 
 			{
 				int penalty = (minutes - 15) * 50;
-				System.out.println ( "Time Penalty -" + penalty + " a[21]" );
+				System.out.println ( "Time Penalty -" + penalty + " points" );
 				a[21] -= penalty;
 			}
 			System.out.println ( "SCORE: " + a[21] );
