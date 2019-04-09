@@ -17,36 +17,36 @@ public class CrestFall
 			char forest = 'y';
 			
 			double start = 0.0; //Timer
-			int[] a =  CfSetup.gameArray();
-			a = CfSetup.warp ( a );
-			a = CfSetup.characterClass(a);
-			a = CfSetup.beginGame (a, forest);
+			
+			CfSetup.initialize();
+			CfSetup.warp ( );
+			CfSetup.characterClass();
+			CfSetup.beginGame (forest);
 			
 			//loop while hp > 0
-			while (a[1] > 0)
+			while (Var.getHp() > 0)
 			{
 				start = System.currentTimeMillis ( );// start timer
-				attack = a[4] - a[3] + 1;  //damage range
 				
-				a = CfChapter.ch1();
+				CfChapter.ch1();
 				
 				//Merchant Camp hub- Chapter 2
-				if (a[1] > 0) {
+				if (Var.getHp() > 0) {
 					
-					CfSetup.ch2Intro(a);
+					CfSetup.ch2Intro();
 				}
-				while (a[7] == 2)
+				while (Var.getChapter() == 2)
 				{
-					a = CfChapter.ch2 ( );
+					CfChapter.ch2 ( );
 				}
 				//Chapter 3
-				if (a[1] > 0) {
+				if (Var.getHp() > 0) {
 					
 					CfSetup.ch3Intro();  //chapter 3 intro
 				}
-				while (a[7] == 3) 
+				while (Var.getChapter() == 3) 
 				{
-					a = CfChapter.ch3 ( );
+					CfChapter.ch3 ( );
 				}
 			
 			}
@@ -61,9 +61,9 @@ public class CrestFall
 			{
 				int penalty = (minutes - 15) * 50;
 				System.out.println ( "Time Penalty -" + penalty + " points" );
-				a[21] -= penalty;
+				Var.setPoints(-penalty);
 			}
-			System.out.println ( "SCORE: " + a[21] );
+			System.out.println ( "SCORE: " + Var.getPoints() );
 			System.out.println ( "Play Again? y/n" );
 			do  //check character input
 			{

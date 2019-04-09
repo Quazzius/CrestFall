@@ -7,13 +7,13 @@ public class CfRoads
 	public static int rand, attack, hitDMG, hitChance, merch;
 	
 
-	public static int[ ] forest(int[ ] a) {
+	public static void forest() {
 		//Journey through the forest
 		Scanner KeyIn = new Scanner(System.in);
 		int merch = 0;
-		int areaCount = 0;
+		Var.setAreaCount(0);
 		System.out.println ( "You begin your journey heading South through the overgrown Elderwood forest" );
-		while (areaCount < 3)
+		while (Var.getAreaCount() < 3)
 		{
 			rand = (int) ( Math.random ( ) * range + minEnc );  //encounter chance
 			if (encNumber == rand)
@@ -23,7 +23,7 @@ public class CfRoads
 				{
 					case 1: 
 						System.out.println ("You stumbled accross a Bear, Fuck" );   //Bear fight
-						char enemyAbility = 'a';  //enemy special ability class (a = none)
+						char enemyAbility = 'a';  //enemy special ability class ( none)
 						int enemyHP = 12;   //enemy health initialize
 						String eType = "Bear"; //type of enemy
 						String aType = " Swipes";  //attack style
@@ -34,7 +34,7 @@ public class CfRoads
 						int minFlee = 4, maxFlee = 8;   // chance to flee from  enemy
 						int heroHit = 8;  // chance to hit enemy
 						int rewardGold = 5, rewardPoints = 50;
-						a = CfSequence.battleSequence ( a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, enemyHP, maxFlee, 
+						 CfSequence.battleSequence ( minRange, maxRange, eType, aType, eMaxHit, eMinHit, enemyHP, maxFlee, 
 								minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility );
 					break;
 					
@@ -55,7 +55,7 @@ public class CfRoads
 						heroHit = 8;
 						rewardGold = 3;
 						rewardPoints = 10;
-						a = CfSequence.battleSequence ( a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, enemyHP, maxFlee,
+						CfSequence.battleSequence ( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  enemyHP, maxFlee,
 								minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility );
 					break;
 					
@@ -76,24 +76,23 @@ public class CfRoads
 						heroHit = 8;
 						rewardGold = 6;
 						rewardPoints = 30;
-						a = CfSequence.battleSequence ( a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, enemyHP, maxFlee,
+						 CfSequence.battleSequence ( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  enemyHP, maxFlee,
 								minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility );
 				}
 			}
-			if (areaCount < 3 && a[1] > 0) {
-				areaCount++;
-				System.out.println ( "Camp " + areaCount + ". Press Enter to continue South" );
+			if (Var.getAreaCount() < 3 && Var.hp > 0) {
+				Var.setAreaCount(1);
+				System.out.println ( "Camp " + Var.getAreaCount() + ". Press Enter to continue South" );
 				KeyIn.nextLine ( );
 			}
 		}
-		return a;
 	}
 
-	public static int roadFork (int [] a) {
+	public static char roadFork () {
 			Scanner input = new Scanner(System.in);
 			Scanner KeyIn = new Scanner(System.in);
 			System.out.println ( "You find the road after 3 days and shortly thereafter come to a Fork." );
-			System.out.println ( "You're still alive with " + a[1] + " HP, and " + a[0] + " gold. Cool..." );
+			System.out.println ( "You're still alive with " + Var.hp + " HP, and " + Var.getGold() + " gold. Cool..." );
 			System.out.println ( "press Enter to continue" );
 			KeyIn.nextLine ( );
 			System.out.println ( "You remember the Merchant Camp being to the West and looks well maintained." );
@@ -111,11 +110,10 @@ public class CfRoads
 				}
 			} while (roadFork != 'E' && roadFork != 'W'); 
 			
-			
-			return (char)roadFork;	
+			return roadFork;	
 	}
 
-	public static int[ ] merchantRoad(int[] a) {
+	public static  void merchantRoad() {
 		Scanner input = new Scanner(System.in);
 		Scanner KeyIn = new Scanner(System.in);
 		System.out.println ( "The Merchant Camp is 3 days from the fork" );
@@ -123,8 +121,8 @@ public class CfRoads
 		System.out.println ( "press Enter to continue" );
 		KeyIn.nextLine ( );
 		int merch = 0;
-		int areaCount = 0;
-		while (areaCount < 3)
+		Var.setAreaCount(0);
+		while (Var.getAreaCount() < 3)
 		{
 			rand = (int) ( Math.random ( ) * range + minEnc );  //encounter chance
 			if (encNumber == rand)
@@ -149,7 +147,7 @@ public class CfRoads
 					int heroHit = 8;
 					int rewardGold = 4;
 					int rewardPoints = 25;
-					a = CfSequence.battleSequence ( a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, enemyHP, maxFlee,
+					 CfSequence.battleSequence ( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  enemyHP, maxFlee,
 							minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility );
 				
 				break;
@@ -192,14 +190,14 @@ public class CfRoads
 							heroHit = 8;
 							rewardGold = 6;
 							rewardPoints = 30;
-							a = CfSequence.battleSequence ( a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, enemyHP, maxFlee,
+							 CfSequence.battleSequence ( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  enemyHP, maxFlee,
 									minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility );
 						}
 						else
 						{
 							System.out.println ( "You spend the rest of the day helping the Man fix his cart" );
 							System.out.println ( "He gives you 10 gold for your services and company" );
-							a[0] += 10;
+							Var.setGold(10);
 						}
 				
 					}
@@ -223,25 +221,24 @@ public class CfRoads
 					heroHit = 8;
 					rewardGold = 7;
 					rewardPoints = 40;
-					a = CfSequence.battleSequence ( a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, enemyHP, maxFlee,
+					 CfSequence.battleSequence ( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  enemyHP, maxFlee,
 							minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility );
 			
 				}
 			
 			}
-			if (areaCount < 3 && a[1] > 0) {
-				areaCount++;
-				System.out.println ( "Camp " + areaCount + ". Press Enter to continue West" );
+			if (Var.getAreaCount() < 3 && Var.getHp() > 0) {
+				Var.setAreaCount(1);
+				System.out.println ( "Camp " + Var.getAreaCount() + ". Press Enter to continue West" );
 				KeyIn.nextLine ( );
 			}
 		}
-		if (a[1] > 0) {
-			a[7] = 2;
+		if (Var.getHp() > 0) {
+			Var.setChapter(2);
 		}
-		return a;
 	} //End Merchant Road
 
-	public static int[] swampRoad1 (int[] a) {
+	public static void swampRoad1 () {
 		char enemyAbility;
 		Scanner input = new Scanner(System.in);
 		Scanner KeyIn = new Scanner(System.in);
@@ -249,8 +246,8 @@ public class CfRoads
 		System.out.println ( "press Enter to continue" );
 		KeyIn.nextLine ( );
 		System.out.println ( "The road meanders to the SouthEast and the air cathces a chill" );
-		int areaCount = 0;
-		while (areaCount < 3)
+		Var.setAreaCount(0);
+		while (Var.getAreaCount() < 3)
 		{
 			rand = (int) ( Math.random ( ) * range + minEnc );  //encounter chance
 			if (encNumber == rand)
@@ -275,7 +272,7 @@ public class CfRoads
 						int heroHit = 8;
 						int rewardGold = 5;
 						int rewardPoints = 30;
-						a = CfSequence.battleSequence ( a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, enemyHP, maxFlee,
+						 CfSequence.battleSequence ( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  enemyHP, maxFlee,
 								minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility );
 					
 					break;
@@ -318,14 +315,14 @@ public class CfRoads
 								heroHit = 9;
 								rewardGold = 8;
 								rewardPoints = 50;
-								a = CfSequence.battleSequence ( a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, enemyHP, maxFlee,
+								 CfSequence.battleSequence ( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  enemyHP, maxFlee,
 										minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility );
 						
 							}
 							else 
 							{
 								System.out.println ( "You find a Garnet worth 8 gold! Killer!" );
-								a[0] += 8;
+								Var.setGold(8);
 								
 							}
 					}
@@ -348,7 +345,7 @@ public class CfRoads
 						heroHit = 8;
 						rewardGold = 5;
 						rewardPoints = 40;
-						a = CfSequence.battleSequence ( a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, enemyHP, maxFlee,
+						 CfSequence.battleSequence ( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  enemyHP, maxFlee,
 								minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility );
 					
 					break;
@@ -370,32 +367,29 @@ public class CfRoads
 						heroHit = 8;
 						rewardGold = 6;
 						rewardPoints = 35;
-						a = CfSequence.battleSequence ( a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, enemyHP, maxFlee,
+						 CfSequence.battleSequence ( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  enemyHP, maxFlee,
 								minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility );
 					
 				}
 			} 
-			if (areaCount < 3 && a[1] > 0) {
-				areaCount++;
-				System.out.println ( "Camp " + areaCount + ". Press Enter to continue East" );
+			if (Var.getAreaCount() < 3 && Var.hp > 0) {
+				Var.setAreaCount(1);
+				System.out.println ( "Camp " + Var.getAreaCount() + ". Press Enter to continue East" );
 				KeyIn.nextLine ( );
 			}
-		}// end swamp road
-		
-		return a;	
+		}// end swamp road	
 	}
 
-	public static int[] swampRoad2(int[] a) {
+	public static void swampRoad2() {
 		char enemyAbility;
 		Scanner input = new Scanner(System.in);
 		Scanner KeyIn = new Scanner(System.in);
-		a[25] = 'E';
 		System.out.println ( "The only road out is northwest to the Merchant Camp" );       //other side of lake
 		System.out.println ( "Enter to continue" );
 		KeyIn.nextLine();
 		System.out.println ( "You now head northWest along another muddy trail." );
-		int areaCount = 0;
-		while (areaCount < 3)
+		Var.setAreaCount(0);
+		while (Var.getAreaCount() < 3)
 		{
 			rand = (int) ( Math.random ( ) * range + minEnc );  //encounter chance
 			if (encNumber == rand)
@@ -420,7 +414,7 @@ public class CfRoads
 					int heroHit = 8;
 					int rewardGold = 5;
 					int rewardPoints = 30;
-					a = CfSequence.battleSequence ( a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, enemyHP, maxFlee,
+					 CfSequence.battleSequence ( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  enemyHP, maxFlee,
 							minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility );
 				break;
 				
@@ -461,13 +455,13 @@ public class CfRoads
 						heroHit = 9;
 						rewardGold = 8;
 						rewardPoints = 80;
-						a = CfSequence.battleSequence ( a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, enemyHP, maxFlee,
+						 CfSequence.battleSequence ( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  enemyHP, maxFlee,
 								minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility );
 					}
 					else 
 					{
 						System.out.println ( "You find a Garnet worth 8 gold! Killer!" );
-						a[0] += 8;
+						Var.setGold(8);
 					}
 				}
 				break;
@@ -489,7 +483,7 @@ public class CfRoads
 					heroHit = 8;
 					rewardGold = 5;
 					rewardPoints = 40;
-					a = CfSequence.battleSequence ( a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, enemyHP, maxFlee,
+					 CfSequence.battleSequence ( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  enemyHP, maxFlee,
 							minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility );
 				break;
 				
@@ -510,29 +504,27 @@ public class CfRoads
 					heroHit = 8;
 					rewardGold = 10;
 					rewardPoints = 80;
-					a = CfSequence.battleSequence ( a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, enemyHP, maxFlee,
+					 CfSequence.battleSequence ( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  enemyHP, maxFlee,
 							minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility );
 			
 				}
 			}
-			if (areaCount < 3 && a[1] > 0) {
-				areaCount++;
-				System.out.println ( "Camp " + areaCount + ". Press Enter to continue West" );
+			if (Var.getAreaCount() < 3 && Var.hp > 0) {
+				Var.setAreaCount(1);
+				System.out.println ( "Camp " + Var.getAreaCount() + ". Press Enter to continue West" );
 				KeyIn.nextLine ( );	
 			}
 		}// end swamp road 2
-		a[25] = 'N';
-		a[17] = 0;
-		a[7] = 2;
-		return a;
+		Var.setMerchCount(0);
+		Var.setChapter(2);
 	}
 
-	public static int[] cityRoad(int[] a) {
+	public static void cityRoad() {
 		Scanner input = new Scanner(System.in);
 		Scanner KeyIn = new Scanner(System.in);
 		char enemyAbility;
-		int areaCount = 0;
-		while (areaCount < 3)
+		Var.setAreaCount(0);
+		while (Var.getAreaCount() < 3)
 		{
 			rand = (int) ( Math.random ( ) * range + minEnc );  //encounter chance
 			if (encNumber == rand)
@@ -557,7 +549,7 @@ public class CfRoads
 					int heroHit = 8;
 					int rewardGold = 5;
 					int rewardPoints = 40;
-					a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+					 CfSequence.battleSequence(minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 						enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 				
 				break;
@@ -604,7 +596,7 @@ public class CfRoads
 							heroHit = 8;
 							rewardGold = 12;
 							rewardPoints = 60;
-							a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+							 CfSequence.battleSequence( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 								enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 						}
 						else
@@ -632,29 +624,28 @@ public class CfRoads
 					heroHit = 8;
 					rewardGold = 11;
 					rewardPoints = 100;
-					a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+					 CfSequence.battleSequence( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 						enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 				
 				}
 			} 
-			if (areaCount < 3 && a[1] > 0) {
-				areaCount++;
-				System.out.println ( "Camp " + areaCount + ". Press Enter to continue South" );
+			if (Var.getAreaCount() < 3 && Var.hp > 0) {
+				Var.setAreaCount(1);
+				System.out.println ( "Camp " + Var.getAreaCount() + ". Press Enter to continue South" );
 				KeyIn.nextLine ( );
 			}
 		}
-		return a;
 	}
 
-	public static int[] mountainRoad1(int[] a) {
+	public static void mountainRoad1() {
 		Scanner input = new Scanner(System.in);
 		Scanner KeyIn = new Scanner(System.in);
 		char enemyAbility;
 		System.out.println ( "Its a Hard road to the mountain, but there's no turning back now..." );
 		System.out.println ( "Press Enter to start your climb" );
 		KeyIn.nextLine();
-		int areaCount = 0;
-		while (areaCount < 3)
+		Var.setAreaCount(0);
+		while (Var.getAreaCount() < 3)
 		{
 			rand = (int) ( Math.random ( ) * range + minEnc );  //encounter chance
 			if (encNumber == rand)
@@ -679,7 +670,7 @@ public class CfRoads
 						int heroHit = 9;
 						int rewardGold = 15;
 						int rewardPoints = 125;
-						a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+						 CfSequence.battleSequence( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 					
 					break;
@@ -722,13 +713,13 @@ public class CfRoads
 								heroHit = 9;
 								rewardGold = 20;
 								rewardPoints = 150;
-								a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+								 CfSequence.battleSequence( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 									enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 							}
 							else 
 							{
 								System.out.println ( "You find a Diamond worth 20 gold! Killer!" );
-								a[0] += 20;	
+								Var.setGold(20);	
 							}
 						}
 					break;
@@ -750,7 +741,7 @@ public class CfRoads
 						heroHit = 8;
 						rewardGold = 20;
 						rewardPoints = 140;
-						a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+						 CfSequence.battleSequence( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 					
 					break;
@@ -772,25 +763,24 @@ public class CfRoads
 						heroHit = 9;
 						rewardGold = 13;
 						rewardPoints = 120;
-						a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+						 CfSequence.battleSequence( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 				}
 			} 
-			if (areaCount < 3 && a[1] > 0) {
-				areaCount++;
-				System.out.println ( "Camp " + areaCount + ". Press Enter to continue Upward" );
+			if (Var.getAreaCount() < 3 && Var.hp > 0) {
+				Var.setAreaCount(1);
+				System.out.println ( "Camp " + Var.getAreaCount() + ". Press Enter to continue Upward" );
 				KeyIn.nextLine ( );
 			}
-		}// end mountain road
-		return a;												
+		}// end mountain road											
 	}
 
-	public static int[] mountainRoad2(int[] a) {
+	public static void mountainRoad2() {
 		Scanner input = new Scanner(System.in);
 		Scanner KeyIn = new Scanner(System.in);
 		char enemyAbility;
-		int areaCount = 0;
-		while (areaCount < 3)
+		Var.setAreaCount(0);
+		while (Var.getAreaCount() < 3)
 		{
 			rand = (int) ( Math.random ( ) * range + minEnc );  //encounter chance
 			if (encNumber == rand)
@@ -815,7 +805,7 @@ public class CfRoads
 						int heroHit = 9;
 						int rewardGold = 15;
 						int rewardPoints = 125;
-						a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+						 CfSequence.battleSequence( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 					break;
 				
@@ -857,13 +847,13 @@ public class CfRoads
 								heroHit = 9;
 								rewardGold = 20;
 								rewardPoints = 150;
-								a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+								 CfSequence.battleSequence(minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 									enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 							}
 							else 
 							{
 								System.out.println ( "You find a Diamond worth 20 gold! Killer!" );
-								a[0] += 20;	
+								Var.setGold(20);	
 							}
 						}
 					break;
@@ -885,7 +875,7 @@ public class CfRoads
 						heroHit = 8;
 						rewardGold = 20;
 						rewardPoints = 140;
-						a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+						 CfSequence.battleSequence( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 					break;
 					
@@ -906,35 +896,34 @@ public class CfRoads
 						heroHit = 9;
 						rewardGold = 13;
 						rewardPoints = 140;
-						a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+						 CfSequence.battleSequence( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 				}
 			}
-			if (areaCount < 3 && a[1] > 0) {
-				areaCount++;
-				System.out.println ( "Camp " + areaCount + ". Press Enter to continue Downward" );
+			if (Var.getAreaCount() < 3 && Var.hp > 0) {
+				Var.setAreaCount(1);
+				System.out.println ( "Camp " + Var.getAreaCount() + ". Press Enter to continue Downward" );
 				KeyIn.nextLine ( );
 			}
 			
 		}
-		if (a[1] > 0) {
-			a[25] = 'N';
-			a[17] = 0;
+		if (Var.hp > 0) {
+			Var.setDirection(1);
+			Var.setMerchCount(0);
 		}
 		else {
-			a[25] = 'A';
+			Var.setDirection(0);
 		}
-		return a;
 	}
 
-	public static int[] sValleyRoad(int[] a, String nautical) {
+	public static void sValleyRoad( String nautical) {
 		Scanner input = new Scanner(System.in);
 		Scanner KeyIn = new Scanner(System.in);
 		char enemyAbility;
 		System.out.println ( "Press Enter to head " + nautical );
 		KeyIn.nextLine();
-		int areaCount = 0;
-		while (areaCount < 3)
+		Var.setAreaCount(0);
+		while (Var.getAreaCount() < 3)
 		{
 			rand = (int) ( Math.random ( ) * range + minEnc );  //encounter chance
 			if (encNumber == rand)
@@ -959,7 +948,7 @@ public class CfRoads
 						int heroHit = 9;
 						int rewardGold = 15;
 						int rewardPoints = 125;
-						a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+						 CfSequence.battleSequence( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 					
 					break;
@@ -1002,13 +991,13 @@ public class CfRoads
 								heroHit = 9;
 								rewardGold = 20;
 								rewardPoints = 150;
-								a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+								 CfSequence.battleSequence(minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 									enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 							}
 							else 
 							{
 								System.out.println ( "You find a chest full of coin! + 20 gold" );
-								a[0] += 20;	
+								Var.setGold(20);	
 							}
 						}
 					break;
@@ -1030,7 +1019,7 @@ public class CfRoads
 						heroHit = 9;
 						rewardGold = 20;
 						rewardPoints = 140;
-						a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+						 CfSequence.battleSequence( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 					
 					break;
@@ -1052,29 +1041,27 @@ public class CfRoads
 						heroHit = 9;
 						rewardGold = 25;
 						rewardPoints = 150;
-						a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+						 CfSequence.battleSequence( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 				}
 			} 
-			if (areaCount < 3 && a[1] > 0) {
-				areaCount++;
-				System.out.println ( "Camp " + areaCount + ". Press Enter to continue " + nautical);
+			if (Var.getAreaCount() < 3 && Var.hp > 0) {
+				Var.setAreaCount(1);
+				System.out.println ( "Camp " + Var.getAreaCount() + ". Press Enter to continue " + nautical);
 				KeyIn.nextLine ( );
 			}
-		}// end valley road
-		
-		return a;	
+		}// end valley road	
 	}
 
-	public static int[] wMarshRoad(int[] a, String nautical) {
+	public static void wMarshRoad( String nautical) {
 		System.out.println ( "You can feel the humidity rise as your steps begin to sink further into the saturated ground" );
 		Scanner input = new Scanner(System.in);
 		Scanner KeyIn = new Scanner(System.in);
 		char enemyAbility;
 		System.out.println ( "Press Enter to head " + nautical );
 		KeyIn.nextLine();
-		int areaCount = 0;
-		while (areaCount < 3)
+		Var.setAreaCount(0);
+		while (Var.getAreaCount() < 3)
 		{
 			rand = (int) ( Math.random ( ) * range + minEnc );  //encounter chance
 			if (encNumber == rand)
@@ -1099,7 +1086,7 @@ public class CfRoads
 						int heroHit = 9;
 						int rewardGold = 20;
 						int rewardPoints = 175;
-						a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+						 CfSequence.battleSequence( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 					
 					break;
@@ -1142,7 +1129,7 @@ public class CfRoads
 								heroHit = 9;
 								rewardGold = 25;
 								rewardPoints = 150;
-								a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+								 CfSequence.battleSequence(minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 									enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 							}
 							else 
@@ -1150,18 +1137,15 @@ public class CfRoads
 								System.out.println ( "You can hear a creaky sigh let out from the tree as you approach.\n"
 										+ "It gives itself a decent shake and drops 25 gold coins along with a few dead animals\nand a bottle of Snake Oil!"
 										+ " + 25 gold!" );
-								a[0] += 25;	
+								Var.setGold(25);	
 							}
-							if (a[16] > 0) {
+							if (Var.getHpPot() > 0) {
 								System.out.println ( "Delicious! +40 HP" );
-								a[1] += 40;
-								if (a[1] > a[2]) {
-									a[1] = a[2];
-								}
+								Var.setHp(40);
 							}
 							else {
 								System.out.println ( "You stowe the snake oil for later." );
-								a[16] ++;
+								Var.setHpPot(1);
 							}
 						}
 					break;
@@ -1183,7 +1167,7 @@ public class CfRoads
 						heroHit = 9;
 						rewardGold = 18;
 						rewardPoints = 140;
-						a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+						 CfSequence.battleSequence( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 					
 					break;
@@ -1205,28 +1189,26 @@ public class CfRoads
 						heroHit = 9;
 						rewardGold = 20;
 						rewardPoints = 150;
-						a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+						 CfSequence.battleSequence( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 				}
 			} 
-			if (areaCount < 3 && a[1] > 0) {
-				areaCount++;
-				System.out.println ( "Camp " + areaCount + ". Press Enter to continue " + nautical);
+			if (Var.getAreaCount() < 3 && Var.hp > 0) {
+				Var.setAreaCount(1);
+				System.out.println ( "Camp " + Var.getAreaCount() + ". Press Enter to continue " + nautical);
 				KeyIn.nextLine ( );
 			}
 		}// end marsh road
-		
-		return a;	
 	}
 
-	public static int[] fDesertRoad(int[] a, String nautical) {
+	public static void fDesertRoad( String nautical) {
 		Scanner input = new Scanner(System.in);
 		Scanner KeyIn = new Scanner(System.in);
 		char enemyAbility;
 		System.out.println ( "Press Enter to head " + nautical );
 		KeyIn.nextLine();
-		int areaCount = 0;
-		while (areaCount < 3)
+		Var.setAreaCount(0);
+		while (Var.getAreaCount() < 3)
 		{
 			rand = (int) ( Math.random ( ) * range + minEnc );  //encounter chance
 			if (encNumber == rand)
@@ -1251,7 +1233,7 @@ public class CfRoads
 						int heroHit = 9;
 						int rewardGold = 17;
 						int rewardPoints = 155;
-						a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+						 CfSequence.battleSequence( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 					
 					break;
@@ -1295,7 +1277,7 @@ public class CfRoads
 								heroHit = 9;
 								rewardGold = 20;
 								rewardPoints = 150;
-								a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+								 CfSequence.battleSequence(minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 									enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 							}
 							else 
@@ -1303,18 +1285,15 @@ public class CfRoads
 								System.out.println ( "The Oasis looks like a paradise litterally frozen in time.\n "
 										+ "You see something shining beneath the water and after punching through\n "
 										+ "the ice, you find 20 gold and a bottle of snake oil!" );
-								a[0] += 25;	
+								Var.setGold(25);	
 							}
-							if (a[16] > 0) {
+							if (Var.getHpPot() > 0) {
 								System.out.println ( "Delicious! +40 HP" );
-								a[1] += 40;
-								if (a[1] > a[2]) {
-									a[1] = a[2];
-								}
+								Var.setHp(40);
 							}
 							else {
 								System.out.println ( "You stowe the snake oil for later." );
-								a[16] ++;
+								Var.setHpPot(1);
 							}
 						}
 					break;
@@ -1336,7 +1315,7 @@ public class CfRoads
 						heroHit = 9;
 						rewardGold = 18;
 						rewardPoints = 140;
-						a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+						 CfSequence.battleSequence( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 					
 					break;
@@ -1358,29 +1337,27 @@ public class CfRoads
 						heroHit = 9;
 						rewardGold = 20;
 						rewardPoints = 175;
-						a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+						 CfSequence.battleSequence( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 				}
 			} 
-			if (areaCount < 3 && a[1] > 0) {
-				areaCount++;
-				System.out.println ( "Camp " + areaCount + ". Press Enter to continue " + nautical);
+			if (Var.getAreaCount() < 3 && Var.hp > 0) {
+				Var.setAreaCount(1);
+				System.out.println ( "Camp " + Var.getAreaCount() + ". Press Enter to continue " + nautical);
 				KeyIn.nextLine ( );
 			}
-		}// end desert road
-		
-		return a;	
+		}// end desert road	
 	}
 
-	public static int[] sCliffsRoad(int[] a, String nautical) {
+	public static void sCliffsRoad( String nautical) {
 		System.out.println ( "The trail gradually unfreezes and then disappears.\nYou sense no one has been this way in a very long time...\n" );
 		Scanner input = new Scanner(System.in);
 		Scanner KeyIn = new Scanner(System.in);
 		char enemyAbility;
 		System.out.println ( "Press Enter to head " + nautical );
 		KeyIn.nextLine();
-		int areaCount = 0;
-		while (areaCount < 3)
+		Var.setAreaCount(0);
+		while (Var.getAreaCount() < 3)
 		{
 			rand = (int) ( Math.random ( ) * range + minEnc );  //encounter chance
 			if (encNumber == rand)
@@ -1405,7 +1382,7 @@ public class CfRoads
 						int heroHit = 9;
 						int rewardGold = 15;
 						int rewardPoints = 155;
-						a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+						 CfSequence.battleSequence( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 					
 					break;
@@ -1448,13 +1425,13 @@ public class CfRoads
 								heroHit = 9;
 								rewardGold = 25;
 								rewardPoints = 150;
-								a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+								 CfSequence.battleSequence(minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 									enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 							}
 							else 
 							{
 								System.out.println ( "You find a bunch of coins worth 25 gold! Killer!" );
-								a[0] += 25;	
+								Var.setGold(25);	
 							}
 						}
 					break;
@@ -1476,7 +1453,7 @@ public class CfRoads
 						heroHit = 9;
 						rewardGold = 18;
 						rewardPoints = 150;
-						a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+						 CfSequence.battleSequence( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 					
 					break;
@@ -1498,28 +1475,26 @@ public class CfRoads
 						heroHit = 9;
 						rewardGold = 20;
 						rewardPoints = 175;
-						a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+						 CfSequence.battleSequence( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 				}
 			} 
-			if (areaCount < 3 && a[1] > 0) {
-				areaCount++;
-				System.out.println ( "Camp " + areaCount + ". Press Enter to continue " + nautical);
+			if (Var.getAreaCount() < 3 && Var.hp > 0) {
+				Var.setAreaCount(1);
+				System.out.println ( "Camp " + Var.getAreaCount() + ". Press Enter to continue " + nautical);
 				KeyIn.nextLine ( );
 			}
-		}// end desert road
-		
-		return a;	
+		}// end desert road	
 	}
 
-	public static int[] sForestRoad(int[] a, String nautical) {
+	public static void sForestRoad( String nautical) {
 		Scanner input = new Scanner(System.in);
 		Scanner KeyIn = new Scanner(System.in);
 		char enemyAbility;
 		System.out.println ( "Press Enter to head " + nautical );
 		KeyIn.nextLine();
-		int areaCount = 0;
-		while (areaCount < 3)
+		Var.setAreaCount(0);
+		while (Var.getAreaCount() < 3)
 		{
 			rand = (int) ( Math.random ( ) * range + minEnc );  //encounter chance
 			if (encNumber == rand)
@@ -1544,7 +1519,7 @@ public class CfRoads
 						int heroHit = 10;
 						int rewardGold = 25;
 						int rewardPoints = 220;
-						a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+						 CfSequence.battleSequence( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 					
 					break;
@@ -1587,25 +1562,22 @@ public class CfRoads
 									heroHit = 10;
 									rewardGold = 25;
 									rewardPoints = 200;
-									a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+									 CfSequence.battleSequence(minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 										enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 							}
 							else 
 							{
 								System.out.println ( "Thankfully the cave's occupants are away and amongst their droppings you find\n"
 										+ "25 gold coins along with a few dead animals\nand a bottle of Snake Oil!");
-								a[0] += 25;	
+								Var.setGold(25);	
 							}
-							if (a[16] > 0) {
+							if (Var.getHpPot() > 0) {
 								System.out.println ( "\nDelicious! +40 HP" );
-								a[1] += 40;
-								if (a[1] > a[2]) {
-									a[1] = a[2];
-								}
+								Var.setHp (40);
 							}
 							else {
 								System.out.println ( "You stowe the snake oil for later." );
-								a[16] ++;
+								Var.setHpPot(1);
 							}
 						}
 					break;
@@ -1627,7 +1599,7 @@ public class CfRoads
 						heroHit = 10;
 						rewardGold = 25;
 						rewardPoints = 200;
-						a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+						 CfSequence.battleSequence( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 					
 					break;
@@ -1649,29 +1621,27 @@ public class CfRoads
 						heroHit = 10;
 						rewardGold = 30;
 						rewardPoints = 250;
-						a = CfSequence.battleSequence(a, minRange, maxRange, eType, aType, eMaxHit, eMinHit, areaCount, 
+						 CfSequence.battleSequence( minRange, maxRange, eType, aType, eMaxHit, eMinHit,  
 							enemyHP, maxFlee, minFlee, rewardGold, rewardPoints, heroHit, killText, deathFlavor, enemyAbility);
 				}
 			} 
-			if (areaCount < 5 && a[1] > 0 ) {
-				areaCount++;
-				System.out.println ( "Camp " + areaCount + ". Press Enter to continue " + nautical);
+			if (Var.getAreaCount() < 5 && Var.hp > 0 ) {
+				Var.setAreaCount(1);
+				System.out.println ( "Camp " + Var.getAreaCount() + ". Press Enter to continue " + nautical);
 				KeyIn.nextLine ( );
 			}
-		}// end desert road
-		
-		return a;	
+		}// end desert road	
 	}
 
-	public static int[] aPlainsRoad(int[] a, String nautical) {
+	public static void aPlainsRoad( String nautical) {
 		
-		return a;
+
 		
 	}
 
-	public static int[] volcanoRoad(int[] a, String nautical) {
+	public static void volcanoRoad( String nautical) {
 		
-		return a;
+
 		
 	}
 
