@@ -1,10 +1,46 @@
+package myGame;
 
 public class Var
 {
-	static int gold, hp, hpMax, minDMG, maxDMG, dex, evade, chapter, ladyOfLake, sSword,
-	lSword, lArmor, mBoots, mDagger, mShield, bSword, hpPot, merchCount, loser, fighter,
-	victim, points, battleDec, city, chaosDemonLife, vRapier, dynamite, cKukri, direction,
-	hordeLife, gryphonLife, pDagger, slArmor, sKatana, lAxe, litchKing, vBangle, chaos, areaCount;
+	//game data
+	
+	//player gold, player health points, player maximum health points, player minimum and maximum damage, player dexterity and evade chance
+	private static int gold, hp, hpMax, minDMG, maxDMG, dex, evade, 
+	// chaper of game, character lady of the lake in swamp count, short sword weapon, long sword weapon, leather armor, mercurial dancing boots
+	chapter, ladyOfLake, sSword, lSword, lArmor, mBoots,
+	// jeweled dagger, magic shield, snowy bastard sword, hp potion amount, text counter for merchant area, losr and figher player classes
+	mDagger, mShield, bSword, hpPot, merchCount, loser, fighter, 
+	// victim character in the city walk count, player points, player battle decision, city counter for text, Chaos demon boos alive/dead
+	victim, points, battleDec, city, chaosDemonLife,
+	// void rapier weapon, dynamite item count, coral Kukri weapon, direction decision for chapters 2 and 3, necro Horde boss alive/dead
+	vRapier, dynamite, cKukri, direction, hordeLife, 
+	// gryphon boss life alive/dead, parrying dagger weapon, studded leather armor, shadow Katana weapon, lighning axe weapon
+	gryphonLife, pDagger, slArmor, sKatana, lAxe, 
+	// litch King boss life alive/dead, void Bangle item, counter for road length, chaos final boss life alive/dead
+	litchKing, vBangle, areaCount, chaosLife;
+	
+	private static String player;
+	
+	//Data getters and setters
+	public static int getChaosLife( )
+	{
+		return chaosLife;
+	}
+
+	public static void setChaosLife( int chaosLife )
+	{
+		Var.chaosLife += chaosLife;
+	}
+
+	public static String getPlayer( )
+	{
+		return player;
+	}
+
+	public static void setPlayer( String player )
+	{
+		Var.player = player;
+	}
 
 	public static int getGold( )
 	{
@@ -23,10 +59,13 @@ public class Var
 
 	public static void setHp( int hp )
 	{
-		Var.hp += hp;
-		if (Var.hp > Var.hpMax) {
-			hp = Var.hpMax;
-		}
+			Var.hp += hp;
+			
+			if ( Var.hp > Var.getHpMax() )
+			{
+				Var.hp = Var.getHpMax();
+			}
+		
 	}
 
 	public static int getHpMax( )
@@ -37,9 +76,6 @@ public class Var
 	public static void setHpMax( int hpMax )
 	{
 		Var.hpMax += hpMax;
-		if (Var.hp > hpMax) {
-			Var.hp = hpMax;
-		}
 	}
 
 	public static int getMinDMG( )
@@ -49,13 +85,15 @@ public class Var
 
 	public static void setMinDMG( int minDMG )
 	{
-		if (minDMG == 1 || minDMG == -1) {
+		if ( minDMG == 1 || minDMG == -1 )
+		{
 			Var.minDMG += minDMG;
 		}
-		else {
+		else
+		{
 			Var.minDMG = minDMG;
 		}
-		
+
 	}
 
 	public static int getMaxDMG( )
@@ -65,10 +103,12 @@ public class Var
 
 	public static void setMaxDMG( int maxDMG )
 	{
-		if(maxDMG == 1 || maxDMG == -1 || maxDMG == 2) {
+		if ( maxDMG == 1 || maxDMG == -1 || maxDMG == 2 )
+		{
 			Var.maxDMG += maxDMG;
 		}
-		else {
+		else
+		{
 			Var.maxDMG = maxDMG;
 		}
 	}
@@ -120,10 +160,12 @@ public class Var
 
 	public static void setsSword( int sSword )
 	{
-		if (sSword > 1) {
+		if ( sSword > 1 )
+		{
 			Var.sSword = 1;
 		}
-		else {
+		else
+		{
 			Var.sSword += sSword;
 		}
 	}
@@ -135,10 +177,12 @@ public class Var
 
 	public static void setlSword( int lSword )
 	{
-		if (lSword > 1) {
+		if ( lSword > 1 )
+		{
 			Var.lSword = 1;
 		}
-		else {
+		else
+		{
 			Var.lSword += lSword;
 		}
 		Var.lSword += lSword;
@@ -146,7 +190,7 @@ public class Var
 
 	public static int getlArmor( )
 	{
-	
+
 		return lArmor;
 	}
 
@@ -287,16 +331,18 @@ public class Var
 
 	public static int getvRapier( )
 	{
-		
+
 		return vRapier;
 	}
 
 	public static void setvRapier( int vRapier )
 	{
-		if (vRapier > 1) {
+		if ( vRapier > 1 )
+		{
 			Var.vRapier = 1;
 		}
-		else {
+		else
+		{
 			Var.vRapier += vRapier;
 		}
 		Var.vRapier += vRapier;
@@ -314,16 +360,18 @@ public class Var
 
 	public static int getcKukri( )
 	{
-		
+
 		return cKukri;
 	}
 
 	public static void setcKukri( int cKukri )
 	{
-		if (cKukri > 1) {
+		if ( cKukri > 1 )
+		{
 			Var.cKukri = 1;
 		}
-		else {
+		else
+		{
 			Var.cKukri += cKukri;
 		}
 		Var.cKukri += cKukri;
@@ -381,16 +429,18 @@ public class Var
 
 	public static int getsKatana( )
 	{
-		
+
 		return sKatana;
 	}
 
 	public static void setsKatana( int sKatana )
 	{
-		if (sKatana > 1) {
+		if ( sKatana > 1 )
+		{
 			Var.sKatana = 1;
 		}
-		else {
+		else
+		{
 			Var.sKatana += sKatana;
 		}
 		Var.sKatana += sKatana;
@@ -403,10 +453,12 @@ public class Var
 
 	public static void setlAxe( int lAxe )
 	{
-		if (lAxe > 1) {
+		if ( lAxe > 1 )
+		{
 			Var.lAxe = 1;
 		}
-		else {
+		else
+		{
 			Var.lAxe += lAxe;
 		}
 		Var.lAxe += lAxe;
@@ -432,16 +484,6 @@ public class Var
 		Var.vBangle += vBangle;
 	}
 
-	public static int getChaos( )
-	{
-		return chaos;
-	}
-
-	public static void setChaos( int chaos )
-	{
-		Var.chaos += chaos;
-	}
-
 	public static int getAreaCount( )
 	{
 		return areaCount;
@@ -449,13 +491,14 @@ public class Var
 
 	public static void setAreaCount( int areaCount )
 	{
-		if (areaCount == 0) {
+		if ( areaCount == 0 )
+		{
 			Var.areaCount = areaCount;
 		}
-		else {
+		else
+		{
 			Var.areaCount += areaCount;
 		}
 	}
-	
-	
+
 }
