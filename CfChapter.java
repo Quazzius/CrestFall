@@ -14,6 +14,7 @@ public class CfChapter
 
 		while ( Var.getChapter ( ) == 1 )
 		{
+			// chapter 1
 			// Forest
 			CfRoads.forest ( );
 			char roadFork = (char) CfRoads.roadFork ( ); // choose direction
@@ -21,34 +22,37 @@ public class CfChapter
 			{
 				CfRoads.merchantRoad ( );
 			}
-			else if ( roadFork == 'E' ) // Swamp and swamp road
+			else if ( roadFork == 'E' )
 			{
 
-				CfRoads.swampRoad1 ( );
+				CfRoads.swampRoad1 ( ); // swamp road
 				if ( Var.getHp ( ) > 0 )
 				{
-					CfAreas.theLake ( );
+					CfAreas.theLake ( ); // lake
 				}
 				if ( Var.getHp ( ) > 0 )
 				{
-					CfRoads.swampRoad2 ( );
+					CfRoads.swampRoad2 ( );// swamp road 2
 				}
 			}
 		}
 	}
 
+	// chapter 2
 	public static void ch2( )
 	{
-
+		// direction 1 returns to player to merchant camp
+		// merchant camp is the central hub for chapter 2
 		Var.setDirection ( 1 );
 		while ( Var.getDirection ( ) == 1 )
 		{
-			CfAreas.merchantHub ( 5 );
+			CfAreas.merchantHub ( 5 ); // merchant
 
+			// player leaves merchant camp
 			switch ( Var.getDirection ( ) )
 			{
 
-				// East to the swamp
+				// East to the swamp (lake)
 				case 3:
 					CfRoads.swampRoad1 ( );
 					if ( Var.getHp ( ) > 0 )
@@ -64,16 +68,21 @@ public class CfChapter
 				// South the the City
 				case 2:
 
-					CfSetup.cityIntro ( );
+					CfSetup.cityIntro ( ); // text intro to go to the city
 
-					CfRoads.cityRoad ( );
+					CfRoads.cityRoad ( ); // road to Crestfall
 					if ( Var.getHp ( ) > 0 )
 					{
-						CfAreas.theCity ( );///// the city/////
+						CfAreas.theCity ( );///// the city of Crestfall/////
 					}
-					if ( Var.getDirection ( ) == 1 && Var.getHp ( ) > 0 )
+					// direction 1 takes carriage back to merchant
+					// direction 2 walks back to merchant
+					// direction 3 goes to chapter 3
+					if ( Var.getDirection ( ) == 2 && Var.getHp ( ) > 0 )
 					{
-						System.out.println ( "As the gates to the city close behind you, you are filled with determination." );
+						// walk back to the merchant camp
+						System.out
+								.println ( "As the gates to the city close behind you, you are filled with determination." );
 						System.out.println ( "Press Enter to continue" );
 						KeyIn.nextLine ( );
 						CfRoads.cityRoad ( );
@@ -85,7 +94,7 @@ public class CfChapter
 					CfRoads.mountainRoad1 ( );
 					if ( Var.getHp ( ) > 0 )
 					{
-						CfAreas.mountainTop ( );// the mountain
+						CfAreas.mountainTop ( );// the mountain and chaos demon boss battle
 					}
 					if ( Var.getHp ( ) > 0 )
 					{
@@ -96,20 +105,24 @@ public class CfChapter
 		} // End Merchant Hub
 	}// end Chapter 2
 
+	// chapter 3. must defeat chaos demon and take carriage from city
 	public static void ch3( )
 	{
 		while ( Var.getChapter ( ) == 3 )
 		{
 
-			String nautical;
-			Var.setDirection ( 1 ); // initialize direction loop
+			String nautical; // passes nautical direction to roads
+
+			// initialize direction loop, home hub is central to chapter 3
+			Var.setDirection ( 1 );
 			while ( Var.getDirection ( ) == 1 )
 			{
 				if ( Var.getHp ( ) > 0 )
 				{
 					Var.setHp ( Var.getHpMax ( ) ); // refill health
-					CfAreas.homeHub ( );
+					CfAreas.homeHub ( ); // home hub
 				}
+				// hp is > 1, player is dead
 				else
 				{
 					Var.setDirection ( -9 );
@@ -123,10 +136,10 @@ public class CfChapter
 						System.out.println ( "The trees and ferns of Shimmering Valley all perpetually covered in dew\n"
 								+ "by the mist that rolls in from the distant marsh." );
 						nautical = "East";
-						CfRoads.sValleyRoad ( nautical );
+						CfRoads.sValleyRoad ( nautical ); // shimmering valley road
 						if ( Var.getHp ( ) > 0 )
 						{
-							CfAreas.sValley ( );
+							CfAreas.sValley ( ); // shimmering valley area
 						}
 						if ( Var.getHp ( ) > 0 )
 						{
@@ -141,20 +154,23 @@ public class CfChapter
 								}
 							} while ( eastWest < 1 || eastWest > 2 );
 						}
+						// player heads home
 						if ( eastWest == 1 )
 						{
 							nautical = "West";
 							CfRoads.sValleyRoad ( nautical );
 							Var.setDirection ( 1 );
 						}
+						// player goes to white marsh
 						else if ( eastWest == 2 )
 						{
 							nautical = "East";
-							CfRoads.wMarshRoad ( nautical );
+							CfRoads.wMarshRoad ( nautical ); // white marsh road
 							if ( Var.getHp ( ) > 0 )
 							{
-								CfAreas.whiteMarsh ( );
+								CfAreas.whiteMarsh ( ); // white marsh area and necro horde boss fight
 							}
+							// when player leaves the marsh, they only take shimmering valley road back home
 							if ( Var.getHp ( ) > 0 )
 							{
 								nautical = "West";
@@ -173,10 +189,10 @@ public class CfChapter
 						nautical = "North";
 						System.out.println ( "The Arid Plains are barren, sans short grass and a faint\n"
 								+ "smell of sulpher wafting from the Volcano that looms on the distant Northern horizon" );
-						CfRoads.aPlainsRoad ( nautical );
+						CfRoads.aPlainsRoad ( nautical ); // arid plains road
 						if ( Var.getHp ( ) > 0 )
 						{
-							CfAreas.aridPlains ( );
+							CfAreas.aridPlains ( ); // arid plains area
 						}
 						if ( Var.getHp ( ) > 0 )
 						{
@@ -191,27 +207,35 @@ public class CfChapter
 								}
 							} while ( eastWest < 1 || eastWest > 2 );
 						}
+						// player heads back home
 						if ( eastWest == 1 )
 						{
 							nautical = "South";
 							CfRoads.aPlainsRoad ( nautical );
 							Var.setDirection ( 1 );
 						}
+						// player continues to the volcano
 						else if ( eastWest == 2 )
 						{
 							nautical = "North";
-							CfRoads.volcanoRoad ( nautical );
+							CfRoads.volcanoRoad ( nautical ); // volcano road
 							if ( Var.getHp ( ) > 0 )
 							{
-								CfAreas.volcano ( );
+								CfAreas.volcano ( ); // volcano area and final boss fight, chaos
 							}
+							// if player defeats chaos, the player is transported to the game over scenario.
 							if ( Var.getChaosLife ( ) < 1 )
 							{
 								System.out.println ( "You're abruptly transported home by the rift..." );
-								Var.setDirection ( 1 );
+								Var.setDirection ( 9 ); // breaks home hub loop
+								Var.setChapter ( 9 ); // breaks chapter loop
+								Var.setHp ( -300 ); //breaks hp loop
 							}
+							// player either ran away or couldn't find the chaos demon and gave up because they didn't
+							// have the spectacles found in the tomb
 							else if ( Var.getHp ( ) > 0 )
 							{
+								// player must take both roads directly home
 								nautical = "South";
 								System.out.println ( "You give up and head back home..." );
 								CfRoads.volcanoRoad ( nautical );
@@ -232,10 +256,10 @@ public class CfChapter
 						System.out.println (
 								"The grass gets crunchy as you reach the southern tundra and the frozen dunes rise on the horizon.\n"
 										+ "However, you sense no change in the air temperature..." );
-						CfRoads.fDesertRoad ( nautical );
+						CfRoads.fDesertRoad ( nautical ); // frozen desert road
 						if ( Var.getHp ( ) > 0 )
 						{
-							CfAreas.frozenDesert ( );
+							CfAreas.frozenDesert ( );// frozen desert area
 						}
 						if ( Var.getHp ( ) > 0 )
 						{
@@ -250,26 +274,38 @@ public class CfChapter
 								}
 							} while ( eastWest < 1 || eastWest > 2 );
 						}
+						// player heads back home
 						if ( eastWest == 1 )
 						{
 							nautical = "North";
 							CfRoads.fDesertRoad ( nautical );
 							Var.setDirection ( 1 );
 						}
+						// player continues to sandstone cliffs
 						else if ( eastWest == 2 )
 						{
 							nautical = "South";
-							CfRoads.sCliffsRoad ( nautical );
+							CfRoads.sCliffsRoad ( nautical ); // cliffs road
 							if ( Var.getHp ( ) > 0 )
 							{
-								CfAreas.sandstoneCliffs ( );
+								CfAreas.sandstoneCliffs ( );// sandstone cliffs area and gryphon boss fight
 							}
-							if ( Var.getHp ( ) > 0 )
+							// when player leaves and gryphon is dead, they only take the frozen desert road back
+							if ( Var.getHp ( ) > 0 && Var.getGryphonLife ( ) < 1 )
 							{
 								nautical = "North";
-								System.out.println ( "You decide to open the Icy Locket and a seemingly endless amount of.\n"
+								System.out.println ( "You decide to open the Icy Locket and a seemingly endless amount of\n"
 										+ "sand pours from it like a waterfall. You find yourself back in the Frozen Desert...\n" );
 								CfRoads.fDesertRoad ( nautical );
+								Var.setDirection ( 1 );
+							}
+							// if player retreats from the sandstone cliffs before defeating the gryphon
+							else if ( Var.getHp ( ) > 0 )
+							{
+								System.out.println ( "You decide to retreat" );
+								nautical = "North";
+								CfRoads.sCliffsRoad ( nautical ); // back along cliffs road
+								CfRoads.fDesertRoad ( nautical );// back along frozen desert road
 								Var.setDirection ( 1 );
 							}
 						}
@@ -281,13 +317,14 @@ public class CfChapter
 						nautical = "West";
 						System.out.println ( "You've heard the Sleeping Forest is difficult to navigate\n"
 								+ "and as you enter the first stand of trees you already feel eyes upon you" );
-						CfRoads.sForestRoad ( nautical );
+						CfRoads.sForestRoad ( nautical ); // sleeping forest road
 						if ( Var.getHp ( ) > 0 )
 						{
 							System.out.println (
 									"You come to a clearing with a gargantuan stone door and a small table with a merchant tending it." );
-							CfAreas.tombEntrance ( );
+							CfAreas.tombEntrance ( ); // outside the doors to the ancient tomb
 						}
+						// player must head back through the sleeping forest to get back home
 						if ( Var.getHp ( ) > 0 )
 						{
 							nautical = "East";

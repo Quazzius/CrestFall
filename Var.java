@@ -18,7 +18,7 @@ public class Var
 	gryphonLife, pDagger, slArmor, sKatana, lAxe, 
 	// litch King boss life alive/dead, void Bangle item, counter for road length, chaos final boss life alive/dead
 	litchKing, vBangle, areaCount, chaosLife;
-	
+	//player name
 	private static String player;
 	
 	//Data getters and setters
@@ -185,7 +185,6 @@ public class Var
 		{
 			Var.lSword += lSword;
 		}
-		Var.lSword += lSword;
 	}
 
 	public static int getlArmor( )
@@ -345,7 +344,6 @@ public class Var
 		{
 			Var.vRapier += vRapier;
 		}
-		Var.vRapier += vRapier;
 	}
 
 	public static int getDynamite( )
@@ -374,7 +372,6 @@ public class Var
 		{
 			Var.cKukri += cKukri;
 		}
-		Var.cKukri += cKukri;
 	}
 
 	public static int getDirection( )
@@ -443,7 +440,6 @@ public class Var
 		{
 			Var.sKatana += sKatana;
 		}
-		Var.sKatana += sKatana;
 	}
 
 	public static int getlAxe( )
@@ -461,7 +457,6 @@ public class Var
 		{
 			Var.lAxe += lAxe;
 		}
-		Var.lAxe += lAxe;
 	}
 
 	public static int getLitchKing( )

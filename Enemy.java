@@ -2,11 +2,18 @@ package myGame;
 
 public class Enemy
 {
+	//enemy ability can be 'a' - no status, 'v'- vampirism/ leech, 'p' - poison, or 's' - stun
 	private static char enemyAbility;
-	private static int enemyHP, minRange, maxRange, eMinHit, eMaxHit, minFlee, maxFlee, heroHit, rewardGold, rewardPoints;
+	//enemy health, minimum damage, maximum damage, minimum chance to hit, maximum chance to hit
+	private static int enemyHP, minRange, maxRange, eMinHit, eMaxHit, 
+	//minimum value for hero ability to flee, maximum value for hero ability to flee, maximum value for random chance to hit enemy
+	minFlee, maxFlee, heroHit, 
+	// gold won from battle, points awarded from battle
+	rewardGold, rewardPoints;
+	//name of enemy, attack style, text to describe enemy death, reward flavor text, enemy introduction text
 	private static String eType, aType, killText, deathFlavor, text;
 
-	// construct creates initial enemy objects
+	// constructor creates initial enemy objects
 	public Enemy(String text1, char ability, int eHP, String eType1, String aType1, String kText, String dFlavor,
 			int mRange, int maRange, int eMHit, int eMaHit, int eMFlee, int eMaFlee, int hHit, int rGold, int rPoints)
 	{
@@ -30,7 +37,7 @@ public class Enemy
 	}
 	
 	//call current enemy values
-	//used on battle sequence
+	//for use on battle sequence
 	public Enemy(Enemy enemyType) {
 		
 		text = enemyType.getText();
@@ -52,11 +59,13 @@ public class Enemy
 	}
 
 	//Enemies and their different attributes sent to constructor
+	//all enemies use the same basic principles
+	//this one is explained in detail
 	public static Enemy bear( )
 	{
 
 		text = "You stumbled accross a Bear..."; // Bear fight
-		enemyAbility = 'a'; // enemy special ability class ( none)
+		enemyAbility = 'a'; // enemy special ability class (none in this case)
 		enemyHP = 12; // enemy health initialize
 		eType = "Bear"; // type of enemy
 		aType = " Swipes"; // attack style
@@ -72,6 +81,7 @@ public class Enemy
 		rewardGold = 5; //gold won from fight
 		rewardPoints = 50; //points awarded from fight
 
+		//calls constructor 
 		Enemy bear = new Enemy ( text, enemyAbility, enemyHP, eType, aType, killText, deathFlavor, minRange, maxRange,
 				eMinHit, eMaxHit, minFlee, maxFlee, heroHit, rewardGold, rewardPoints );
 		
@@ -480,8 +490,8 @@ public class Enemy
 		aType = " chomps";
 		killText = "You killed a ";
 		deathFlavor = "!\nYou open its skull, which resembles a chest, and find a Diamond! + 20 gold";
-		minRange = 7;
-		maxRange = 8;
+		minRange = 5;
+		maxRange = 7;
 		eMinHit = 6;
 		eMaxHit = 12;
 		minFlee = 5;
@@ -503,7 +513,7 @@ public class Enemy
 		aType = " clubs you";
 		killText = "You killed a ";
 		deathFlavor = "! WOW\nIts pouch holds 20 gold, Awesome!";
-		minRange = 8;
+		minRange = 6;
 		maxRange = 8;
 		eMinHit = 4;
 		eMaxHit = 11;
@@ -526,7 +536,7 @@ public class Enemy
 		aType = " swoops";
 		killText = "You slaughter the colony of ";
 		deathFlavor = "s and find 13 gold on a nearby corpse.";
-		minRange = 7;
+		minRange = 5;
 		maxRange = 5;
 		eMinHit = 5;
 		eMaxHit = 12;
@@ -549,7 +559,7 @@ public class Enemy
 		aType = " swoops";
 		killText = "You slaughter the colony of ";
 		deathFlavor = "s and find 13 gold on a nearby corpse.";
-		minRange = 7;
+		minRange = 6;
 		maxRange = 5;
 		eMinHit = 5;
 		eMaxHit = 12;
@@ -565,14 +575,14 @@ public class Enemy
 	}
 	
 	public static Enemy gBat() {
-		System.out.println ( "The cry of a hundred Giant Vampire bats ring though the cave" ); // gbat
+		text = "The cry of a hundred Giant Vampire bats ring though the cave" ; // gbat
 		enemyAbility = 'v';
 		enemyHP = 50;
 		eType = "Giant Vampire Bat";
 		aType = " swoops";
 		killText = "You slaughter the colony of ";
 		deathFlavor = "s and find a stash of 25 gold along with a bottle of Snake Oil!";
-		minRange = 7;
+		minRange = 6;
 		maxRange = 6;
 		eMinHit = 6;
 		eMaxHit = 13;
@@ -733,8 +743,8 @@ public class Enemy
 		aType = " dive bomb ";
 		killText = "You Murdered a Murder of ";
 		deathFlavor = "!\nThere is a small hole in the base of the tree and you find 25 gold\nanlong with a bottle of Snake Oil!";
-		minRange = 7;
-		maxRange = 4;
+		minRange = 5;
+		maxRange = 6;
 		eMinHit = 6;
 		eMaxHit = 12;
 		minFlee = 5;
@@ -780,7 +790,7 @@ public class Enemy
 		killText = "You dissipate the ";
 		deathFlavor = " and coins drop from the mist... huh? + 20 coins";
 		minRange = 7;
-		maxRange = 7;
+		maxRange = 5;
 		eMinHit = 6;
 		eMaxHit = 12;
 		minFlee = 5;
@@ -849,7 +859,7 @@ public class Enemy
 		aType = " bludgeons";
 		killText = "You defeated a ";
 		deathFlavor = "! A Sapphire remains after its flame dissipated. +18 gold";
-		minRange = 6;
+		minRange = 5;
 		maxRange = 7;
 		eMinHit = 5;
 		eMaxHit = 11;
@@ -872,8 +882,8 @@ public class Enemy
 		aType = " lunges";
 		killText = "You Skewer the ";
 		deathFlavor = " and claim one of its fangs as a prize + 20 gold";
-		minRange = 7;
-		maxRange = 8;
+		minRange = 6;
+		maxRange = 7;
 		eMinHit = 4;
 		eMaxHit = 12;
 		minFlee = 5;
@@ -895,7 +905,7 @@ public class Enemy
 		aType = " Sting";
 		killText = "You grind the ";
 		deathFlavor = " into the ground and wipe the sweat from your brow.\n15 Gold falls from the sky. It just does... ";
-		minRange = 7;
+		minRange = 6;
 		maxRange = 5;
 		eMinHit = 5;
 		eMaxHit = 12;
@@ -919,7 +929,7 @@ public class Enemy
 		killText = "You Killed a ";
 		deathFlavor = "! An amorphous blob is all that remains, along with 18 gold";
 		minRange = 6;
-		maxRange = 7;
+		maxRange = 6;
 		eMinHit = 5;
 		eMaxHit = 11;
 		minFlee = 4;
@@ -941,8 +951,8 @@ public class Enemy
 		aType = " Bite";
 		killText = "You Murder the viscious ";
 		deathFlavor = ". You notice later that your purse is heavier + 20 gold";
-		minRange = 6;
-		maxRange = 7;
+		minRange = 5;
+		maxRange = 8;
 		eMinHit = 6;
 		eMaxHit = 12;
 		minFlee = 5;
@@ -965,8 +975,8 @@ public class Enemy
 		aType = " Strikes";
 		killText = "The ";
 		deathFlavor = " shrivels up and smolders to ash. You search its camp and find 25 gold.";
-		minRange = 7;
-		maxRange = 9;
+		minRange = 6;
+		maxRange = 7;
 		eMinHit = 6;
 		eMaxHit = 13;
 		minFlee = 6;
@@ -988,7 +998,7 @@ public class Enemy
 		aType = " strikes";
 		killText = "You Killed a ";
 		deathFlavor = " and now feel kind of sad, until you find 25 gold! ";
-		minRange = 7;
+		minRange = 6;
 		maxRange = 7;
 		eMinHit = 5;
 		eMaxHit = 11;
@@ -1011,8 +1021,8 @@ public class Enemy
 		aType = " Attacks";
 		killText = "You Murder the ";
 		deathFlavor = ". Its satchel holds a bar of gold. +30 gold!";
-		minRange = 8;
-		maxRange = 8;
+		minRange = 6;
+		maxRange = 9;
 		eMinHit = 6;
 		eMaxHit = 12;
 		minFlee = 6;
@@ -1035,7 +1045,7 @@ public class Enemy
 		killText = "You knocked out that worthless ";
 		deathFlavor = "\n and pick up the gold tooth you knocked out of his mouth. +10 gold.";
 		minRange = 5;
-		maxRange = 12;
+		maxRange = 8;
 		eMinHit = 3;
 		eMaxHit = 11;
 		minFlee = 3;
@@ -1059,8 +1069,8 @@ public class Enemy
 		killText = "You killed a couple of ";
 		deathFlavor = "s and save the girl!\nShe is shaken, but thanks you and gives you a kiss on the cheek\n"
 				+ "It felt so wonderful you breifly closed your eyes\n When you opened them she was gone\n +25 Max HP";
-		minRange = 4;
-		maxRange = 11;
+		minRange = 5;
+		maxRange = 10;
 		eMinHit = 5;
 		eMaxHit = 12;
 		minFlee = 5;
@@ -1083,7 +1093,7 @@ public class Enemy
 		killText = "You killed a Giant ";
 		deathFlavor = "! Gross!\nOne of the locals witnessed your heroic deed and hands you 15 gold";
 		minRange = 5;
-		maxRange = 8;
+		maxRange = 6;
 		eMinHit = 6;
 		eMaxHit = 12;
 		minFlee = 6;
@@ -1105,7 +1115,7 @@ public class Enemy
 		killText = "You decapitate the ";
 		deathFlavor = " of Chaos...\ntheir purse holds 12 gold.";
 		minRange = 5;
-		maxRange = 8;
+		maxRange = 7;
 		eMinHit = 5;
 		eMaxHit = 12;
 		minFlee = 5;
@@ -1126,7 +1136,7 @@ public class Enemy
 		killText = "You grind the ";
 		deathFlavor = " into the ground and wipe the sweat from your brow.\n"
 				+ "22 Gold lies in front of you surrounded by a broken clay pot . + 22 gold";
-		minRange = 7;
+		minRange = 6;
 		maxRange = 7;
 		eMinHit = 5;
 		eMaxHit = 12;
@@ -1149,7 +1159,7 @@ public class Enemy
 		aType = " Strikes ";
 		killText = "You tear through the  ";
 		deathFlavor = "s\nYou reach into the hole and find 25 gold\nanlong with a bottle of Snake Oil!";
-		minRange = 7;
+		minRange = 6;
 		maxRange = 7;
 		eMinHit = 6;
 		eMaxHit = 12;
@@ -1197,7 +1207,7 @@ public class Enemy
 		aType = " Attacks";
 		killText = "The ";
 		deathFlavor = " unleashes a gutteral scream and falls. You take its whiskers worth 24 gold.";
-		minRange = 6;
+		minRange = 5;
 		maxRange = 8;
 		eMinHit = 5;
 		eMaxHit = 13;
@@ -1220,7 +1230,7 @@ public class Enemy
 		aType = " Swings";
 		killText = "The ";
 		deathFlavor = " crumbles, leaving a pile of rubble. In the rubble you find some gold ore. + 30 gold.";
-		minRange = 8;
+		minRange = 7;
 		maxRange = 9;
 		eMinHit = 5;
 		eMaxHit = 11;
@@ -1243,7 +1253,7 @@ public class Enemy
 		killText = "You slash the ";
 		deathFlavor = " and it implodes. A void opens and pulls you forward.\n"
 				+ "you use all of your might to pull yourself away.\nYou then gather yourself and find gold ore lodged in a crevase + 28 gold.";
-		minRange = 8;
+		minRange = 7;
 		maxRange = 8;
 		eMinHit = 7;
 		eMaxHit = 12;
@@ -1266,7 +1276,7 @@ public class Enemy
 		aType = " Clubs";
 		killText = "You bleed the ";
 		deathFlavor = " to death and catch your breath.\nYou take its purse and find 40 gold.";
-		minRange = 10;
+		minRange = 7;
 		maxRange = 10;
 		eMinHit = 4;
 		eMaxHit = 13;
@@ -1342,7 +1352,7 @@ public class Enemy
 				+ "After removing its head and setting it on fire for good measure,\n"
 				+ "you take a look in the Sarcophagus and see a blood red bangle laying next to\n"
 				+ "a dusty pair of spectacles. You try on the bangle and your blood catches a chill.\n"
-				+ "You feel thirsty..." + "+10 max HP. HP fully restored! + 50 gold.\n"
+				+ "You feel thirsty..." + "+25 max HP. HP fully restored! + 50 gold.\n"
 				+ "You try on the spectacles and nothing happens so you store them away";
 		minRange = 7;
 		maxRange = 10;
@@ -1469,7 +1479,7 @@ public class Enemy
 				+ "You awaken, and are still on the Volcano... How long were you knocked out?\n"
 				+ "+25 Max HP. HP fully restored! + 100 gold.";
 		minRange = 8;
-		maxRange = 10;
+		maxRange = 9;
 		eMinHit = 7;
 		eMaxHit = 13;
 		minFlee = 5;

@@ -1,22 +1,21 @@
 package myGame;
+
 import java.util.Scanner;
 
+@SuppressWarnings("resource")
 public class CfSequence
 {
-// minEnc and maxEnc are the boundaries of your chance for enemy encounters
-	// encNumber is the number that is set for your chance of enemy encounter
-	// range takes minEnc and maxEnc and gives a variable to be randomized
-	// rand is the integer chosen my the randomizer
 	// merch is the the players decision at the merchant hub and leaves merchant loop if player dies
 	// city is a count that gives text based on how many times the player has been to the city,
 	// it also is used to end city loop if inside the city on death
-	public static final int minEnc = 1, maxEnc = 2, encNumber = 1, range = maxEnc - minEnc + 1;
 	public static int rand, attack, hitDMG, hitChance, merch, city = 0;
 
-	public static void battleSequence( Enemy enemyType ) {
-	
-	Enemy enemy = new Enemy(enemyType);
-	
+	public static void battleSequence( Enemy enemyType )
+	{
+
+		// calls overloaded Enemy constructor to get enemy data
+		Enemy enemy = new Enemy ( enemyType );
+
 		Scanner input = new Scanner ( System.in );
 		int poisonCount = 0; // initialize hero poisoned counter
 		int ePoisonCount = 0; // initialize enemy poisoned counter
@@ -24,19 +23,20 @@ public class CfSequence
 		int eStunCount = 0; // init enemy stun count
 		int battleDec = 0; // init player decision
 		attack = Var.getMaxDMG ( ) - Var.getMinDMG ( ) + 1;
-		if ( Var.getvRapier ( ) == 0 || Var.getsKatana ( ) == 0 )
+		if ( Var.getvRapier ( ) < 1 || Var.getsKatana ( ) < 1 )
 		{
 			// lose max hp to Vamp
 			Var.setHpMax ( -10 );
 		}
-		while ( enemy.getEnemyHP() > 0 ) // fight sequence
+		while ( enemy.getEnemyHP ( ) > 0 ) // fight sequence
 		{
 			eStunCount--;
 			if ( eStunCount < 1 )
 			{
-				int damage = (int) ( Math.random ( ) * enemy.getMaxRange() + enemy.getMinRange() ); // enemy attack range
-				System.out.println ( enemy.geteType() + enemy.getaType() + " for " + damage + " damage." );
-				hitChance = (int) ( Math.random ( ) * enemy.geteMaxHit() + enemy.geteMinHit() ); // enemy hit chance
+				int damage = (int) ( Math.random ( ) * enemy.getMaxRange ( ) + enemy.getMinRange ( ) ); // enemy attack
+																																		// range
+				System.out.println ( enemy.geteType ( ) + enemy.getaType ( ) + " for " + damage + " damage." );
+				hitChance = (int) ( Math.random ( ) * enemy.geteMaxHit ( ) + enemy.geteMinHit ( ) ); // enemy hit chance
 				if ( Var.getEvade ( ) > hitChance ) // if evade is greater than hit, enemy misses
 				{
 					System.out.println ( "But Misses!" );
@@ -47,17 +47,18 @@ public class CfSequence
 					System.out.println ( "-" + damage + " HP. " + "HP is " + Var.getHp ( ) + "/" + Var.getHpMax ( ) );
 
 					// if enemy ability type "v" vampirism
-					if ( enemy.getEnemyAbility() == 'v' )
+					if ( enemy.getEnemyAbility ( ) == 'v' )
 					{
 						double vamp = damage * 0.20; // heals 20% damage given
 						int iVamp = (int) vamp; // change from double to int
 						if ( iVamp > 0 )
-						{ // output if necessary
-							System.out.println ( enemy.geteType() + " heals " + iVamp + " HP" );
-							enemy.setEnemyHP(iVamp);
+						{
+							// output if necessary
+							System.out.println ( enemy.geteType ( ) + " heals " + iVamp + " HP" );
+							enemy.setEnemyHP ( iVamp );
 						}
 					}
-					else if ( enemy.getEnemyAbility() == 'p' && poisonCount < 1 )
+					else if ( enemy.getEnemyAbility ( ) == 'p' && poisonCount < 1 )
 					{
 						int poison = (int) ( Math.random ( ) * 3 + 1 );
 						if ( poison == 3 )
@@ -66,7 +67,7 @@ public class CfSequence
 							poisonCount = 3;
 						}
 					}
-					else if ( enemy.getEnemyAbility() == 's' && stunCount < 1 )
+					else if ( enemy.getEnemyAbility ( ) == 's' && stunCount < 1 )
 					{
 						int stun = (int) ( Math.random ( ) * 8 + 1 );
 						if ( stun == 5 )
@@ -79,7 +80,7 @@ public class CfSequence
 					{
 						Var.setChapter ( -4 );
 						Var.setAreaCount ( 9 );
-						enemy.setEnemyHP(0);
+						enemy.setEnemyHP ( 0 );
 						merch = 0;
 						city = 6;
 						Var.setDirection ( -9 );
@@ -99,6 +100,7 @@ public class CfSequence
 			stunCount--;
 			if ( Var.getHp ( ) > 0 && stunCount < 1 )
 			{
+				// chapters define item availability
 				System.out.println ( "0 - Flee\n1 - Attack" );
 				if ( Var.getChapter ( ) > 2 )
 				{
@@ -116,11 +118,11 @@ public class CfSequence
 				{
 					// flee
 					case 0:
-						hitChance = (int) ( Math.random ( ) * enemy.getMaxFlee() + enemy.getMinFlee() ); // chance to flee
+						hitChance = (int) ( Math.random ( ) * enemy.getMaxFlee ( ) + enemy.getMinFlee ( ) ); // chance to flee
 						if ( Var.getEvade ( ) > hitChance )
 						{ // flee successful
 							System.out.println ( "You run away! Coward!" );
-							enemy.setEnemyHP(0);
+							enemy.setEnemyHP ( 0 );
 						}
 						else
 						{ // flee unsuccessful
@@ -131,11 +133,11 @@ public class CfSequence
 					// attack
 					case 1:
 						hitDMG = (int) ( Math.random ( ) * attack + Var.getMinDMG ( ) ); // possible damage range
-						hitChance = (int) ( Math.random ( ) * enemy.getHeroHit() + 1 ); // chance to hit
+						hitChance = (int) ( Math.random ( ) * enemy.getHeroHit ( ) + 1 ); // chance to hit
 						if ( Var.getDex ( ) >= hitChance ) // if dex is at least heroHit chance, hero connects
 						{
 							System.out.println ( "You hit for " + hitDMG + " DMG" );
-							enemy.setEnemyHP(- hitDMG);
+							enemy.setEnemyHP ( -hitDMG );
 
 							// has bangle
 							if ( Var.getvBangle ( ) == 0 )
@@ -145,7 +147,7 @@ public class CfSequence
 							}
 
 							// character ability Vamp
-							if ( Var.getvRapier ( ) == 0 || Var.getsKatana ( ) == 0 )
+							if ( Var.getvRapier ( ) < 1 || Var.getsKatana ( ) < 1 )
 							{
 								System.out.println ( "HP + 1" );
 								Var.setHp ( 1 );
@@ -156,16 +158,17 @@ public class CfSequence
 								int ePoison = (int) ( Math.random ( ) * 3 + 1 );
 								if ( ePoison == 3 )
 								{
-									System.out.println ( enemy.geteType() + " Poisoned!" );
+									System.out.println ( enemy.geteType ( ) + " Poisoned!" );
 									ePoisonCount = 3;
 								}
 							}
+							// character ability stun
 							else if ( Var.getlAxe ( ) == 0 )
 							{
 								int eStun = (int) ( Math.random ( ) * 7 + 1 );
 								if ( eStun == 3 )
 								{
-									System.out.println ( enemy.geteType() + " Stunned!" );
+									System.out.println ( enemy.geteType ( ) + " Stunned!" );
 									eStunCount = 2;
 								}
 							}
@@ -176,18 +179,19 @@ public class CfSequence
 						}
 						if ( ePoisonCount > 0 )
 						{
-							System.out.println ( enemy.geteType() + " -2 HP (Poison), Left: " + ePoisonCount );
-							enemy.setEnemyHP(-2);
+							System.out.println ( enemy.geteType ( ) + " -2 HP (Poison), Left: " + ePoisonCount );
+							enemy.setEnemyHP ( -2 );
 							ePoisonCount--;
 						}
 						break;
 
+					// use dynamite
 					case 3:
 						if ( Var.getDynamite ( ) > 0 )
 						{
-							System.out.println ( "You light the wick and toss the dynamite at the " + enemy.geteType() );
-							System.out.println ( "dealing 30 damage! Your reckless action deals 5 damage to you as well" );
-							enemy.setEnemyHP(-30);
+							System.out.println ( "You light the wick and toss the dynamite at the " + enemy.geteType ( ) );
+							System.out.println ( "dealing 30 damage! and deals you 5 damage." );
+							enemy.setEnemyHP ( -30 );
 							Var.setHp ( -5 );
 							Var.setDynamite ( -1 );
 						}
@@ -223,18 +227,22 @@ public class CfSequence
 				}
 			}
 		}
+		// make sure hero did not die or flee for reward
 		if ( Var.getHp ( ) > 0 && battleDec != 0 )
-		{ // make sure hero did not die or flee for reward
-			System.out.println ( enemy.getKillText() + enemy.geteType() + enemy.getDeathFlavor() );
-			Var.setGold ( enemy.getRewardGold() ); // gold
-			Var.setPoints ( enemy.getRewardPoints() ); // points
+		{
+
+			System.out.println ( enemy.getKillText ( ) + enemy.geteType ( ) + enemy.getDeathFlavor ( ) );
+			Var.setGold ( enemy.getRewardGold ( ) ); // gold
+			Var.setPoints ( enemy.getRewardPoints ( ) ); // points
 		}
+		// return hp max to normal if player has vamp ability
 		if ( Var.getvRapier ( ) == 0 || Var.getsKatana ( ) == 0 )
 		{
 			Var.setHpMax ( 10 );
 		}
 	}
-
+	
+	//player can try to win gold playing the guessing game
 	public static void guessingGame( int gGameCost )
 	{
 		Scanner input = new Scanner ( System.in );
@@ -244,7 +252,7 @@ public class CfSequence
 		}
 		else
 		{
-			int randNumber = 1; // initialize nested loop
+			int randNumber = 1; // initialize number to guess
 			int game = 1; // game count
 			int score = 6; // player score, will decrement before first play to 5
 			char play = 'y'; // initialize loop to play game
@@ -314,12 +322,14 @@ public class CfSequence
 					}
 				}
 			} // end loop if user inputs 'n'
-				// calculate average and output score
+
+			// calculate average and output score
 			double avg = (double) ttlpoints / game;
 			System.out.println ( "GUESSING GAME OVER. Total points: " + ttlpoints );
 			System.out.println ( "Games played: " + game );
 			System.out.println ( "Average Score: " + avg );
 			int rev = Var.getGold ( ) - gameGold;
+			//let player know the outcome of their game
 			if ( Var.getGold ( ) > gameGold )
 			{
 				System.out.println ( "You made " + rev + " gold\n" );

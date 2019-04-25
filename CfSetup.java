@@ -121,7 +121,7 @@ public class CfSetup
 		if ( player.equals ( "ch2" ) )
 		{
 			Var.setChapter ( 2 );
-			Var.setGold ( 20 );
+			Var.setGold ( 150 );
 		}
 		if ( player.equals ( "ch3" ) )
 		{
@@ -132,16 +132,17 @@ public class CfSetup
 			Var.setEvade ( 1 );
 			Var.setHpMax ( 50 );
 			Var.setHp (50);
-			Var.setGold ( 75 );
+			Var.setGold ( 200 );
 			Var.setlArmor ( 0 );
 			Var.setbSword ( 0 );
+			Var.setmDagger ( -1 );
 		}
 	}
 
-	public static void beginGame( char forest )
+	public static void beginGame( )
 	{
-
-		System.out.println ( "Your home, the village of Sardina, was just burned to the ground by a forest fire." );
+		char forest;
+		System.out.println ( "Your home, the village of Sardina, was just burned to the ground by a ball of fire that fell from the sky." );
 		System.out.println (
 				"Living in the middle of the forest has its advantages though the closest town is 10 days away on foot." );
 		System.out.println (
@@ -222,6 +223,25 @@ public class CfSetup
 		System.out
 				.println ( "Your small village has no name as it is merely called \"Home\" to the village's 6 residents."
 						+ "\nYou greet your friend Gil, the merchant, and ask to see his stock" );
+	}
+	
+	public static void gameOverScenarios() {
+		
+		if (Var.getPoints() < 5000 && Var.getChaosLife() < 1) {
+			System.out.println ( "You emerge from the rift and are home in Home. You Open the door to your\n"
+					+ "house and collapse in your bed. Tales of your journey are spead lightly through legends\n"
+					+ "and your story becomes a myth told by few...\n\n");
+		}
+		
+		else if (Var.getPoints() >= 5000 && Var.getChaosLife() < 1) {
+			System.out.println ( "You emerge from the rift into a familiar place... Sardina.\n"
+					+ "Amazed by your surroundings, your eyes well up with tears.\n"
+					+ "Your freinds walk up to you and are concerned that you look confused\n"
+					+ "and strangely emotional..." + Var.getPlayer ( ) + ", where have you been?! the bakery\n "
+					+ "caught fire last night and we put it out but we could have used your help.\n"
+					+ "You shake your head and sit down where you are, overwhelmed with joy...\n\n");
+		}
+		
 	}
 
 }

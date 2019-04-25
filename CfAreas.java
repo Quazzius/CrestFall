@@ -1,23 +1,25 @@
 package myGame;
 
 import java.util.Scanner;
-
+@SuppressWarnings("resource")
 public class CfAreas
 {
 	// minEnc and maxEnc are the boundaries of your chance for enemy encounters
 	// encNumber is the number that is set for your chance of enemy encounter
 	// range takes minEnc and maxEnc and gives a variable to be randomized
-	// rand is the integer chosen my the randomizer
 	// merch is the the players decision at the merchant hub
 	// city is a count that gives text based on how many times the player has been to the city
 	public static final int minEnc = 1, maxEnc = 2, encNumber = 1, range = maxEnc - minEnc + 1;
-	public static int rand, hitDMG, merch, city = 0;
+	public static int merch, city = 0;
 
+	
+	//areas and merchants all use the same basic mechanics
+	//the first couple of each are explained in detail
 	public static void theLake( )
 	{
+		// the lake
 		Scanner input = new Scanner ( System.in );
-		Scanner KeyIn = new Scanner ( System.in );
-		char lake; // the lake
+		char lake; 
 		System.out.println ( "You find yourself standing at the edge of a large lake" );
 		System.out.println ( "There is only one path leading out and it heads northWest" );
 		System.out.println ( "Would you like to look around? y/n" );
@@ -29,12 +31,20 @@ public class CfAreas
 				System.out.println ( "You must enter y or n" );
 			}
 		} while ( lake != 'y' && lake != 'n' );
-		while ( lake == 'y' )
+		
+		//counts the amount of times the player has searched the area
+		int count = 0;
+		while ( lake == 'y' )//loops as long as player wants to stay in the area
 		{
-			rand = (int) ( Math.random ( ) * range + minEnc ); // encounter chance
-			if ( encNumber == rand )
-			{
+			count ++;
 				int enemy = (int) ( Math.random ( ) * 4 + 1 ); // random enemy
+				
+				//if the player has not completed special encounter or boss fight
+				//after 3 encounters, player is given the special encounter/boss option.
+				if (count > 3) {
+					enemy = 2; //special encounter
+					count = 0; //count resets so it's not chosen every time after 3
+				}
 				switch ( enemy )
 				{
 					case 1:
@@ -43,7 +53,7 @@ public class CfAreas
 						break;
 
 					case 2:
-						if ( Var.getLadyOfLake ( ) > 0 )
+						if ( Var.getLadyOfLake ( ) > 0 )  //checks if the special encounter or boss has already been completed
 						{
 							System.out.println ( "You hear someone singing..." ); // Lady of the Lake
 							System.out.println ( "Do you want to check it out? y/n" );
@@ -56,16 +66,17 @@ public class CfAreas
 									System.out.println ( "You must enter y or n" );
 								}
 							} while ( help != 'y' && help != 'n' );
-
+							
+							//player does not have to do special encounter
 							if ( help == 'n' ) // Don't look
 							{
 								System.out.println ( "Thats gotta be a trap... Keep wandering aimlessly" );
 							}
-							else
+							else //player chose to do special  encounter
 							{
 								System.out.println ( "You found the lady of the lake" );
 								System.out.println ( "Her kind and voiceless words heal your wounds. Full HP!" );
-								Var.setHp ( Var.getHpMax ( ) );
+								Var.setHp ( Var.getHpMax ( ) ); //refill HP to  max
 								System.out.println ( "She hands you a short sword that glows faintly green.\n"
 										+ "The translucent lady disappears upon taking the sword." );
 								System.out.println ( "You've acquired PhantomBane! DMG 5-8" );
@@ -81,19 +92,21 @@ public class CfAreas
 								if ( help == 'y' )
 								{
 									System.out.println ( "PhantomBane Equipped" );
-									Var.setMinDMG ( 5 );
-									Var.setMaxDMG ( 8 );
-									Var.setLadyOfLake ( -1 );
-									Var.setvRapier ( 1 );
-									if ( Var.getFighter ( ) == 1 )
+									Var.setMinDMG ( 5 ); //set new minimum damage
+									Var.setMaxDMG ( 8 ); //set new maximum damage
+									Var.setLadyOfLake ( -1 ); //special encounter completed
+									if (Var.getvRapier( ) < 1) { //in case player had this weapon previously, added back to quantity
+										Var.setvRapier ( 1 );
+									}
+									if ( Var.getFighter ( ) == 1 ) //updates max damage if player is fighter class
 									{
 										Var.setMaxDMG ( 2 );
 									}
-									if ( Var.getLoser ( ) == 1 )
+									if ( Var.getLoser ( ) == 1 ) //updates max damage if player is loser class
 									{
 										Var.setMaxDMG ( -1 );
 									}
-									if ( Var.getmDagger ( ) == 0 )
+									if ( Var.getmDagger ( ) == 0 ) //updates min damage if player has jeweled dagger
 									{
 										Var.setMinDMG ( 1 );
 									}
@@ -123,9 +136,8 @@ public class CfAreas
 					case 4:
 						System.out.println ( Enemy.leech ( ).getText ( ) );
 						CfSequence.battleSequence ( Enemy.leech ( ) );
-
+						
 				}
-			}
 			if ( Var.getHp ( ) < 1 )
 			{
 				lake = 'n';
@@ -147,11 +159,12 @@ public class CfAreas
 
 	public static int merchantHub( int hpPotCost )
 	{
+		
 		Scanner input = new Scanner ( System.in );
-		Scanner KeyIn = new Scanner ( System.in );
-		if ( Var.getMerchCount ( ) == 0 )
+		//only displays text if its the first time player goes to merchant camp or has met certain conditions
+		if ( Var.getMerchCount ( ) == 0 ) 
 		{
-			if ( Var.getChaosDemonLife ( ) == 0 )
+			if ( Var.getChaosDemonLife ( ) == 0 ) //new text when chaos demon is destroyed
 			{
 				System.out
 						.println ( "You return to the Merchant Camp.\nYou are relieved to be walking amongst others again" );
@@ -164,9 +177,10 @@ public class CfAreas
 			System.out.println ( "You hear him whisper what sounds like \"its a secret to everybody\" " );
 			Var.setMerchCount ( 1 );
 		}
-		Var.setDirection ( 1 );
+		Var.setDirection ( 1 ); //return to merchant hub condition
 		while ( Var.getDirection ( ) == 1 )
 		{
+			//player gets to choose if they want to buy anything or leave the merchant
 			System.out.println ( "What would you like?" );
 			int gGameCost = 5;
 			System.out.println ( "0 - Guessing Game (5 gold) Double your money and get points!" );
@@ -196,32 +210,40 @@ public class CfAreas
 			} while ( merch < 0 || merch > 8 );
 			switch ( merch )
 			{
-				case 0:
+				case 0://guessing game
 
 					CfSequence.guessingGame ( gGameCost );
 
 					break;
 
 				case 1: // buy short sword
+					//Item must be in stock
 					if ( Var.getsSword ( ) > 0 )
 					{
+						//player must have enough gold
 						if ( Var.getGold ( ) >= sSwordCost )
 						{
 							System.out.println ( "The Short Sword is now yours! DMG: 3-6" );
-							Var.setMinDMG ( 3 );
-							Var.setMaxDMG ( 6 );
-							Var.setGold ( -sSwordCost );
-							Var.setsSword ( -1 );
-							Var.setvRapier ( 1 );
-							if ( Var.getFighter ( ) == 1 )
+							Var.setMinDMG ( 3 ); //updates minimum damage
+							Var.setMaxDMG ( 6 ); //updates maximum damage
+							Var.setGold ( -sSwordCost ); //cost of item subtracted from players total gold
+							Var.setsSword ( -1 ); // item removed from inventory
+							
+							//since this weapon gives the player a status effect
+							//it must be made sure that this item is added back to inventory
+							//to avoid the player keeping the status effect without the special weapon
+							if (Var.getvRapier( ) < 1) {
+								Var.setvRapier ( 1 );
+							}
+							if ( Var.getFighter ( ) == 1 ) //update max damage when player class is fighter
 							{
 								Var.setMaxDMG ( 2 );
 							}
-							if ( Var.getLoser ( ) == 1 )
+							if ( Var.getLoser ( ) == 1 ) //update max damage when player class is loser
 							{
 								Var.setMaxDMG ( -1 );
 							}
-							if ( Var.getmDagger ( ) == 0 )
+							if ( Var.getmDagger ( ) == 0 ) //update min damage when player has jeweled dagger
 							{
 								Var.setMinDMG ( 1 );
 							}
@@ -242,13 +264,16 @@ public class CfAreas
 					{
 						if ( Var.getGold ( ) >= lSwordCost )
 						{
+							//same idea as with short sword
 							System.out.println ( "The Long Sword is now yours! DMG: 4-9. -1 dex" );
 							Var.setMinDMG ( 4 );
 							Var.setMaxDMG ( 9 );
 							Var.setDex ( -1 );
 							Var.setGold ( -lSwordCost );
 							Var.setlSword ( -1 );
-							Var.setvRapier ( 1 );
+							if (Var.getvRapier( ) < 1) {
+								Var.setvRapier ( 1 );
+							}
 							if ( Var.getFighter ( ) == 1 )
 							{
 								Var.setMaxDMG ( 2 );
@@ -294,7 +319,7 @@ public class CfAreas
 					}
 					break;
 
-				case 4:
+				case 4: //buy boots
 					if ( Var.getmBoots ( ) >= 0 )
 					{
 						if ( Var.getGold ( ) >= mBootsCost )
@@ -315,7 +340,7 @@ public class CfAreas
 					}
 					break;
 
-				case 5:
+				case 5: //heal
 					if ( Var.getGold ( ) >= hPotionCost )
 					{
 						Var.setHp ( 50 );
@@ -331,8 +356,8 @@ public class CfAreas
 					}
 					break;
 
-				case 6:
-					if ( Var.getHpPot ( ) < 1 )
+				case 6: //buy health potion
+					if ( Var.getHpPot ( ) < 3 )
 					{
 						if ( Var.getGold ( ) >= hpPotCost )
 						{
@@ -348,18 +373,18 @@ public class CfAreas
 					}
 					else
 					{
-						System.out.println ( "You can only hold one bottle at a time." );
+						System.out.println ( "You can only hold three bottles." );
 					}
 					break;
 
-				case 7:
+				case 7: // show stats
 					System.out.println ( "HP: " + Var.getHp ( ) );
 					System.out.println ( "DMG: " + Var.getMinDMG ( ) + " - " + Var.getMaxDMG ( ) );
 					System.out.println ( "Dex: " + Var.getDex ( ) );
 					System.out.println ( "Evade: " + Var.getEvade ( ) );
 					break;
 
-				case 8:
+				case 8: // leave merchant camp
 					System.out.println ( "There is a road sign at the far end of camp; It reads:" );
 					System.out.println ( "Humble Mountain - West (Road closed due to Extreme Terror)" );
 					System.out.println ( "City of CrestFall - South" );
@@ -374,8 +399,10 @@ public class CfAreas
 		return Var.getDirection ( );
 	}
 
+	// City of CrestFall
 	public static void theCity( )
 	{
+		//city introduction
 		Scanner input = new Scanner ( System.in );
 		Scanner KeyIn = new Scanner ( System.in );
 		System.out.println ( "You find yourself standing at the Gates to the City" );
@@ -383,10 +410,10 @@ public class CfAreas
 		System.out.println ( "Press Enter to... Enter" );
 		KeyIn.nextLine ( );
 
-		int commonBoard;
-		int armorerItems;
-		char armorer;
-		city = 9;
+		int commonBoard; //commonboard decision
+		int armorerItems; //item choice in armory
+		char armorer; //loop to stay in armory
+		city = 9; //initialize city loop
 		System.out.println ( "The City looks like it has seen better days..." );
 		System.out.println (
 				"There are only a handful of people walking about and there is rising smoke from multiple dwellings." );
@@ -417,9 +444,9 @@ public class CfAreas
 			} while ( commonBoard < 0 || commonBoard > 7 );
 			switch ( commonBoard )
 			{
-				case 0:
+				case 0: //buy potion
 					int hpPotCost = 8;
-					if ( Var.getHpPot ( ) < 1 )
+					if ( Var.getHpPot ( ) < 3 )
 					{
 						if ( Var.getGold ( ) >= hpPotCost )
 						{
@@ -435,7 +462,7 @@ public class CfAreas
 					}
 					else
 					{
-						System.out.println ( "You can only hold one bottle at a time." );
+						System.out.println ( "You can only hold three bottles." );
 					}
 					break;
 
@@ -481,11 +508,10 @@ public class CfAreas
 						System.out.println (
 								"2 - Crested Shield. Off-hand, +1 Resistance. (30 gold) In stock: " + Var.getmShield ( ) );
 						int bSwordCost = 50;
-						System.out
-								.println ( "3 - Snowy Bastard Sword. 6 - 12 DMG. (50 gold) In stock: " + Var.getbSword ( ) );
+						System.out.println ( "3 - Snowy Bastard Sword. 6 - 12 DMG. (50 gold) In stock: " + Var.getbSword ( ) );
 						int vRapierCost = 60;
 						System.out.println (
-								"4 - Void Rapier. 5 - 11 DMG. Heals 1 HP on Hit. - 10 Max HP in battle" + Var.getvRapier ( ) );
+								"4 - Void Rapier. 5 - 11 DMG. Heals 1 HP on Hit. - 10 Max HP in battle (60 gold) In Stock: " + Var.getvRapier ( ) );
 						System.out.println ( "5 - Return to Armorer Entrance" );
 						System.out.println ( "(You may only hold one Off-hand item, unless you grow and extra hand...)" );
 						armorerItems = input.nextInt ( );
@@ -493,24 +519,29 @@ public class CfAreas
 						{
 							// armorer case dagger
 							case 1:
+								//item must be in stock
 								if ( Var.getmDagger ( ) > 0 )
 								{
+									//player must have enough money to pay for items
 									if ( Var.getGold ( ) >= mDaggerCost )
 									{
+										//off-hand items must be replaced as only one ability can be had
+										//in this case if the player already has the shield,
+										//it will be replaced by the dagger
 										if ( Var.getmShield ( ) == 0 )
 										{
 											System.out.println ( "You ditch your shield and it vanishes! -1 Resistance" );
 											System.out.println ( "Where you left it now lies a few gold coins... + 10 gold" );
-											Var.setHpMax ( -25 );
-											Var.setmShield ( 1 );
-											Var.setGold ( 10 );
+											Var.setHpMax ( -25 ); //remove shield buff
+											Var.setmShield ( 1 ); //add shield back to stock
+											Var.setGold ( 10 ); //player gets 10 gold from exchange
 										}
 										System.out.println ( "The Dagger's hilt feels like it was made for your hand" );
 										System.out.println ( "+1 Min DMG, +1 Dex" );
-										Var.setMinDMG ( 1 );
-										Var.setDex ( 1 );
-										Var.setGold ( -mDaggerCost );
-										Var.setmDagger ( -1 );
+										Var.setMinDMG ( 1 ); //increase minimum damage by 1
+										Var.setDex ( 1 ); //increase dex by 1
+										Var.setGold ( -mDaggerCost ); //pay cost of dagger
+										Var.setmDagger ( -1 ); //remove dagger from stock
 
 									}
 									else
@@ -526,6 +557,7 @@ public class CfAreas
 								break;
 
 							// armorer case shield
+							//same idea as with buying the dagger
 							case 2:
 								if ( Var.getmShield ( ) > 0 )
 								{
@@ -562,19 +594,26 @@ public class CfAreas
 
 							// Armorer case bastard sword
 							case 3:
-								if ( Var.getbSword ( ) > 0 )
+								if ( Var.getbSword ( ) > 0 ) //check item quantity
 								{
-									if ( Var.getGold ( ) >= bSwordCost )
+									if ( Var.getGold ( ) >= bSwordCost ) //check gold amount
 									{
 										System.out.println (
 												"Gripping the pommel, a chill flows from your palm to the top of your head." );
 										System.out.println ( "It feels as though you pulled this sword from its own grave" );
 										System.out.println ( "DMG = 6 - 12" );
+										
+										//update veriables
 										Var.setMinDMG ( 6 );
 										Var.setMaxDMG ( 12 );
 										Var.setGold ( -bSwordCost );
 										Var.setbSword ( -1 );
-										Var.setvRapier ( 1 );
+										
+										//check for status, off hand variables and class types
+										//update if necessary
+										if (Var.getvRapier( ) < 1) {
+											Var.setvRapier ( 1 );
+										}
 										if ( Var.getFighter ( ) == 1 )
 										{
 											Var.setMaxDMG ( 2 );
@@ -601,6 +640,7 @@ public class CfAreas
 								break;
 
 							// armorer case, void rapier
+							// same idea as with buying any weapon(see above)
 							case 4:
 								if ( Var.getvRapier ( ) > 0 )
 								{
@@ -691,8 +731,10 @@ public class CfAreas
 						System.out.println ( "Where to?" );
 						System.out.println ( "1 - Take Carriage back to the Merchant Camp fork. (10 gold)" );
 						System.out.println ( "2 - Walk back to Merchant Camp fork" );
+						
+						// after killing chaos demon, player can go to chapter 3
 						if ( Var.getChaosDemonLife ( ) == 0 )
-						{ // after killing chaos demon
+						{ 
 							System.out.println (
 									"3 - A man standing at the City Gates recognizes you\nas the one who ended the rain of fire" );
 							System.out.println (
@@ -700,23 +742,25 @@ public class CfAreas
 						}
 						int direction = input.nextInt ( );
 						Var.setDirection ( direction );
+						
+						//player takes the carriage back to the merchant camp
 						if ( Var.getDirection ( ) == 1 )
 						{
 							if ( Var.getGold ( ) >= carriage )
 							{
 								Var.setGold ( -carriage );
-								merch = 0;
-								Var.setMerchCount ( -1 );
+								Var.setMerchCount ( -1 );//allows merchant intro text to appear again
 								System.out.println (
 										"The ride back to the Merchant Camp lasts the rest of\n the day and night, and is not very exciting\n" );
 
 							}
-							else
+							else //player does not have enough money to take the carriage
 							{
 								System.out.println ( "It's not that much money, go get some more." );
 								city = 9;
 							}
 						}
+						//player moves on to chapter 3 if chaos demon is dead
 						else if ( Var.getDirection ( ) == 3 && Var.getChaosDemonLife ( ) == 0 )
 						{
 							System.out.println ( "You desire to leave this place as there is nothing left here for you." );
@@ -741,25 +785,21 @@ public class CfAreas
 										"Feeling perfectly fine with that answer, you help load the cart.\nPress Enter" );
 								KeyIn.nextLine ( );
 
-								Var.setChapter ( 3 );
+								Var.setChapter ( 3 ); //chapter 3 initialize
 
 								break;
 							}
-							else
+							else //decide not to leave
 							{
 								System.out.println (
 										"You decide there are some things you need to wrap-up and take another look at the board...\n" );
 								city = 9;
 							}
 						}
-						else
-						{
-							Var.setDirection ( 1 );
-						}
 					}
 					break;
 
-				case 7:
+				case 7: //guessing game
 
 					int gGameCost = 5;
 					CfSequence.guessingGame ( gGameCost );
@@ -774,8 +814,8 @@ public class CfAreas
 
 	public static void cityWalk( )
 	{
+		
 		Scanner input = new Scanner ( System.in );
-		Scanner KeyIn = new Scanner ( System.in );
 		char citySearch;
 		System.out.println ( "Lets walk about town, shall we? y/n" );
 		do // check character input
@@ -786,12 +826,15 @@ public class CfAreas
 				System.out.println ( "You must enter y or n, press 'n' to return to Common Board." );
 			}
 		} while ( citySearch != 'y' && citySearch != 'n' );
+		int count = 0;
 		while ( citySearch == 'y' )
 		{
-			rand = (int) ( Math.random ( ) * range + minEnc ); // encounter chance
-			if ( encNumber == rand )
-			{
+			count ++;
 				int enemy = (int) ( Math.random ( ) * 4 + 1 ); // random enemy
+				if (count > 3) {
+					enemy = 2;
+					count = 0;
+				}
 				switch ( enemy )
 				{
 					case 1:
@@ -852,7 +895,6 @@ public class CfAreas
 						CfSequence.battleSequence ( Enemy.cultist ( ) );
 
 				}
-			}
 			if ( Var.getHp ( ) > 0 )
 			{
 				System.out.println ( "Keep walking about aimlessly? y/n" );
@@ -872,6 +914,7 @@ public class CfAreas
 		}
 	}
 
+	
 	public static void mountainTop( )
 	{
 		Scanner input = new Scanner ( System.in );
@@ -889,13 +932,15 @@ public class CfAreas
 				System.out.println ( "You must enter y or n" );
 			}
 		} while ( mountain != 'y' && mountain != 'n' );
-
+		int count = 0;
 		while ( mountain == 'y' )
 		{
-			rand = (int) ( Math.random ( ) * range + minEnc ); // encounter chance
-			if ( encNumber == rand )
-			{
+			count ++;
 				int enemy = (int) ( Math.random ( ) * 4 + 1 ); // random enemy
+				if (count > 3) {
+					enemy = 2;
+					count = 0;
+				}
 				switch ( enemy )
 				{
 					case 1:
@@ -927,7 +972,7 @@ public class CfAreas
 							else
 							{
 								System.out.println ( Enemy.chaosDemon ( ).getText ( ) );
-
+								Var.setHp ( Var.getHpMax()/2 );
 								System.out.println ( "Press Enter" );
 								KeyIn.nextLine ( );
 
@@ -961,7 +1006,6 @@ public class CfAreas
 						CfSequence.battleSequence ( Enemy.eBat ( ) );
 
 				}
-			}
 			if ( Var.getHp ( ) > 0 )
 			{
 				System.out.println ( "Keep Searching the Mountain?" );
@@ -990,8 +1034,9 @@ public class CfAreas
 
 	public static void homeHub( )
 	{
+		
 		Scanner input = new Scanner ( System.in );
-		System.out.println ( "\"Welcome friend, what would you like?\"\n" );
+		System.out.println ( "\"Welcome " + Var.getPlayer() + ", what would you like?\"\n" );
 		int gGameCost = 5;
 		System.out.println ( "0 - Play Guessing Game. (5 gold)" );
 		int hpPotCost = 20;
@@ -1027,14 +1072,14 @@ public class CfAreas
 		switch ( merch )
 		{
 
-			case 0:
+			case 0: //guessing game
 
 				CfSequence.guessingGame ( gGameCost );
 
 				break;
 
-			case 1:
-				if ( Var.getHpPot ( ) < 1 )
+			case 1: //buy potion
+				if ( Var.getHpPot ( ) < 3 )
 				{
 					if ( Var.getGold ( ) >= hpPotCost )
 					{
@@ -1050,12 +1095,12 @@ public class CfAreas
 				}
 				else
 				{
-					System.out.println ( "You can only hold one bottle at a time." );
+					System.out.println ( "You can only hold three bottles." );
 				}
 				break;
 
-			case 2:
-				if ( Var.getDynamite ( ) < 1 )
+			case 2: // buy dynamite
+				if ( Var.getDynamite ( ) < 3 )
 				{
 					if ( Var.getGold ( ) >= dynamiteCost )
 					{
@@ -1071,37 +1116,36 @@ public class CfAreas
 				}
 				else
 				{
-					System.out.println ( "You can only hold one explosive at a time." );
+					System.out.println ( "You can only hold three explosive at a time." );
 				}
 				break;
 
-			case 3:
+			case 3: // refill hp to max
 				Var.setHp ( Var.getHpMax ( ) );
 				System.out.println ( "Your bed is so comfy... HP Refiled: " + Var.getHp ( ) + " / " + Var.getHpMax ( ) );
 				break;
 
-			case 4:
+			case 4: //leave home hub
 				System.out.println ( "Where to?" );
-				System.out.println (
-						"1 - Stay Home\n2 - Shimmering Valley\n3 - Arid Plains\n4 - Frozen Desert\n5 - Sleeping Forest" );
+				System.out.println ("1 - Stay Home\n2 - Shimmering Valley\n3 - Arid Plains\n4 - Frozen Desert\n5 - Sleeping Forest" );
 				int direction = input.nextInt ( );
 				Var.setDirection ( direction );
 				break;
 
-			case 5:
+			case 5: //advice from vendor
 
-				if ( Var.getLitchKing ( ) == 0 )
+				if ( Var.getLitchKing ( ) == 0 ) //litchKing is dead
 				{
 					System.out.println ( "The Smoke from the volcano has darkened a bit recently...\n" );
 				}
-				else if ( Var.getHordeLife ( ) == 0 || Var.getGryphonLife ( ) == 0 )
+				else if ( Var.getHordeLife ( ) == 0 || Var.getGryphonLife ( ) == 0 ) //horde and gryphon are dead
 				{
 					System.out.println (
 							"I heard there is an Ancient Tomb past the sleeping forest that is impossible to open.\n "
 									+ "There is also rumor that the the crystalized desert was a cursed\n"
 									+ "during the Gryphon Riders Crusade that ended mysteriously 1200 years ago.\n" );
 				}
-				else
+				else //beginning advice
 				{
 					System.out.println ( "I hear travelers lose whole days of travel in the sleeping forest\n"
 							+ "and the plains are teaming with horrible creatures."
@@ -1112,13 +1156,15 @@ public class CfAreas
 				}
 				break;
 
-			case 6:
+			case 6: // dagger available when gryphon or horde is dead
 				if ( Var.getHordeLife ( ) == 0 || Var.getGryphonLife ( ) == 0 )
 				{
 					if ( Var.getpDagger ( ) > 0 )
 					{
 						if ( Var.getGold ( ) >= pDaggerCost )
 						{
+							//dagger is an off-hand weapon so it must be checked if the player
+							//has an off-hand weapon equipped and remove it and add it back to stock if so
 							if ( Var.getmShield ( ) == 0 )
 							{
 								System.out.println ( "You ditch your shield and it vanishes! -1 Resistance" );
@@ -1154,19 +1200,20 @@ public class CfAreas
 						System.out.println ( "Sorry, This item is out of stock." );
 					}
 				}
-				else
+				else //if player tries to buy the item before defeating the boss
 				{
 					System.out.println ( "No Cheating!" );
 				}
 				break;
 
-			case 7:
+			case 7://studded leather armor available when gryphon and horde are  both dead
 				if ( Var.getHordeLife ( ) == 0 && Var.getGryphonLife ( ) == 0 )
 				{
 					if ( Var.getSlArmor ( ) > 0 )
 					{
 						if ( Var.getGold ( ) >= slArmorCost )
 						{
+							//leather armor must be removed first if equipped
 							if ( Var.getlArmor ( ) == 0 )
 							{
 								System.out.println (
@@ -1189,19 +1236,21 @@ public class CfAreas
 						System.out.println ( "Sorry, This item is out of stock." );
 					}
 				}
-				else
+				else //player cannot buy item prior to  meeting conditions
 				{
 					System.out.println ( "No Cheating!" );
 				}
 				break;
 
-			case 8:
+			case 8://Shadow Katana available when gryphon and horde are both dead
 				if ( Var.getHordeLife ( ) == 0 && Var.getGryphonLife ( ) == 0 )
 				{
 					if ( Var.getsKatana ( ) > 0 )
 					{
 						if ( Var.getGold ( ) >= sKatanaCost )
 						{
+							//update veriables, check for other status weapons equipped
+							//and add them  back to stock if so
 							System.out.println ( "Gripping the pommel, you get the feeling of a ghostly tentacle\n"
 									+ "weaving its way through the tendons of your forearm." );
 							System.out.println ( "DMG = 7 - 13. Max HP -10 in Battle.\nYou feel more vascular." );
@@ -1209,9 +1258,15 @@ public class CfAreas
 							Var.setMaxDMG ( 13 );
 							Var.setGold ( -sKatanaCost );
 							Var.setsKatana ( -1 );
-							Var.setvRapier ( 1 );
-							Var.setcKukri ( 1 );
-							Var.setlAxe ( 1 );
+							if (Var.getvRapier( ) < 1) {
+								Var.setvRapier ( 1 );
+							}
+							if (Var.getcKukri( ) < 1) {
+								Var.setcKukri ( 1 );
+							}
+							if (Var.getlAxe( ) < 1) {
+								Var.setlAxe ( 1 );
+							}
 							if ( Var.getFighter ( ) == 1 )
 							{
 								Var.setMaxDMG ( 2 );
@@ -1245,9 +1300,9 @@ public class CfAreas
 
 	public static void sValley( )
 	{
+		// Shimmering Valley
 		Scanner input = new Scanner ( System.in );
-		Scanner KeyIn = new Scanner ( System.in );
-		char valley; // Shimmering Valley
+		char valley; 
 		System.out.println ( "The trail widens and then branches into many directions" );
 		System.out.println ( "From here you can either head back home, or continue East to the White Marsh" );
 		System.out.println ( "First, Would you like to look around the meandering trails? y/n" );
@@ -1259,12 +1314,15 @@ public class CfAreas
 				System.out.println ( "You must enter y or n" );
 			}
 		} while ( valley != 'y' && valley != 'n' );
+		int count = 0;
 		while ( valley == 'y' )
 		{
-			rand = (int) ( Math.random ( ) * range + minEnc ); // encounter chance
-			if ( encNumber == rand )
-			{
+			count ++;
 				int enemy = (int) ( Math.random ( ) * 4 + 1 ); // random enemy
+				if (count > 3) {
+					enemy = 2;
+					count = 0;
+				}
 				switch ( enemy )
 				{
 					case 1:
@@ -1327,7 +1385,7 @@ public class CfAreas
 										break;
 
 									case 1:
-										if ( Var.getHpPot ( ) < 1 )
+										if ( Var.getHpPot ( ) < 3 )
 										{
 											if ( Var.getGold ( ) >= hpPotCost )
 											{
@@ -1343,12 +1401,12 @@ public class CfAreas
 										}
 										else
 										{
-											System.out.println ( "You can only hold one bottle at a time." );
+											System.out.println ( "You can only hold three bottles." );
 										}
 										break;
 
 									case 2:
-										if ( Var.getDynamite ( ) < 1 )
+										if ( Var.getDynamite ( ) < 3 )
 										{
 											if ( Var.getGold ( ) >= dynamiteCost )
 											{
@@ -1364,7 +1422,7 @@ public class CfAreas
 										}
 										else
 										{
-											System.out.println ( "You can only hold one explosive at a time." );
+											System.out.println ( "You can only hold three explosive at a time." );
 										}
 										break;
 
@@ -1379,9 +1437,15 @@ public class CfAreas
 												Var.setMaxDMG ( 11 );
 												Var.setGold ( -cKukriCost );
 												Var.setcKukri ( -1 );
-												Var.setvRapier ( 1 );
-												Var.setlAxe ( 1 );
-												Var.setsKatana ( 1 );
+												if (Var.getvRapier( ) < 1) {
+													Var.setvRapier ( 1 );
+												}
+												if (Var.getsKatana( ) < 1) {
+													Var.setsKatana ( 1 );
+												}
+												if (Var.getlAxe( ) < 1) {
+													Var.setlAxe ( 1 );
+												}
 												if ( Var.getFighter ( ) == 1 )
 												{
 													Var.setMaxDMG ( 2 );
@@ -1427,7 +1491,7 @@ public class CfAreas
 						CfSequence.battleSequence ( Enemy.malboro ( ) );
 
 				}
-			}
+			
 			if ( Var.getHp ( ) < 1 )
 			{
 				valley = 'n';
@@ -1447,6 +1511,7 @@ public class CfAreas
 		}
 	}
 
+	
 	public static void whiteMarsh( )
 	{
 		Scanner input = new Scanner ( System.in );
@@ -1462,13 +1527,15 @@ public class CfAreas
 				System.out.println ( "You must enter y or n" );
 			}
 		} while ( mountain != 'y' && mountain != 'n' );
-
+		int count = 0;
 		while ( mountain == 'y' )
 		{
-			rand = (int) ( Math.random ( ) * range + minEnc ); // encounter chance
-			if ( encNumber == rand )
-			{
+			count ++;
 				int enemy = (int) ( Math.random ( ) * 4 + 1 ); // random enemy
+				if (count > 3) {
+					enemy = 2;
+					count = 0;
+				}
 				switch ( enemy )
 				{
 					case 1:
@@ -1512,7 +1579,7 @@ public class CfAreas
 								if ( Var.getHp ( ) > 0 )
 								{
 									Var.setHpMax ( 10 ); // hp Max + 10
-									Var.setHp ( Var.getHpMax ( ) / 2 ); // full hp
+									Var.setHp ( Var.getHpMax ( )); // full hp
 
 									Var.setHordeLife ( -1 ); // horde dies
 
@@ -1560,12 +1627,12 @@ public class CfAreas
 										+ "and a bottle of Snake Oil!" + " + 25 gold!" );
 								Var.setGold ( 25 );
 							}
-							if ( Var.getHpPot ( ) > 0 )
+							if ( Var.getHpPot ( ) > 2 && Var.getHp() > 0)
 							{
 								System.out.println ( "\nDelicious! +40 HP" );
 								Var.setHp ( 40 );
 							}
-							else
+							else if (Var.getHp() > 0)
 							{
 								System.out.println ( "You stowe the snake oil for later." );
 								Var.setHpPot ( 1 );
@@ -1578,7 +1645,7 @@ public class CfAreas
 						CfSequence.battleSequence ( Enemy.aElemental ( ) );
 
 				}
-			}
+			
 			if ( Var.getHp ( ) > 0 )
 			{
 				System.out.println ( "Keep Searching the Marsh?" );
@@ -1598,10 +1665,10 @@ public class CfAreas
 		}
 	}
 
+	
 	public static void frozenDesert( )
 	{
 		Scanner input = new Scanner ( System.in );
-		Scanner KeyIn = new Scanner ( System.in );
 		System.out.println (
 				"The bleakness of the Frozen desert is staggering, you can only guess as to what cursed this wasteland." );
 		System.out.println ( "Would you like to look around? y/n" );
@@ -1614,13 +1681,15 @@ public class CfAreas
 				System.out.println ( "You must enter y or n" );
 			}
 		} while ( mountain != 'y' && mountain != 'n' );
-
+		int count = 0;
 		while ( mountain == 'y' )
 		{
-			rand = (int) ( Math.random ( ) * range + minEnc ); // encounter chance
-			if ( encNumber == rand )
-			{
+			count ++;
 				int enemy = (int) ( Math.random ( ) * 4 + 1 ); // random enemy
+				if (count > 3) {
+					enemy = 2;
+					count = 0;
+				}
 				switch ( enemy )
 				{
 					case 1:
@@ -1682,7 +1751,7 @@ public class CfAreas
 										break;
 
 									case 1:
-										if ( Var.getHpPot ( ) < 1 )
+										if ( Var.getHpPot ( ) < 3 )
 										{
 											if ( Var.getGold ( ) >= hpPotCost )
 											{
@@ -1698,12 +1767,12 @@ public class CfAreas
 										}
 										else
 										{
-											System.out.println ( "You can only hold one bottle at a time." );
+											System.out.println ( "You can only hold three bottles." );
 										}
 										break;
 
 									case 2:
-										if ( Var.getDynamite ( ) < 1 )
+										if ( Var.getDynamite ( ) < 3 )
 										{
 											if ( Var.getGold ( ) >= dynamiteCost )
 											{
@@ -1719,7 +1788,7 @@ public class CfAreas
 										}
 										else
 										{
-											System.out.println ( "You can only hold one explosive at a time." );
+											System.out.println ( "You can only hold three explosive at a time." );
 										}
 										break;
 
@@ -1734,9 +1803,15 @@ public class CfAreas
 												Var.setMaxDMG ( 11 );
 												Var.setGold ( -cKukriCost );
 												Var.setcKukri ( -1 );
-												Var.setvRapier ( 1 );
-												Var.setlAxe ( 1 );
-												Var.setsKatana ( 0 );
+												if (Var.getvRapier( ) < 1) {
+													Var.setvRapier ( 1 );
+												}
+												if (Var.getsKatana( ) < 1) {
+													Var.setsKatana ( 1 );
+												}
+												if (Var.getlAxe( ) < 1) {
+													Var.setlAxe ( 1 );
+												}
 												if ( Var.getFighter ( ) == 1 )
 												{
 													Var.setMaxDMG ( 2 );
@@ -1781,7 +1856,7 @@ public class CfAreas
 						CfSequence.battleSequence ( Enemy.taranTroll ( ) );
 
 				}
-			}
+			
 			if ( Var.getHp ( ) > 0 )
 			{
 				System.out.println ( "Keep Searching the Desert?" );
@@ -1801,6 +1876,7 @@ public class CfAreas
 		}
 	}
 
+	
 	public static void sandstoneCliffs( )
 	{
 		System.out.println ( "The SandStone Cliffs are flat and rocky with patches of vegetation.\n"
@@ -1818,13 +1894,15 @@ public class CfAreas
 				System.out.println ( "You must enter y or n" );
 			}
 		} while ( mountain != 'y' && mountain != 'n' );
-
+		int count = 0;
 		while ( mountain == 'y' )
 		{
-			rand = (int) ( Math.random ( ) * range + minEnc ); // encounter chance
-			if ( encNumber == rand )
-			{
+			count ++;
 				int enemy = (int) ( Math.random ( ) * 4 + 1 ); // random enemy
+				if (count > 3) {
+					enemy = 2;
+					count = 0;
+				}
 				switch ( enemy )
 				{
 					case 1:
@@ -1832,7 +1910,7 @@ public class CfAreas
 						CfSequence.battleSequence ( Enemy.ants ( ) );
 						break;
 
-					case 2: // Horde
+					case 2: // Gryphon
 						if ( Var.getGryphonLife ( ) > 0 )
 						{
 							System.out.println ( "Your gaze moves to the cliffs edge and curiosity fills your mind" ); // boss
@@ -1913,13 +1991,13 @@ public class CfAreas
 										+ "and a bottle of Snake Oil!" + " + 25 gold!" );
 								Var.setGold ( 25 );
 							}
-							if ( Var.getHpPot ( ) > 0 )
+							if ( Var.getHpPot ( ) > 2 && Var.getHp() > 0)
 							{
 								System.out.println ( "\nDelicious! +40 HP" );
 								Var.setHp ( 40 );
 
 							}
-							else
+							else if (Var.getHp() > 0)
 							{
 								System.out.println ( "You stowe the snake oil for later." );
 								Var.setHpPot ( 1 );
@@ -1932,7 +2010,7 @@ public class CfAreas
 						CfSequence.battleSequence ( Enemy.miniBears ( ) );
 
 				}
-			}
+			
 			if ( Var.getHp ( ) > 0 )
 			{
 				System.out.println ( "Keep Searching the Cliffs?" );
@@ -1954,6 +2032,7 @@ public class CfAreas
 
 	public static void tombEntrance( )
 	{
+		
 		Scanner input = new Scanner ( System.in );
 		int valleyMerch = 0;
 		while ( valleyMerch != 5 )
@@ -1988,7 +2067,7 @@ public class CfAreas
 					break;
 
 				case 1:
-					if ( Var.getHpPot ( ) < 1 )
+					if ( Var.getHpPot ( ) < 3 )
 					{
 						if ( Var.getGold ( ) >= hpPotCost )
 						{
@@ -2004,12 +2083,12 @@ public class CfAreas
 					}
 					else
 					{
-						System.out.println ( "You can only hold one bottle at a time." );
+						System.out.println ( "You can only hold three bottles." );
 					}
 					break;
 
 				case 2:
-					if ( Var.getDynamite ( ) < 1 )
+					if ( Var.getDynamite ( ) < 3 )
 					{
 						if ( Var.getGold ( ) >= dynamiteCost )
 						{
@@ -2025,7 +2104,7 @@ public class CfAreas
 					}
 					else
 					{
-						System.out.println ( "You can only hold one explosive at a time." );
+						System.out.println ( "You can only hold three explosive at a time." );
 					}
 					break;
 
@@ -2040,9 +2119,15 @@ public class CfAreas
 							Var.setMaxDMG ( 13 );
 							Var.setGold ( -lAxeCost );
 							Var.setlAxe ( -1 );
-							Var.setcKukri ( 1 );
-							Var.setvRapier ( 1 );
-							Var.setsKatana ( 1 );
+							if (Var.getvRapier( ) < 1) {
+								Var.setvRapier ( 1 );
+							}
+							if (Var.getcKukri( ) < 1) {
+								Var.setcKukri ( 1 );
+							}
+							if (Var.getsKatana( ) < 1) {
+								Var.setsKatana( 1 );
+							}
 							if ( Var.getFighter ( ) == 1 )
 							{
 								Var.setMaxDMG ( 2 );
@@ -2089,6 +2174,9 @@ public class CfAreas
 						{
 							valleyMerch = 5;
 							ancientTomb ( );
+							if (Var.getHp() > 0) {
+								valleyMerch = 0;
+							}
 						}
 					}
 					break;
@@ -2098,6 +2186,7 @@ public class CfAreas
 		} // end merchant
 	}
 
+	
 	public static void ancientTomb( )
 	{
 		System.out.println ( "The Tomb is dark with patches of light seeping though the weathered cracks in the walls.\n"
@@ -2115,13 +2204,15 @@ public class CfAreas
 				System.out.println ( "You must enter y or n" );
 			}
 		} while ( mountain != 'y' && mountain != 'n' );
-
+		int count = 0;
 		while ( mountain == 'y' )
 		{
-			rand = (int) ( Math.random ( ) * range + minEnc ); // encounter chance
-			if ( encNumber == rand )
-			{
+			count ++;
 				int enemy = (int) ( Math.random ( ) * 4 + 1 ); // random enemy
+				if (count > 3) {
+					enemy = 2;
+					count = 0;
+				}
 				switch ( enemy )
 				{
 					case 1:
@@ -2155,7 +2246,6 @@ public class CfAreas
 							{
 								System.out.println ( Enemy.litchKing ( ).getText ( ) );
 								Var.setHp ( Var.getHpMax ( ) / 2 );
-
 								System.out.println ( "Press Enter" );
 								KeyIn.nextLine ( );
 
@@ -2164,7 +2254,7 @@ public class CfAreas
 
 								if ( Var.getHp ( ) > 0 )
 								{
-									Var.setHpMax ( 10 ); // hp Max + 10
+									Var.setHpMax ( 25 ); // hp Max + 25
 									Var.setHp ( Var.getHpMax ( ) ); // full hp
 									Var.setLitchKing ( -1 ); // Litch King dies
 									Var.setvBangle ( -1 ); // vBangle
@@ -2211,13 +2301,13 @@ public class CfAreas
 										"You reach into the hole and find 25 gold\nanlong with a bottle of Snake Oil!" );
 								Var.setGold ( 25 );
 							}
-							if ( Var.getHpPot ( ) > 0 )
+							if ( Var.getHpPot ( ) > 2 && Var.getHp() > 0)
 							{
 								System.out.println ( "\nDelicious! +40 HP" );
 								Var.setHp ( 40 );
 
 							}
-							else
+							else if (Var.getHp() > 0)
 							{
 								System.out.println ( "You stowe the snake oil for later." );
 								Var.setHpPot ( 1 );
@@ -2230,7 +2320,6 @@ public class CfAreas
 						CfSequence.battleSequence ( Enemy.spectre ( ) );
 
 				}
-			}
 			if ( Var.getHp ( ) > 0 )
 			{
 				System.out.println ( "Keep Searching the Tomb?" );
@@ -2256,8 +2345,8 @@ public class CfAreas
 	public static void aridPlains( )
 	{
 		System.out.println ( "Your eyes are dry and the sulpher stings your nose." );
+		
 		Scanner input = new Scanner ( System.in );
-		Scanner KeyIn = new Scanner ( System.in );
 		System.out.println ( "" );
 		System.out.println ( "Would you like to look around? y/n" );
 		char mountain = 'a';
@@ -2269,13 +2358,15 @@ public class CfAreas
 				System.out.println ( "You must enter y or n" );
 			}
 		} while ( mountain != 'y' && mountain != 'n' );
-
+		int count = 0;
 		while ( mountain == 'y' )
 		{
-			rand = (int) ( Math.random ( ) * range + minEnc ); // encounter chance
-			if ( encNumber == rand )
-			{
+			count ++;
 				int enemy = (int) ( Math.random ( ) * 4 + 1 ); // random enemy
+				if (count > 3) {
+					enemy = 3;
+					count = 0;
+				}
 				switch ( enemy )
 				{
 					case 1:
@@ -2321,13 +2412,13 @@ public class CfAreas
 										+ "and a bottle of Snake Oil!" + " + 25 gold!" );
 								Var.setGold ( 25 );
 							}
-							if ( Var.getHpPot ( ) > 0 )
+							if ( Var.getHpPot ( ) > 2 && Var.getHp() > 0)
 							{
 								System.out.println ( "\nDelicious! +40 HP" );
 								Var.setHp ( 40 );
 
 							}
-							else
+							else if (Var.getHp() > 0)
 							{
 								System.out.println ( "You stowe the snake oil for later." );
 								Var.setHpPot ( 1 );
@@ -2340,7 +2431,7 @@ public class CfAreas
 						CfSequence.battleSequence ( Enemy.stoneGolem ( ) );
 
 				}
-			}
+			
 			if ( Var.getHp ( ) > 0 )
 			{
 				System.out.println ( "Keep Searching the Plains?" );
@@ -2360,6 +2451,7 @@ public class CfAreas
 		}
 	}
 
+	
 	public static void volcano( )
 	{
 		Scanner input = new Scanner ( System.in );
@@ -2376,13 +2468,15 @@ public class CfAreas
 				System.out.println ( "You must enter y or n" );
 			}
 		} while ( mountain != 'y' && mountain != 'n' );
-
+		int count = 0;
 		while ( mountain == 'y' )
 		{
-			rand = (int) ( Math.random ( ) * range + minEnc ); // encounter chance
-			if ( encNumber == rand )
-			{
+			count ++;
 				int enemy = (int) ( Math.random ( ) * 4 + 1 ); // random enemy
+				if (count > 3 && Var.getLitchKing() < 1) {
+					enemy = 2;
+					count = 0;
+				}
 				switch ( enemy )
 				{
 					case 1:
@@ -2416,7 +2510,7 @@ public class CfAreas
 							else
 							{
 								System.out.println ( Enemy.chaos ( ).getText ( ) );
-
+								Var.setHp ( Var.getHpMax()/2 );
 								System.out.println ( "Press Enter" );
 								KeyIn.nextLine ( );
 
@@ -2477,12 +2571,12 @@ public class CfAreas
 												+ "25 gold coins along with a few dead animals\nand a bottle of Snake Oil!" );
 								Var.setGold ( 25 );
 							}
-							if ( Var.getHpPot ( ) > 0 )
+							if ( Var.getHpPot ( ) > 2 && Var.getHp() > 0)
 							{
 								System.out.println ( "\nDelicious! +40 HP" );
 								Var.setHp ( 40 );
 							}
-							else
+							else if ( Var.getHp() > 0)
 							{
 								System.out.println ( "You stowe the snake oil for later." );
 								Var.setHpPot ( 1 );
@@ -2491,7 +2585,7 @@ public class CfAreas
 						break;
 
 				}
-			}
+			
 			if ( Var.getHp ( ) > 0 )
 			{
 				System.out.println ( "Keep Searching the Volcano?" );

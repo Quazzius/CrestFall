@@ -1,7 +1,7 @@
 package myGame;
 
 import java.util.Scanner;
-
+@SuppressWarnings("resource")
 public class CfRoads
 {
 	// minEnc and maxEnc are the boundaries of your chance for enemy encounters
@@ -12,14 +12,16 @@ public class CfRoads
 	public static final int minEnc = 1, maxEnc = 2, encNumber = 1, range = maxEnc - minEnc + 1;
 	public static int rand, merch;
 
+	//all roads use the same basic mechanics
+	//the first couple are explained in detail
 	public static void forest( )
 	{
 		// Journey through the forest
 		Scanner KeyIn = new Scanner ( System.in );
 		merch = 0;
-		Var.setAreaCount ( 0 );
+		Var.setAreaCount ( 0 ); //initializes the amount of days the journey is to the next area
 		System.out.println ( "You begin your journey heading South through the overgrown Elderwood forest" );
-		while ( Var.getAreaCount ( ) < 3 )
+		while ( Var.getAreaCount ( ) < 3 ) //in this case the journey is 3 days long
 		{
 			rand = (int) ( Math.random ( ) * range + minEnc ); // encounter chance
 			if ( encNumber == rand )
@@ -27,10 +29,11 @@ public class CfRoads
 				int enemy = (int) ( Math.random ( ) * 3 + 1 ); // random enemy
 				switch ( enemy )
 				{
+					//in this case there are 3 different enemies that can be randomly chosen
 					case 1:
 
-						System.out.println ( Enemy.bear ( ).getText ( ) );
-						CfSequence.battleSequence ( Enemy.bear ( ) );
+						System.out.println ( Enemy.bear ( ).getText ( ) ); //type of enemy
+						CfSequence.battleSequence ( Enemy.bear ( ) );  // battle sequence
 
 						break;
 
@@ -46,8 +49,9 @@ public class CfRoads
 						CfSequence.battleSequence ( Enemy.elf ( ) );
 				}
 			}
-			if ( Var.getAreaCount ( ) < 3 && Var.getHp ( ) > 0 )
+			if ( Var.getAreaCount ( ) < 3 && Var.getHp ( ) > 0 ) //character must be alive to continue
 			{
+				//increment area count and prompt the next day of the journey
 				Var.setAreaCount ( 1 );
 				System.out.println ( "Camp " + Var.getAreaCount ( ) + ". Press Enter to continue South" );
 				KeyIn.nextLine ( );
@@ -55,6 +59,7 @@ public class CfRoads
 		}
 	}
 
+	// fork in the road, choice to go to merchant or down swamp road early
 	public static char roadFork( )
 	{
 		Scanner input = new Scanner ( System.in );
@@ -82,6 +87,7 @@ public class CfRoads
 		return roadFork;
 	}
 
+	//west down merchant road to merchant camp
 	public static void merchantRoad( )
 	{
 		Scanner input = new Scanner ( System.in );
@@ -110,6 +116,8 @@ public class CfRoads
 						System.out.println ( "A man is busy mending the wheel for his cart" ); // cart man/ Bandit
 						System.out.println ( "Do you want to help? y/n" );
 						char help;
+						
+						//player gets the choice to engage in encounter
 						do // check character input
 						{
 							help = input.next ( ).toLowerCase ( ).charAt ( 0 );
@@ -123,15 +131,16 @@ public class CfRoads
 						{
 							System.out.println ( "Screw that guy. You keep walking" );
 						}
-						else
+						else //help
 						{
+							//in this case there is a 2/5 chance that the encounter is an enemy
 							int ruse = (int) ( Math.random ( ) * 10 );
-							if ( ruse > 5 )
+							if ( ruse > 5 ) // enemy encounter
 							{
 								System.out.println ( Enemy.bandit ( ).getText ( ) );
 								CfSequence.battleSequence ( Enemy.bandit ( ) );
 							}
-							else
+							else //no enemy 
 							{
 								System.out.println ( "You spend the rest of the day helping the Man fix his cart" );
 								System.out.println ( "He gives you 10 gold for your services and company" );
@@ -269,7 +278,7 @@ public class CfRoads
 						break;
 
 					case 2:
-						System.out.println ( "Something shiny catches your eye off trail" ); // jewel/ wraith
+						System.out.println ( "Something shiny catches your eye off trail" ); // jewel/ rotten wraith
 						System.out.println ( "Do you want to check it out? y/n" );
 						char help;
 						do // check character input
@@ -319,8 +328,10 @@ public class CfRoads
 				KeyIn.nextLine ( );
 			}
 		} // end swamp road 2
-		Var.setMerchCount ( 0 );
-		Var.setChapter ( 2 );
+		if(Var.getHp() > 0) {
+			Var.setMerchCount ( 0 );
+			Var.setChapter ( 2 );
+		}
 	}
 
 	public static void cityRoad( )
@@ -582,8 +593,8 @@ public class CfRoads
 
 					case 2:
 						System.out.println (
-								"You nearly trip over a mound of dirt hidden in the underbrush\nIt looks like someone buried something recently" ); // chest/
-																																															// zombie
+								"You nearly trip over a mound of dirt hidden in the underbrush\n"
+								+ "It looks like someone buried something recently" ); // chest/ zombie
 						System.out.println ( "Do you want to dig it up? y/n" );
 						char help;
 						do // check character input
@@ -692,6 +703,8 @@ public class CfRoads
 										+ "and a bottle of Snake Oil!" + " + 25 gold!" );
 								Var.setGold ( 25 );
 							}
+							//player already has max potion amount
+							//uses potion instead of storing it
 							if ( Var.getHpPot ( ) > 0 )
 							{
 								System.out.println ( "Delicious! +40 HP" );
@@ -894,7 +907,7 @@ public class CfRoads
 		System.out.println ( "Press Enter to head " + nautical );
 		KeyIn.nextLine ( );
 		Var.setAreaCount ( 0 );
-		while ( Var.getAreaCount ( ) < 3 )
+		while ( Var.getAreaCount ( ) < 5 )
 		{
 			rand = (int) ( Math.random ( ) * range + minEnc ); // encounter chance
 			if ( encNumber == rand )
@@ -962,8 +975,6 @@ public class CfRoads
 						break;
 
 					case 4:
-						System.out.println ( "You hear a horse running nearby and look to see it's holding a spear " ); // air
-																																						// elemental
 						System.out.println ( Enemy.centaur ( ).getText ( ) );
 						CfSequence.battleSequence ( Enemy.centaur ( ) );
 				}
