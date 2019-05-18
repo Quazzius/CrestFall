@@ -1,4 +1,4 @@
-package myGame;
+
 
 import java.util.Scanner;
 
@@ -10,6 +10,10 @@ public class CfSequence
 	// it also is used to end city loop if inside the city on death
 	public static int rand, attack, hitDMG, hitChance, merch, city = 0;
 
+	
+	//this is the battle sequence, where the enemy attacks
+	//and you make decisions to attack, flee, heal, or use explosives
+	//the chances to  hit and status effects are randomized within enemy specific parameters
 	public static void battleSequence( Enemy enemyType )
 	{
 
@@ -22,8 +26,8 @@ public class CfSequence
 		int stunCount = 0; // initialize hero stun
 		int eStunCount = 0; // init enemy stun count
 		int battleDec = 0; // init player decision
-		attack = Var.getMaxDMG ( ) - Var.getMinDMG ( ) + 1;
-		if ( Var.getvRapier ( ) < 1 || Var.getsKatana ( ) < 1 )
+		attack = Var.getMaxDMG ( ) - Var.getMinDMG ( ) + 1; //get attack range
+		if ( Var.getvRapier ( ) < 1 || Var.getsKatana ( ) < 1 )//weapons with vamp ability
 		{
 			// lose max hp to Vamp
 			Var.setHpMax ( -10 );
@@ -31,7 +35,7 @@ public class CfSequence
 		while ( enemy.getEnemyHP ( ) > 0 ) // fight sequence
 		{
 			eStunCount--;
-			if ( eStunCount < 1 )
+			if ( eStunCount < 1 ) //if enemy is stunned, they cannot attack this turn
 			{
 				int damage = (int) ( Math.random ( ) * enemy.getMaxRange ( ) + enemy.getMinRange ( ) ); // enemy attack
 																																		// range
@@ -49,7 +53,7 @@ public class CfSequence
 					// if enemy ability type "v" vampirism
 					if ( enemy.getEnemyAbility ( ) == 'v' )
 					{
-						double vamp = damage * 0.20; // heals 20% damage given
+						double vamp = damage * 0.20; // heals 20% damage given to player on hit
 						int iVamp = (int) vamp; // change from double to int
 						if ( iVamp > 0 )
 						{
@@ -58,41 +62,42 @@ public class CfSequence
 							enemy.setEnemyHP ( iVamp );
 						}
 					}
+					//if enemy ability type 'p'poison
 					else if ( enemy.getEnemyAbility ( ) == 'p' && poisonCount < 1 )
 					{
-						int poison = (int) ( Math.random ( ) * 3 + 1 );
+						int poison = (int) ( Math.random ( ) * 3 + 1 ); // 1 in 3 chance of being poisoned on hit
 						if ( poison == 3 )
 						{
 							System.out.println ( "You're Poisoned!" );
-							poisonCount = 3;
+							poisonCount = 3; //poison lasts 3 turns
 						}
 					}
 					else if ( enemy.getEnemyAbility ( ) == 's' && stunCount < 1 )
 					{
-						int stun = (int) ( Math.random ( ) * 8 + 1 );
+						int stun = (int) ( Math.random ( ) * 8 + 1 ); //1 in 8 chance of being stunned on hit
 						if ( stun == 5 )
 						{
 							System.out.println ( "You're Stunned! (1 turn)\n" );
-							stunCount = 2;
+							stunCount = 2; //stun lasts 1 turn, set to 2 since the stun count decrements at the end of the turn
 						}
 					}
 					if ( Var.getHp ( ) < 1 ) // on death condition, reset variables to go to game over
 					{
-						Var.setChapter ( -4 );
-						Var.setAreaCount ( 9 );
-						enemy.setEnemyHP ( 0 );
-						merch = 0;
-						city = 6;
-						Var.setDirection ( -9 );
+						Var.setChapter ( -4 ); //breaks chapter loop
+						Var.setAreaCount ( 9 ); // if in area, breaks choice to continue loop
+						enemy.setEnemyHP ( 0 ); // breaks battle sequence
+						merch = 0; // if in chapter 2 breaks merchant hub loop
+						city = 6; // if in citywalk inside the city, breaks loop to return to common board
+						Var.setDirection ( -9 ); // breaks switch direction loop
 
 					}
 				}
 			}
-			if ( poisonCount > 0 )
+			if ( poisonCount > 0 ) //poison counter
 			{
 				poisonCount--;
 				System.out.println ( "-2 HP (Poison), left: " + poisonCount );
-				Var.setHp ( -2 );
+				Var.setHp ( -2 ); // poison reduces health by 2 per round
 
 			}
 			// battle decision
@@ -110,15 +115,20 @@ public class CfSequence
 				{
 					System.out.println ( "5 - Health Potion: " + Var.getHpPot ( ) );
 				}
-
-				battleDec = input.nextInt ( );
-
-				// flee
+				try {
+					battleDec = input.nextInt ( ); 
+				}catch(Exception e){
+					
+				}finally {
+					battleDec = 0;
+				}
+				// players turn
 				switch ( battleDec )
 				{
 					// flee
 					case 0:
-						hitChance = (int) ( Math.random ( ) * enemy.getMaxFlee ( ) + enemy.getMinFlee ( ) ); // chance to flee
+						// chance to flee based on enemy's speed
+						hitChance = (int) ( Math.random ( ) * enemy.getMaxFlee ( ) + enemy.getMinFlee ( ) ); 
 						if ( Var.getEvade ( ) > hitChance )
 						{ // flee successful
 							System.out.println ( "You run away! Coward!" );
@@ -134,12 +144,12 @@ public class CfSequence
 					case 1:
 						hitDMG = (int) ( Math.random ( ) * attack + Var.getMinDMG ( ) ); // possible damage range
 						hitChance = (int) ( Math.random ( ) * enemy.getHeroHit ( ) + 1 ); // chance to hit
-						if ( Var.getDex ( ) >= hitChance ) // if dex is at least heroHit chance, hero connects
+						if ( Var.getDex ( ) >= hitChance ) // if dex is at least heroHit chance, hero hits
 						{
 							System.out.println ( "You hit for " + hitDMG + " DMG" );
 							enemy.setEnemyHP ( -hitDMG );
 
-							// has bangle
+							// has bangle, gives player Vamp, stacks with other abilities
 							if ( Var.getvBangle ( ) == 0 )
 							{
 								System.out.println ( "HP + 1" );
@@ -153,35 +163,38 @@ public class CfSequence
 								Var.setHp ( 1 );
 							}
 							// character ability poison
-							else if ( Var.getcKukri ( ) == 0 && ePoisonCount < 1 )
+							else if ( Var.getcKukri ( ) == 0 && ePoisonCount < 1 ) //poison does not stack
 							{
-								int ePoison = (int) ( Math.random ( ) * 3 + 1 );
+								int ePoison = (int) ( Math.random ( ) * 3 + 1 ); //1 in 3 chance to poison enemy on hit
 								if ( ePoison == 3 )
 								{
 									System.out.println ( enemy.geteType ( ) + " Poisoned!" );
-									ePoisonCount = 3;
+									ePoisonCount = 3;// lasts 3 turns
 								}
 							}
 							// character ability stun
 							else if ( Var.getlAxe ( ) == 0 )
 							{
-								int eStun = (int) ( Math.random ( ) * 7 + 1 );
+								int eStun = (int) ( Math.random ( ) * 7 + 1 ); //1 in 7 chance to stun enemy on hit
 								if ( eStun == 3 )
 								{
 									System.out.println ( enemy.geteType ( ) + " Stunned!" );
-									eStunCount = 2;
+									eStunCount = 2; //lasts 1 turn, set to 2 since it decrements -1 before enemy turn
 								}
 							}
 						}
+						//hero does not hit
 						else
 						{
 							System.out.println ( "You miss! Lame!" );
 						}
+						//enemy poison counter
 						if ( ePoisonCount > 0 )
 						{
-							System.out.println ( enemy.geteType ( ) + " -2 HP (Poison), Left: " + ePoisonCount );
-							enemy.setEnemyHP ( -2 );
 							ePoisonCount--;
+							System.out.println ( enemy.geteType ( ) + " -2 HP (Poison), Left: " + ePoisonCount );
+							enemy.setEnemyHP ( -2 ); //enemy loses 2 hp per round when poisoned
+							
 						}
 						break;
 
@@ -205,7 +218,7 @@ public class CfSequence
 					case 5:
 						if ( Var.getHpPot ( ) > 0 )
 						{
-							if ( Var.getChapter ( ) > 2 )
+							if ( Var.getChapter ( ) > 2 ) //potion upgraded to snake oil in chapter 3
 							{
 								System.out.println ( "Delicious reptile secretions...\n +40 HP" );
 								Var.setHpPot ( -1 ); // used potion
@@ -230,7 +243,7 @@ public class CfSequence
 		// make sure hero did not die or flee for reward
 		if ( Var.getHp ( ) > 0 && battleDec != 0 )
 		{
-
+			//output text related to killing the particular enemy and gain the gold and points associated
 			System.out.println ( enemy.getKillText ( ) + enemy.geteType ( ) + enemy.getDeathFlavor ( ) );
 			Var.setGold ( enemy.getRewardGold ( ) ); // gold
 			Var.setPoints ( enemy.getRewardPoints ( ) ); // points
@@ -258,13 +271,13 @@ public class CfSequence
 			char play = 'y'; // initialize loop to play game
 			int number = -9999; // initialize guess loop
 			int ttlpoints = 0; // total point accumulator
-			int gameGold = Var.getGold ( );
+			int gameGold = Var.getGold ( ); //instance of amount of gold when beginning game
 
 			// Game start
 			while ( play == 'y' )
 			{
 				Var.setGold ( -gGameCost );
-				randNumber = (int) ( Math.random ( ) * 12 + 1 ); // Generate randNumberom number
+				randNumber = (int) ( Math.random ( ) * 10 + 1 ); // Generate randNumberom number
 
 				// user number must not equal randNumberom number to guess again
 				while ( number != randNumber )
@@ -277,7 +290,7 @@ public class CfSequence
 					System.out.println ( score * 2 + " Points remain." );
 
 					// prompt user for number and output results
-					System.out.println ( "Enter a number between 1 and 12" );
+					System.out.println ( "Enter a number between 1 and 10" );
 					number = input.nextInt ( ); // users guess
 					System.out.println ( "Your number was: " + number );
 
@@ -295,6 +308,9 @@ public class CfSequence
 				ttlpoints += score * 2; // score accumulate to total points
 				System.out.println (
 						"CORRECT! you get " + score * 2 + " Points and " + score * 2 + " gold! \nPlay Again? y/n" );
+				
+				//user gets amount of gold and points 
+				//worth double the amount of remaining guesses
 				Var.setGold ( score * 2 );
 				Var.setPoints ( score * 2 );
 				do // user must answer 'y' or 'n'

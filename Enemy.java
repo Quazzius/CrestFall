@@ -1,4 +1,4 @@
-package myGame;
+
 
 public class Enemy
 {
@@ -59,18 +59,17 @@ public class Enemy
 	}
 
 	//Enemies and their different attributes sent to constructor
-	//all enemies use the same basic principles
+	//all enemies use the same logic
 	//this one is explained in detail
 	public static Enemy bear( )
 	{
-
 		text = "You stumbled accross a Bear..."; // Bear fight
 		enemyAbility = 'a'; // enemy special ability class (none in this case)
 		enemyHP = 12; // enemy health initialize
 		eType = "Bear"; // type of enemy
 		aType = " Swipes"; // attack style
 		killText = "You killed a "; // type of death
-		deathFlavor = "! +5 gold for some reason"; // flavor text on enemy death
+		deathFlavor = "! May as well take its claws. +5 gold"; // flavor text on enemy death
 		minRange = 3; // enemy min damage range;
 		maxRange = 6; // enemy max damage range;
 		eMinHit = 4;  // enemy min chance to hit

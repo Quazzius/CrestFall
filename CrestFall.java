@@ -1,9 +1,25 @@
-package myGame;
+/*Jeff Flanegan
+ * CSC 160 combo
+ * Final Project
+ * due 5/13/2019
+ */
+
+
+
 import java.util.Scanner;
 
 public class CrestFall
 {
 
+	//CrerstFall is a text-based adventure game where you have to make choices
+	//for which paths to take, what Items to buy/use and when to fight or flee.
+	//there are  many enemies along the way which are specific to their environment.
+	//there are 3 chapters that get increasingly more involved which are mostly milestone markers
+	//for where we were in class and how much knowledge I had at the time.
+	//you control a character and work your way through the areas, finding secrets,
+	//deciding whether or not to investigate certain scenarios, slaying monsters,
+	//fighting bosses, getting gold and points, and trying to eventually defeat Chaos in chapter 3.
+	//you must make the correct decisions to make it to the volcano and even find Chaos itself.
 	public static void main( String[ ] args )
 	{
 		Scanner input = new Scanner ( System.in );
@@ -57,21 +73,30 @@ public class CrestFall
 			int minutes = (int) ( time / 1000 / 60 );
 			int seconds = (int) ( time / 1000 % 60 );
 			
+			//if player takes more than 30 minutes, they receive a 100 point penalty for every minute after 30
+			//this should help dieter gold and point farming
+			if ( minutes > 30 )
+			{
+				int penalty = ( minutes - 30 ) * 100;
+				Var.setPoints ( -penalty );
+			}
+			
 			//player gets game over scenario if they defeated chaos
+			//changes depending on calculated points
 			if (Var.getChaosLife() < 1) {
 				CfSetup.gameOverScenarios();
 			}
 			CfSetup.printGraphic(CfSetup.gameOver ( ));
 			System.out.println ( "TIME: " + minutes + " min " + seconds + " sec" );
 			
-			//if player takes more than 30 minutes, they receive a 100 point penalty for every minute after 30
-			//this should help dieter gold and point farming
+			//output penalty if there is one
 			if ( minutes > 30 )
 			{
 				int penalty = ( minutes - 30 ) * 100;
 				System.out.println ( "Time Penalty -" + penalty + " points" );
-				Var.setPoints ( -penalty );
 			}
+			
+			
 			//output end game stats
 			System.out.println ( "NAME: " + Var.getPlayer() );
 			System.out.println ( "GOLD: " + Var.getGold());

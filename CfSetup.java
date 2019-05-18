@@ -1,4 +1,4 @@
-package myGame;
+
 import java.util.Scanner;
 
 public class CfSetup
@@ -6,7 +6,7 @@ public class CfSetup
 	static Scanner KeyIn = new Scanner ( System.in );
 	static Scanner input = new Scanner ( System.in );
 
-	//initialize All Variables
+	//initialize All Variables. described in Var class
 	public static void initialize( )
 	{
 		Var.setGold ( 0 );
@@ -49,9 +49,14 @@ public class CfSetup
 		Var.setChaosLife ( 1 );
 		Var.setAreaCount ( 0 );
 	}
+	
+	//the game logo and game over were made from a text to ASCII generator
+	//found here: http://patorjk.com/software/taag/#p=display&f=Swamp%20Land&t=Type%20Something%20
+	//then did a find-replace on the back slashes to double them up and adjusted text for the array
 	public static String[] gameLogo () {
 		
-		String[] gameLogo = {"	 ______   ______    ______   ______   _________   ______   ________   __       __          \n"
+		String[] gameLogo = {
+		 "	 ______   ______    ______   ______   _________   ______   ________   __       __          \n"
 		+"	/_____/\\ /_____/\\  /_____/\\ /_____/\\ /________/\\ /_____/\\ /_______/\\ /_/\\     /_/\\         \n"
 		+"	\\:::__\\/ \\:::_ \\ \\ \\::::_\\/_\\::::_\\/_\\__.::.__\\/ \\::::_\\/_\\::: _  \\ \\\\:\\ \\    \\:\\ \\        \n"
 		+"	 \\:\\ \\  __\\:(_) ) )_\\:\\/___/\\\\:\\/___/\\  \\::\\ \\    \\:\\/___/\\\\::(_)  \\ \\\\:\\ \\    \\:\\ \\       \n"
@@ -64,7 +69,8 @@ public class CfSetup
 	
 	public static String[] gameOver() {
 		
-			String[] gmeOver = {"	 _______    ________   ___ __ __   ______       ______   __   __   ______   ______       \n"
+			String[] gmeOver = {
+			 "	 _______    ________   ___ __ __   ______       ______   __   __   ______   ______       \n"
 			+"	/______/\\  /_______/\\ /__//_//_/\\ /_____/\\     /_____/\\ /_/\\ /_/\\ /_____/\\ /_____/\\      \n"
 			+"	\\::::__\\/__\\::: _  \\ \\\\::\\| \\| \\ \\\\::::_\\/_    \\:::_ \\ \\\\:\\ \\\\ \\ \\\\::::_\\/_\\:::_ \\ \\     \n"
 			+"	 \\:\\ /____/\\\\::(_)  \\ \\\\:.      \\ \\\\:\\/___/\\    \\:\\ \\ \\ \\\\:\\ \\\\ \\ \\\\:\\/___/\\\\:(_) ) )_   \n"
@@ -74,7 +80,7 @@ public class CfSetup
 			};
 			return gmeOver;
 		}
-	//print graphic arrays
+	//print graphic arrays shown above
 	public static void printGraphic(String[] outputArray) {
 		for(int i = 0; i < outputArray.length; i++) {
 			System.out.println(outputArray[i]);
@@ -94,69 +100,70 @@ public class CfSetup
 	{
 		System.out.println ( "Pick your class type" ); 
 		System.out.println (
-				"1. Hunter (Normal Game)\n2. Fighter (Braun mode) -1 dex, +2 Max DMG\n3. Loser (Hard Mode) -1 dex, -1 evade, -1 Max DMG, +10 Max HP" );
+				"1. Hunter (Normal Game)\n2. Fighter (Braun mode) -1 dex, +2 Max DMG\n"
+				+ "3. Loser (Hard Mode) -1 dex, -1 evade, -1 Max DMG, +10 Max HP" );
 		int playerType = input.nextInt ( );
-		if ( playerType == 2 )
+		if ( playerType == 2 ) //fighter class
 		{
-			Var.setFighter ( 1 );
-			Var.setDex ( -1 );
-			Var.setMaxDMG ( 2 );
+			Var.setFighter ( 1 ); //initialize fighter class
+			Var.setDex ( -1 ); //fighter gets -1 to  dexterity
+			Var.setMaxDMG ( 2 ); //fighter gets +2 to max damage
 		}
-		if ( playerType == 3 )
+		if ( playerType == 3 ) //loser class
 		{
-			Var.setLoser ( 1 );
-			Var.setDex ( -1 );
-			Var.setEvade ( -1 );
-			Var.setMaxDMG ( -1 );
-			Var.setHpMax ( 10 );
+			Var.setLoser ( 1 ); // initialize loser class
+			Var.setDex ( -1 ); //loser class gets - 1 to dexterity
+			Var.setEvade ( -1 ); // -1 to  evade
+			Var.setMaxDMG ( -1 ); // -1 to max damage
+			Var.setHpMax ( 10 ); // +10 to max hp
 		}
 
 	}
-
+	// warp if user enters "ch2" or "ch3"
 	public static void warp( )
 	{
-
-		// warp if user enters "ch2" or "ch3"
 		String player = CfSetup.playerName ( );
-		if ( player.equals ( "ch2" ) )
+		if ( player.equals ( "ch2" ) ) // chapter 2, get 150 gold for testing purposes
 		{
 			Var.setChapter ( 2 );
 			Var.setGold ( 150 );
 		}
-		if ( player.equals ( "ch3" ) )
+		if ( player.equals ( "ch3" ) ) // chapter 3, get updated stats for chapter level and 200 gold for testing
 		{
 			Var.setChapter ( 3 );
 			Var.setMinDMG ( 7 );
 			Var.setMaxDMG ( 12 );
-			Var.setDex ( 1 );
-			Var.setEvade ( 1 );
-			Var.setHpMax ( 50 );
-			Var.setHp (50);
+			Var.setDex ( 1 ); // +1
+			Var.setEvade ( 1 ); // +1
+			Var.setHpMax ( 50 ); // +50 to max hp
+			Var.setHp (50); // full health
 			Var.setGold ( 200 );
+			//items "acquired" from chapter 2
 			Var.setlArmor ( 0 );
 			Var.setbSword ( 0 );
 			Var.setmDagger ( -1 );
 		}
 	}
-
+	//beginning of story text and first decision (to play the game)
 	public static void beginGame( )
 	{
 		char forest;
 		System.out.println ( "Your home, the village of Sardina, was just burned to the ground by a ball of fire that fell from the sky." );
 		System.out.println (
-				"Living in the middle of the forest has its advantages though the closest town is 10 days away on foot." );
+				"Living in the middle of the forest has its advantages, though the closest town is 10 days away on foot." );
 		System.out.println (
 				"You know of a merchant to the SouthWest, but first you mush make your way through the forest to find the road." );
 		System.out.println ( "Your only posessions are the clothes on your back and your Splitting Axe (2-5 DMG)." );
-		if ( Var.getFighter ( ) == 1 )
+		if ( Var.getFighter ( ) == 1 ) //fighter class
 		{
 			System.out.println (
 					"You have a lifetime of fighting experince + 2 Max DMG\n But your large stature leaves you less nimble -1 dex" );
 		}
-		if ( Var.getLoser ( ) == 1 )
+		if ( Var.getLoser ( ) == 1 ) // loser class
 		{
 			System.out.println (
-					"You're a loser so you kind of suck at everything -1 dex, -1 evade, -1 Max DMG\n But a lifetime of being picked on gives you more resilience + 10 Max HP" );
+					"You're a loser so you kind of suck at everything -1 dex, -1 evade, -1 Max DMG\n"
+					+ "But a lifetime of being picked on gives you more resilience + 10 Max HP" );
 		}
 		System.out.println ( "The only choice you have is to head South, continue? y/n" );
 		do // check character input
@@ -168,7 +175,7 @@ public class CfSetup
 			}
 		} while ( forest != 'y' && forest != 'n' );
 
-		// endgame statement
+		//pre-game play decision
 		if ( forest == 'n' )
 		{
 			System.out.println ( "You decided you would rather just lay down and burn like everything else." );
@@ -224,21 +231,24 @@ public class CfSetup
 				.println ( "Your small village has no name as it is merely called \"Home\" to the village's 6 residents."
 						+ "\nYou greet your friend Gil, the merchant, and ask to see his stock" );
 	}
-	
+	//the type of game over scene you get is dependent on if you 
+	//defeated chaos and the amount of points you received 
 	public static void gameOverScenarios() {
 		
-		if (Var.getPoints() < 5000 && Var.getChaosLife() < 1) {
+		//player returns home if less than 5000 points and killed chaos
+		if (Var.getPoints() < 7500 && Var.getChaosLife() < 1) {
 			System.out.println ( "You emerge from the rift and are home in Home. You Open the door to your\n"
 					+ "house and collapse in your bed. Tales of your journey are spead lightly through legends\n"
 					+ "and your story becomes a myth told by few...\n\n");
 		}
-		
-		else if (Var.getPoints() >= 5000 && Var.getChaosLife() < 1) {
+		//Player returns to alternate reality where Sardina is intact
+		//if they have more than 5000 points and killed chaos.
+		else if (Var.getPoints() >= 7500 && Var.getChaosLife() < 1) {
 			System.out.println ( "You emerge from the rift into a familiar place... Sardina.\n"
 					+ "Amazed by your surroundings, your eyes well up with tears.\n"
 					+ "Your freinds walk up to you and are concerned that you look confused\n"
 					+ "and strangely emotional..." + Var.getPlayer ( ) + ", where have you been?! the bakery\n "
-					+ "caught fire last night and we put it out but we could have used your help.\n"
+					+ "caught fire last night! We put it out but we could have used your help.\n"
 					+ "You shake your head and sit down where you are, overwhelmed with joy...\n\n");
 		}
 		

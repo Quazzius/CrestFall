@@ -1,4 +1,4 @@
-package myGame;
+
 
 import java.util.Scanner;
 @SuppressWarnings("resource")
@@ -77,7 +77,12 @@ public class CfRoads
 		char roadFork;
 		do // check character input
 		{
-			roadFork = input.next ( ).toUpperCase ( ).charAt ( 0 );
+			try {
+				roadFork = input.next ( ).toUpperCase ( ).charAt ( 0 );
+			}catch(Exception e) {
+			}finally {
+				roadFork = 'S';
+			}
 			if ( roadFork != 'E' && roadFork != 'W' )
 			{
 				System.out.println ( "You must enter E or W" );
@@ -171,7 +176,8 @@ public class CfRoads
 			Var.setChapter ( 2 );
 		}
 	} // End Merchant Road
-
+	
+	//road to the lake
 	public static void swampRoad1( )
 	{
 		Scanner input = new Scanner ( System.in );
@@ -251,7 +257,7 @@ public class CfRoads
 			}
 		} // end swamp road
 	}
-
+	//road away from  the lake leading back to the merchant camp
 	public static void swampRoad2( )
 	{
 
@@ -333,7 +339,7 @@ public class CfRoads
 			Var.setChapter ( 2 );
 		}
 	}
-
+	//road leading to  the city
 	public static void cityRoad( )
 	{
 		Scanner input = new Scanner ( System.in );
@@ -405,7 +411,7 @@ public class CfRoads
 			}
 		}
 	}
-
+	// road leading to the mountain top
 	public static void mountainRoad1( )
 	{
 		Scanner input = new Scanner ( System.in );
@@ -482,7 +488,7 @@ public class CfRoads
 			}
 		} // end mountain road
 	}
-
+	//road leading away from the mountain top, to the merchant camp
 	public static void mountainRoad2( )
 	{
 		Scanner input = new Scanner ( System.in );
@@ -568,7 +574,7 @@ public class CfRoads
 			Var.setDirection ( 0 );
 		}
 	}
-
+	//road leading to  the shimmering valley area
 	public static void sValleyRoad( String nautical )
 	{
 		Scanner input = new Scanner ( System.in );
@@ -647,7 +653,7 @@ public class CfRoads
 			}
 		} // end valley road
 	}
-
+	//road leading to  the white  marsh area
 	public static void wMarshRoad( String nautical )
 	{
 		System.out.println ( "You can feel the humidity rise as your steps begin to sink further into the saturated ground" );
@@ -737,7 +743,7 @@ public class CfRoads
 			}
 		} // end marsh road
 	}
-
+	//road leading to t he frozen desert area
 	public static void fDesertRoad( String nautical )
 	{
 		Scanner input = new Scanner ( System.in );
@@ -823,7 +829,7 @@ public class CfRoads
 			}
 		} // end desert road
 	}
-
+	// road leading to the sandstone cliffs area
 	public static void sCliffsRoad( String nautical )
 	{
 		System.out.println ("The trail gradually unfreezes and then disappears.\nYou sense no one has been this way in a very long time...\n" );
@@ -899,7 +905,7 @@ public class CfRoads
 			}
 		} // end desert road
 	}
-
+	//road leading to  the ancient tomb entrance area
 	public static void sForestRoad( String nautical )
 	{
 		Scanner input = new Scanner ( System.in );
@@ -987,7 +993,7 @@ public class CfRoads
 			}
 		} // end desert road
 	}
-
+	//road leading to  the arid plains area
 	public static void aPlainsRoad( String nautical )
 	{
 		
@@ -1075,7 +1081,7 @@ public class CfRoads
 			}
 		} // end aPlains road
 	}
-
+	//road leading to  the volcano  area
 	public static void volcanoRoad( String nautical )
 	{
 		Scanner input = new Scanner ( System.in );

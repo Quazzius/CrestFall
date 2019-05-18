@@ -1,4 +1,4 @@
-package myGame;
+
 
 public class Var
 {
@@ -6,18 +6,25 @@ public class Var
 	
 	//player gold, player health points, player maximum health points, player minimum and maximum damage, player dexterity and evade chance
 	private static int gold, hp, hpMax, minDMG, maxDMG, dex, evade, 
+	
 	// chaper of game, character lady of the lake in swamp count, short sword weapon, long sword weapon, leather armor, mercurial dancing boots
 	chapter, ladyOfLake, sSword, lSword, lArmor, mBoots,
-	// jeweled dagger, magic shield, snowy bastard sword, hp potion amount, text counter for merchant area, losr and figher player classes
+	
+	// jeweled dagger, magic shield, snowy bastard sword, hp potion amount, text counter for merchant area, loser and figher player classes
 	mDagger, mShield, bSword, hpPot, merchCount, loser, fighter, 
+	
 	// victim character in the city walk count, player points, player battle decision, city counter for text, Chaos demon boos alive/dead
 	victim, points, battleDec, city, chaosDemonLife,
+	
 	// void rapier weapon, dynamite item count, coral Kukri weapon, direction decision for chapters 2 and 3, necro Horde boss alive/dead
 	vRapier, dynamite, cKukri, direction, hordeLife, 
+	
 	// gryphon boss life alive/dead, parrying dagger weapon, studded leather armor, shadow Katana weapon, lighning axe weapon
 	gryphonLife, pDagger, slArmor, sKatana, lAxe, 
+	
 	// litch King boss life alive/dead, void Bangle item, counter for road length, chaos final boss life alive/dead
 	litchKing, vBangle, areaCount, chaosLife;
+	
 	//player name
 	private static String player;
 	
@@ -61,7 +68,7 @@ public class Var
 	{
 			Var.hp += hp;
 			
-			if ( Var.hp > Var.getHpMax() )
+			if ( Var.hp > Var.getHpMax() ) //hp cannot be higher than hp max
 			{
 				Var.hp = Var.getHpMax();
 			}
@@ -85,11 +92,11 @@ public class Var
 
 	public static void setMinDMG( int minDMG )
 	{
-		if ( minDMG == 1 || minDMG == -1 )
+		if ( minDMG == 1 || minDMG == -1 ) //if change is only by one, then it is an off-hand modifier
 		{
 			Var.minDMG += minDMG;
 		}
-		else
+		else // change is literal
 		{
 			Var.minDMG = minDMG;
 		}
@@ -103,7 +110,7 @@ public class Var
 
 	public static void setMaxDMG( int maxDMG )
 	{
-		if ( maxDMG == 1 || maxDMG == -1 || maxDMG == 2 )
+		if ( maxDMG == 1 || maxDMG == -1 || maxDMG == 2 )//these values indicate a modifier instead of a literal change
 		{
 			Var.maxDMG += maxDMG;
 		}
@@ -160,7 +167,7 @@ public class Var
 
 	public static void setsSword( int sSword )
 	{
-		if ( sSword > 1 )
+		if ( sSword > 1 ) //check to make sure item quantity is binary
 		{
 			Var.sSword = 1;
 		}
@@ -177,7 +184,7 @@ public class Var
 
 	public static void setlSword( int lSword )
 	{
-		if ( lSword > 1 )
+		if ( lSword > 1 )//check to make sure item quantity is binary
 		{
 			Var.lSword = 1;
 		}
@@ -336,7 +343,7 @@ public class Var
 
 	public static void setvRapier( int vRapier )
 	{
-		if ( vRapier > 1 )
+		if ( vRapier > 1 )//check to make sure item quantity is binary
 		{
 			Var.vRapier = 1;
 		}
@@ -364,7 +371,7 @@ public class Var
 
 	public static void setcKukri( int cKukri )
 	{
-		if ( cKukri > 1 )
+		if ( cKukri > 1 )//check to make sure item quantity is binary
 		{
 			Var.cKukri = 1;
 		}
@@ -432,7 +439,7 @@ public class Var
 
 	public static void setsKatana( int sKatana )
 	{
-		if ( sKatana > 1 )
+		if ( sKatana > 1 )//check to make sure item quantity is binary
 		{
 			Var.sKatana = 1;
 		}
@@ -449,7 +456,7 @@ public class Var
 
 	public static void setlAxe( int lAxe )
 	{
-		if ( lAxe > 1 )
+		if ( lAxe > 1 )//check to make sure item quantity is binary
 		{
 			Var.lAxe = 1;
 		}
@@ -486,11 +493,11 @@ public class Var
 
 	public static void setAreaCount( int areaCount )
 	{
-		if ( areaCount == 0 )
+		if ( areaCount == 0 ) //used to break loop
 		{
 			Var.areaCount = areaCount;
 		}
-		else
+		else //else increments
 		{
 			Var.areaCount += areaCount;
 		}

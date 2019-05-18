@@ -1,7 +1,11 @@
-package myGame;
+
 
 import java.util.Scanner;
 
+
+//this is the layout of the game by chapter.
+//It arranges the roads and areas while checking if the 
+//player is still alive to reach the next area
 public class CfChapter
 {
 	public static int merch = 0, direction = 0;

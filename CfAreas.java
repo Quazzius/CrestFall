@@ -1,4 +1,4 @@
-package myGame;
+
 
 import java.util.Scanner;
 @SuppressWarnings("resource")
@@ -13,7 +13,7 @@ public class CfAreas
 	public static int merch, city = 0;
 
 	
-	//areas and merchants all use the same basic mechanics
+	//areas and merchants are all copies of each other and use the same basic mechanics
 	//the first couple of each are explained in detail
 	public static void theLake( )
 	{
@@ -89,6 +89,7 @@ public class CfAreas
 										System.out.println ( "You must enter y or n" );
 									}
 								} while ( help != 'y' && help != 'n' );
+								//player equips PhantomBane
 								if ( help == 'y' )
 								{
 									System.out.println ( "PhantomBane Equipped" );
@@ -111,13 +112,13 @@ public class CfAreas
 										Var.setMinDMG ( 1 );
 									}
 								}
-								else
+								else //player decides not to equip PhaontomBane
 								{
 									System.out.println ( "The sword fades back into obscurity" );
 								}
 							}
 						}
-						else
+						else //scenario is selected again though player does not have the same scenario happen
 						{
 							System.out.println ( "Here is where you met the lady of the lake" );
 							System.out.println ( "You can feel her spirit well up inside of you. Regen 10% MaxHP!" );
@@ -202,7 +203,12 @@ public class CfAreas
 			System.out.println ( "You have " + Var.getGold ( ) + " gold" );
 			do
 			{
+				try {
 				merch = input.nextInt ( ); // input decision
+				}catch(Exception e) {
+				}finally {
+					merch = 7;
+				}
 				if ( merch < 0 || merch > 8 )
 				{
 					System.out.println ( "You must enter a valid number (1-8)" );
@@ -260,11 +266,12 @@ public class CfAreas
 					break;
 
 				case 2: // buy long sword
-					if ( Var.getlSword ( ) > 0 )
+					if ( Var.getlSword ( ) > 0 ) //item must be instock
 					{
-						if ( Var.getGold ( ) >= lSwordCost )
+						if ( Var.getGold ( ) >= lSwordCost ) //player  must have enough gold
 						{
 							//same idea as with short sword
+							//update quantities, set variables, check player class
 							System.out.println ( "The Long Sword is now yours! DMG: 4-9. -1 dex" );
 							Var.setMinDMG ( 4 );
 							Var.setMaxDMG ( 9 );
@@ -287,12 +294,12 @@ public class CfAreas
 								Var.setMinDMG ( 1 );
 							}
 						}
-						else
+						else //not enough  gold
 						{
 							System.out.println ( "You are too poor for this item. you have " + Var.getGold ( ) + " gold" );
 						}
 					}
-					else
+					else // item 0 quantity
 					{
 						System.out.println ( "Sorry, This item is out of stock." );
 					}
@@ -363,7 +370,7 @@ public class CfAreas
 						{
 							System.out.println ( "You get a bottle of Magic EEl Sauce. Use it wisely" );
 							Var.setGold ( -hpPotCost );
-							Var.setHpPot ( 1 );
+							Var.setHpPot ( 1 ); //hp potion is an item that gets added for use in battle sequence
 						}
 						else
 						{
@@ -371,13 +378,13 @@ public class CfAreas
 							System.out.println ( "You have " + Var.getGold ( ) + " gold. Go find some more" );
 						}
 					}
-					else
+					else //player can only have a maximum of 3 health potions at one time
 					{
 						System.out.println ( "You can only hold three bottles." );
 					}
 					break;
 
-				case 7: // show stats
+				case 7: // show player stats
 					System.out.println ( "HP: " + Var.getHp ( ) );
 					System.out.println ( "DMG: " + Var.getMinDMG ( ) + " - " + Var.getMaxDMG ( ) );
 					System.out.println ( "Dex: " + Var.getDex ( ) );
@@ -392,14 +399,20 @@ public class CfAreas
 					System.out.println (
 							"Which way? \n2 - CrestFall, \n3 - Smelly Fart Swamp. \n4 - Hike up Humble Mountain... \n1 - stay at Camp" );
 					Var.setMerchCount ( 1 );
-					int direction = input.nextInt ( );
+					int direction;
+					try {
+						direction = input.nextInt ( );
+					}catch(Exception e){					
+					}finally {
+						direction = 3;
+					}
 					Var.setDirection ( direction );
 			}
 		}
 		return Var.getDirection ( );
 	}
 
-	// City of CrestFall
+	// City of CrestFall. player can buy items, heal and access the "city walk" area
 	public static void theCity( )
 	{
 		//city introduction
@@ -420,8 +433,8 @@ public class CfAreas
 		System.out.println ( "There is a large map of the City with a message board, that could be helpful." );
 		System.out.println ( "Press Enter" );
 		KeyIn.nextLine ( );
-
-		while ( city != 6 )
+		
+		while ( city != 6 ) //6 is the leave city switch statement
 		{
 			System.out.println ( "City Common Board" );
 			System.out.println ( "0 - EEL Sauce Vendor. 1 Bottle (8 gold)" );
@@ -435,8 +448,12 @@ public class CfAreas
 			System.out.println ( "7 - Guessing Game (5) Double your gold and get points!" );
 			System.out.println ( "You have " + Var.getGold ( ) + " gold" );
 			do
-			{
+			{	try {
 				commonBoard = input.nextInt ( ); // input decision
+				}catch(Exception e) {			
+				}finally {
+					commonBoard = 2;
+				}
 				if ( commonBoard < 0 || commonBoard > 7 )
 				{
 					System.out.println ( "You must enter a valid number (0-7)" );
@@ -611,8 +628,10 @@ public class CfAreas
 										
 										//check for status, off hand variables and class types
 										//update if necessary
-										if (Var.getvRapier( ) < 1) {
-											Var.setvRapier ( 1 );
+										if (Var.getvRapier( ) < 1) { //void rapier gives 'v' (vamp) ability
+											
+											Var.setvRapier ( 1 ); //must be added back to stock to  
+																		 //remove ability when replaced by another weapon
 										}
 										if ( Var.getFighter ( ) == 1 )
 										{
@@ -698,7 +717,7 @@ public class CfAreas
 						} // end armorerItem switch
 					} // exit armorer
 					break;
-
+					//heal at the INN
 				case 4:
 					if ( Var.getGold ( ) >= innCost )
 					{
@@ -712,10 +731,10 @@ public class CfAreas
 						System.out.println ( "NO FREE-LOADING! Go make some gold, you Dirty BUM!" );
 					}
 					break;
-
+					
 				case 5:
 
-					// City Search
+					// Walk around the city - area with random encounters
 					cityWalk ( );
 
 					break;
@@ -726,7 +745,7 @@ public class CfAreas
 					System.out.println ( "Are you sure you  want to leave the City?" );
 					System.out.println ( "Enter 6 to confirm. Enter 0 to return to Common Board" );
 					city = input.nextInt ( );
-					if ( city == 6 )
+					if ( city == 6 ) //breaks out of city loop
 					{
 						System.out.println ( "Where to?" );
 						System.out.println ( "1 - Take Carriage back to the Merchant Camp fork. (10 gold)" );
@@ -746,10 +765,10 @@ public class CfAreas
 						//player takes the carriage back to the merchant camp
 						if ( Var.getDirection ( ) == 1 )
 						{
-							if ( Var.getGold ( ) >= carriage )
+							if ( Var.getGold ( ) >= carriage ) //player must have enough gold
 							{
 								Var.setGold ( -carriage );
-								Var.setMerchCount ( -1 );//allows merchant intro text to appear again
+								Var.setMerchCount ( -1 );//allows merchant intro text to appear again when they arrive
 								System.out.println (
 										"The ride back to the Merchant Camp lasts the rest of\n the day and night, and is not very exciting\n" );
 
@@ -760,7 +779,7 @@ public class CfAreas
 								city = 9;
 							}
 						}
-						//player moves on to chapter 3 if chaos demon is dead
+						//player can move on to chapter 3 if chaos demon is dead
 						else if ( Var.getDirection ( ) == 3 && Var.getChaosDemonLife ( ) == 0 )
 						{
 							System.out.println ( "You desire to leave this place as there is nothing left here for you." );
@@ -775,7 +794,7 @@ public class CfAreas
 									System.out.println ( "You must enter y or n" );
 								}
 							} while ( citySearch != 'y' && citySearch != 'n' );
-							if ( citySearch == 'y' )
+							if ( citySearch == 'y' ) //player decides to move on to chapter 3
 							{
 								System.out.println (
 										"The cloaked carriage driver gives you a nod \nand asks of you only to help him load up his shipment" );
@@ -812,6 +831,7 @@ public class CfAreas
 		} // end city decision
 	}
 
+	//random encounter area within city
 	public static void cityWalk( )
 	{
 		
@@ -914,7 +934,7 @@ public class CfAreas
 		}
 	}
 
-	
+	// on top  of the mountain where chaos demon resides
 	public static void mountainTop( )
 	{
 		Scanner input = new Scanner ( System.in );
@@ -951,7 +971,7 @@ public class CfAreas
 						break;
 
 					case 2: // Chaos Demon
-						if ( Var.getChaosDemonLife ( ) > 0 )
+						if ( Var.getChaosDemonLife ( ) > 0 ) //chaos demon must be alive for encounter to happen
 						{
 							System.out.println ( "A voice that is much different than your own begins to tug on your mind" ); // rescue
 							System.out.println ( "Give in to the foreign voice? y/n" );
@@ -965,22 +985,21 @@ public class CfAreas
 								}
 							} while ( help != 'y' && help != 'n' );
 
-							if ( help == 'n' ) // Don't look
+							if ( help == 'n' ) // Don't give in
 							{
 								System.out.println ( "That's way too Creepy. You shut the voice out of your mind." );
 							}
-							else
+							else // fight the chaos demon
 							{
 								System.out.println ( Enemy.chaosDemon ( ).getText ( ) );
-								Var.setHp ( Var.getHpMax()/2 );
+								Var.setHp ( Var.getHpMax()/2 ); //player regenerates 50% of max hp
 								System.out.println ( "Press Enter" );
 								KeyIn.nextLine ( );
 
-								// Boss battle
-
+								// Chaos Demon Boss battle
 								CfSequence.battleSequence ( Enemy.chaosDemon ( ) );
 
-								if ( Var.getHp ( ) > 0 )
+								if ( Var.getHp ( ) > 0 )//player wins battle
 								{
 									Var.setHpMax ( 25 ); // hp Max + 25
 									Var.setHp ( Var.getHpMax ( ) ); // full hp
@@ -1031,7 +1050,7 @@ public class CfAreas
 			KeyIn.nextLine ( );
 		}
 	}
-
+	// chapter 3 "merchant" hub
 	public static void homeHub( )
 	{
 		
@@ -1063,7 +1082,12 @@ public class CfAreas
 		System.out.println ( "\nYou Have " + Var.getGold ( ) + "gold" );
 		do
 		{
-			merch = input.nextInt ( ); // input decision
+			try {
+				merch = input.nextInt ( ); // input decision
+			}catch(Exception e) {
+			}finally {
+				merch = 3;
+			}
 			if ( merch < 0 || merch > 8 )
 			{
 				System.out.println ( "You must enter a valid number" );
@@ -1138,7 +1162,7 @@ public class CfAreas
 				{
 					System.out.println ( "The Smoke from the volcano has darkened a bit recently...\n" );
 				}
-				else if ( Var.getHordeLife ( ) == 0 || Var.getGryphonLife ( ) == 0 ) //horde and gryphon are dead
+				else if ( Var.getHordeLife ( ) == 0 || Var.getGryphonLife ( ) == 0 ) //necro horde or gryphon are dead
 				{
 					System.out.println (
 							"I heard there is an Ancient Tomb past the sleeping forest that is impossible to open.\n "
@@ -1297,7 +1321,7 @@ public class CfAreas
 				}
 		}
 	}
-
+	//shimmering valley area is midpoint that leads to the white marsh
 	public static void sValley( )
 	{
 		// Shimmering Valley
@@ -1370,7 +1394,12 @@ public class CfAreas
 								System.out.println ( "\nYou Have " + Var.getGold ( ) + "gold" );
 								do
 								{
-									valleyMerch = input.nextInt ( ); // input decision
+									try {
+										valleyMerch = input.nextInt ( ); // input decision
+									}catch(Exception e) {
+									}finally {
+										valleyMerch = 4;
+									}
 									if ( valleyMerch < 0 || valleyMerch > 4 )
 									{
 										System.out.println ( "You must enter a valid number (0 - 4)" );
@@ -1511,7 +1540,7 @@ public class CfAreas
 		}
 	}
 
-	
+	// white marsh area contains Necro Horde Boss Battle
 	public static void whiteMarsh( )
 	{
 		Scanner input = new Scanner ( System.in );
@@ -1665,7 +1694,7 @@ public class CfAreas
 		}
 	}
 
-	
+	//frozen desert area is midpoint leading to sandstone cliffs
 	public static void frozenDesert( )
 	{
 		Scanner input = new Scanner ( System.in );
@@ -1736,7 +1765,12 @@ public class CfAreas
 								System.out.println ( "\nYou Have " + Var.getGold ( ) + "gold" );
 								do
 								{
-									valleyMerch = input.nextInt ( ); // input decision
+									try {
+										valleyMerch = input.nextInt ( ); // input decision
+									}catch(Exception e) {
+									}finally {
+										valleyMerch = 4;
+									}
 									if ( valleyMerch < 0 || valleyMerch > 4 )
 									{
 										System.out.println ( "You must enter a valid number (0 - 4)" );
@@ -1876,7 +1910,7 @@ public class CfAreas
 		}
 	}
 
-	
+	// sandstone cliffs area contains Gryphon Boss Battle
 	public static void sandstoneCliffs( )
 	{
 		System.out.println ( "The SandStone Cliffs are flat and rocky with patches of vegetation.\n"
@@ -2029,7 +2063,8 @@ public class CfAreas
 			}
 		}
 	}
-
+	//tomb entrance area is a merchant with the option to open the door to  the ancient tomb
+	//ancient tomb can  only be opened if the player killed the Gryphon and Necro Horde
 	public static void tombEntrance( )
 	{
 		
@@ -2050,8 +2085,12 @@ public class CfAreas
 			System.out.println ( "5 - Go Back Home" );
 			System.out.println ( "\nYou Have " + Var.getGold ( ) + "gold" );
 			do
-			{
-				valleyMerch = input.nextInt ( ); // input decision
+			{	try {
+					valleyMerch = input.nextInt ( ); // input decision
+				}catch(Exception e) {
+				}finally {
+					valleyMerch = 4;
+				}
 				if ( valleyMerch < 0 || valleyMerch > 5 )
 				{
 					System.out.println ( "You must enter a valid number (0 - 5)" );
@@ -2060,13 +2099,13 @@ public class CfAreas
 			switch ( valleyMerch )
 			{
 
-				case 0:
+				case 0://guessing game
 
 					CfSequence.guessingGame ( gGameCost );
 
 					break;
 
-				case 1:
+				case 1: //hp potion
 					if ( Var.getHpPot ( ) < 3 )
 					{
 						if ( Var.getGold ( ) >= hpPotCost )
@@ -2087,7 +2126,7 @@ public class CfAreas
 					}
 					break;
 
-				case 2:
+				case 2: //buy dynamite
 					if ( Var.getDynamite ( ) < 3 )
 					{
 						if ( Var.getGold ( ) >= dynamiteCost )
@@ -2108,7 +2147,7 @@ public class CfAreas
 					}
 					break;
 
-				case 3:
+				case 3: //buy lightning axe
 					if ( Var.getlAxe ( ) > 0 )
 					{
 						if ( Var.getGold ( ) >= lAxeCost )
@@ -2158,6 +2197,9 @@ public class CfAreas
 					System.out.println ( "An Enormous set of double doors is carved into a massive wall of stone\n"
 							+ "It is weathered and rough with no markings besides two small holes.\n"
 							+ "Above the holes you faintly make out an etching of a Warrior riding a Gryphon" );
+					
+					//player can open the door if they have the 2 items acquired from defeating
+					// the necro horde and gryphon bosses
 					if ( Var.getHordeLife ( ) == 0 && Var.getGryphonLife ( ) == 0 )
 					{
 						System.out.println ( "Insert the Two Keys?\ny/n" );
@@ -2172,21 +2214,21 @@ public class CfAreas
 						} while ( mountain != 'y' && mountain != 'n' );
 						if ( mountain == 'y' )
 						{
-							valleyMerch = 5;
-							ancientTomb ( );
+							valleyMerch = 5; //leaves tomb entrance merchant
+							ancientTomb ( ); //enter ancient tomb area
 							if (Var.getHp() > 0) {
-								valleyMerch = 0;
+								valleyMerch = 0; //if player dies in the ancient tomb, this exits the tomb entrance loop
 							}
 						}
 					}
 					break;
 
-				case 5:
+				case 5: //returns back to the sleeping forest
 			}// end switch
 		} // end merchant
 	}
 
-	
+	// ancient tomb area with Litch King boss battle
 	public static void ancientTomb( )
 	{
 		System.out.println ( "The Tomb is dark with patches of light seeping though the weathered cracks in the walls.\n"
@@ -2221,7 +2263,7 @@ public class CfAreas
 
 						break;
 
-					case 2: // Horde
+					case 2: // Boss
 						if ( Var.getLitchKing ( ) > 0 )
 						{
 							System.out.println (
@@ -2245,7 +2287,7 @@ public class CfAreas
 							else
 							{
 								System.out.println ( Enemy.litchKing ( ).getText ( ) );
-								Var.setHp ( Var.getHpMax ( ) / 2 );
+								Var.setHp ( Var.getHpMax ( ) / 2 ); //regen 50% max hp
 								System.out.println ( "Press Enter" );
 								KeyIn.nextLine ( );
 
@@ -2270,8 +2312,8 @@ public class CfAreas
 						break;
 
 					case 3:
-						System.out.println (
-								"You see a very large hole at the base of a nearby wall that opens into an even darker space." ); // tree
+						System.out.println ("You see a very large hole at the base of a nearby"
+								+ "wall that opens into an even darker space." ); // hole
 						System.out.println ( "Investigate the Hole? y/n" );
 						char help;
 						do // check character input
@@ -2335,13 +2377,14 @@ public class CfAreas
 			else
 			{
 				mountain = 'n';
+				System.out.println ( "You step out of the Tomb and back into the warmth of the Sun.\n"
+						+ "You're glad to see that merchant still in his place as\n"
+						+ "you had expected him to vanish like so many other things had\n" + "on this insane adventure." );
 			}
-			System.out.println ( "You step out of the Tomb and back into the warmth of the Sun.\n"
-					+ "You're glad to see that merchant still in his place as\n"
-					+ "you had expected him to vanish like so many other things had\n" + "on this insane adventure." );
+			
 		}
 	}
-
+	// arid plains area is the midpoint to the volcano
 	public static void aridPlains( )
 	{
 		System.out.println ( "Your eyes are dry and the sulpher stings your nose." );
@@ -2451,7 +2494,7 @@ public class CfAreas
 		}
 	}
 
-	
+	//volcano  area has the final boss battle with Chaos
 	public static void volcano( )
 	{
 		Scanner input = new Scanner ( System.in );
@@ -2487,11 +2530,12 @@ public class CfAreas
 						break;
 
 					case 2: // Chaos Demon
+						//player can only encounter chaos if they have not encountered him before
+						// and they have killed the Litch King which gives them the Spectacles
 						if ( Var.getChaosLife ( ) > 0 && Var.getLitchKing ( ) < 1 )
 						{
 							System.out.println ( "Your spectacles vibrate and you put them on.." );
-							System.out.println (
-									"You see an Orange blur and a distanly familiar voice begins to tug on your mind" ); // rescue
+							System.out.println ("You can see an Orange blur and a distanly familiar voice begins to tug on your mind" ); 
 							System.out.println ( "Give in to the voice? y/n" );
 							char help;
 							do // check character input
@@ -2540,7 +2584,7 @@ public class CfAreas
 						break;
 
 					case 4:
-						System.out.println ( "You see a a large cave..." ); // tree
+						System.out.println ( "You see a a large cave..." ); // cave
 						System.out.println ( "Investigate the cave? y/n" );
 						char help;
 						do // check character input
