@@ -1,2 +1,3 @@
 # Crest Fall The Game
 
+CrerstFall is a text-based adventure game where you have to make choices for which paths to take, what Items to buy/use and when to fight or flee. there are  many enemies along the way which are specific to their environment. there are 3 chapters that get increasingly more involved which are mostly milestone markers for where we were in class and how much knowledge I had at the time. you control a character and work your way through the areas, finding secrets, deciding whether or not to investigate certain scenarios, slaying monsters, fighting bosses, getting gold and points, and trying to eventually defeat Chaos in chapter 3. you must make the correct decisions to make it to the volcano and even find Chaos itself.
