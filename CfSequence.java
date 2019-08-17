@@ -120,7 +120,7 @@ public class CfSequence
 				}catch(Exception e){
 					
 				}finally {
-					battleDec = 0;
+					battleDec = 1;
 				}
 				// players turn
 				switch ( battleDec )
