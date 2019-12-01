@@ -115,13 +115,9 @@ public class CfSequence
 				{
 					System.out.println ( "5 - Health Potion: " + Var.getHpPot ( ) );
 				}
-				try {
-					battleDec = input.nextInt ( ); 
-				}catch(Exception e){
-					
-				}finally {
-					battleDec = 1;
-				}
+				
+				battleDec = input.nextInt ( ); 
+				
 				// players turn
 				switch ( battleDec )
 				{
